@@ -2,9 +2,7 @@
     <h1>Hello-Agents</h1>
 </div>
 
-<div al| **第五部分：毕业设计及未来展望** |  |  |
-| [第十八章 毕业设计](./docs/chapter18/第十八章%20毕业设计.md) | 构建属于你的完整多智能体应用 | 🚧 |
-| [第十九章 未来已来](./docs/chapter19/第十九章%20未来已来.md) | 具身智能、人机协作、挑战与机遇 | 🚧 |="center">
+<div>
   <img src="https://img.shields.io/github/stars/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub stars"/>
   <img src="https://img.shields.io/github/forks/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub forks"/>
   <img src="https://img.shields.io/badge/language-Chinese-brightgreen?style=flat" alt="Language"/>
@@ -15,6 +13,7 @@
   <h3>🤖 动手学多智能体系统实战教程</h3>
   <p><em>从基础理论到实际应用，全面掌握多智能体系统的设计与实现</em></p>
 </div>
+
 
 ---
 
