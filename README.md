@@ -1,5 +1,5 @@
 <div align='center'>
-    <img src="./images/helloagents.png" alt="alt text" width="100%">
+    <img src="./docs/images/helloagents.png" alt="alt text" width="100%">
     <h1>Hello-Agents</h1>
 </div>
 
