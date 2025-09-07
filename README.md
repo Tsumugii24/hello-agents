@@ -1,18 +1,12 @@
 <div align='center'>
-    <img src="./docs/images/helloagents.png" alt="alt text" width="100%">
-    <h1>Hello-Agents</h1>
-</div>
-
-<div>
+  <img src="./docs/images/helloagents.png" alt="alt text" width="100%">
+  <h1>Hello-Agents</h1>
+  <h3>🤖 动手学多智能体系统实战教程</h3>
+  <p><em>从基础理论到实际应用，全面掌握多智能体系统的设计与实现</em></p>
   <img src="https://img.shields.io/github/stars/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub stars"/>
   <img src="https://img.shields.io/github/forks/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub forks"/>
   <img src="https://img.shields.io/badge/language-Chinese-brightgreen?style=flat" alt="Language"/>
   <a href="https://github.com/datawhalechina/Hello-Agents"><img src="https://img.shields.io/badge/GitHub-Project-blue?style=flat&logo=github" alt="GitHub Project"></a>
-</div>
-
-<div align="center">
-  <h3>🤖 动手学多智能体系统实战教程</h3>
-  <p><em>从基础理论到实际应用，全面掌握多智能体系统的设计与实现</em></p>
 </div>
 
 ---
