@@ -104,9 +104,9 @@
 ## 🙏 致谢
 
 ### 核心贡献者
-- [张三-项目负责人](https://github.com/example) (Datawhale成员-XX大学)
-- [李四-项目负责人](https://github.com/example) (Datawhale成员-XX大学)  
-- [朱信忠-指导专家]()（Datawhale成员）
+- [陈思州-项目负责人](https://github.com/jjyaoao) (Datawhale成员)
+- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale精英助教)  
+- [姜舒凡-项目负责人](https://github.com/Tsumugii24)（Datawhale成员）
 
 ### 特别感谢
 - 感谢 [@Sm1les](https://github.com/Sm1les) 对本项目的帮助与支持
