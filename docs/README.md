@@ -2,9 +2,7 @@
     <h1>hl-mas</h1>
 </div>
 
-<div al| **第五部分：毕业设计及未来展望** |  |  |
-| [第十八章 毕业设计](./chapter18/第十八章%20毕业设计.md) | 构建属于你的完整多智能体应用 | 🚧 |
-| [第十九章 未来已来](./chapter19/第十九章%20未来已来.md) | 具身智能、人机协作、挑战与机遇 | 🚧 |="center">
+<div>
   <img src="https://img.shields.io/github/stars/datawhalechina/hl-mas?style=flat&logo=github" alt="GitHub stars"/>
   <img src="https://img.shields.io/github/forks/datawhalechina/hl-mas?style=flat&logo=github" alt="GitHub forks"/>
   <img src="https://img.shields.io/badge/language-Chinese-brightgreen?style=flat" alt="Language"/>
