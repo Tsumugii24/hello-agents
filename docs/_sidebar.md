@@ -1,4 +1,4 @@
-- [HL-MAS](./README.md)
+- [Hello-Agents](./README.md)
   - [前言](./前言.md)
   - [第一章 初识智能体](./chapter1/第一章%20初识智能体.md)
   - [第二章 xxxx](./chapter2/第二章%20xxxx.md)
