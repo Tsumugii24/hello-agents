@@ -62,7 +62,7 @@
 
 ### PDF 版本下载
 
-&emsp;&emsp;*<strong>本 Hello-Agents PDF 教程完全开源免费。为防止各类营销号加水印后贩卖给多智能体系统初学者，我们特地在 PDF 文件中预先添加了不影响阅读的 Datawhale 开源标志水印，敬请谅解～</strong>*
+&emsp;&emsp;<strong>本 Hello-Agents PDF 教程完全开源免费。为防止各类营销号加水印后贩卖给多智能体系统初学者，我们特地在 PDF 文件中预先添加了不影响阅读的 Datawhale 开源标志水印，敬请谅解～</strong>
 
 > *Hello-Agents PDF : https://github.com/datawhalechina/Hello-Agents/releases/tag/PDF*  
 > *Hello-Agents PDF 国内下载地址 : https://www.datawhale.cn/learn/summary/XXX* 
