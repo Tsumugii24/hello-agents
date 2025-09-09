@@ -1,5 +1,5 @@
 <div align='center'>
-  <img src="./images/helloagents.png" alt="alt text" width="100%">
+  <img src="./images/hello-agents.png" alt="alt text" width="100%">
   <h1>Hello-Agents</h1>
   <h3>🤖 动手学多智能体系统实战教程</h3>
   <p><em>从基础理论到实际应用，全面掌握多智能体系统的设计与实现</em></p>
