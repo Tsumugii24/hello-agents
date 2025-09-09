@@ -100,7 +100,7 @@
 
 ### 核心贡献者
 - [陈思州-项目负责人](https://github.com/jjyaoao) (Datawhale成员)
-- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale精英助教)  
+- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员)  
 - [姜舒凡-项目负责人](https://github.com/Tsumugii24)（Datawhale成员）
 
 ### 特别感谢
