@@ -40,7 +40,7 @@ def fix_bold_format_in_file(file_path):
 def main():
     """主函数"""
     # 查找所有Markdown文件
-    docs_dir = "/Users/suntao/Documents/GitHub/hello-agents/docs"
+    docs_dir = ""
     
     # 递归查找所有.md文件
     md_files = []
