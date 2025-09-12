@@ -136,14 +136,10 @@ import re
 
 # --- 1. 配置LLM客户端 ---
 # 请根据您使用的服务，将这里替换成对应的凭证和地址
-# API_KEY = "YOUR_API_KEY"
-# BASE_URL = "YOUR_BASE_URL"
-# MODEL_ID = "YOUR_MODEL_ID"
-# os.environ['TAVILY_API_KEY'] = "YOUR_TAVILY_API_KEY"
-MODEL_ID="Qwen/Qwen2.5-72B-Instruct"
-API_KEY="ms-b9909ba3-f6f5-4413-9565-c9a741d8b032"
-BASE_URL="https://api-inference.modelscope.cn/v1/"
-os.environ['TAVILY_API_KEY'] = "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"
+API_KEY = "YOUR_API_KEY"
+BASE_URL = "YOUR_BASE_URL"
+MODEL_ID = "YOUR_MODEL_ID"
+os.environ['TAVILY_API_KEY'] = "YOUR_TAVILY_API_KEY"
 
 llm = OpenAICompatibleClient(
     model=MODEL_ID,
