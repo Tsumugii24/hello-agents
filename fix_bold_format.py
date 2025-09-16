@@ -15,13 +15,26 @@ def fix_bold_format_in_file(file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
+        # 先找出所有代码块的位置
+        code_blocks = []
+        code_pattern = r'```[\s\S]*?```'
+        for match in re.finditer(code_pattern, content):
+            code_blocks.append((match.start(), match.end()))
+        
         # 使用正则表达式匹配 **文本** 并替换为 <strong>文本</strong>
-        # 确保不匹配已经是HTML标签的情况
+        # 确保不匹配已经是HTML标签的情况和代码块内的情况
         pattern = r'\*\*([^*]+?)\*\*'
-        replacement = r'<strong>\1</strong>'
+        
+        def replacement_func(match):
+            # 检查匹配位置是否在代码块内
+            match_start = match.start()
+            for block_start, block_end in code_blocks:
+                if block_start <= match_start < block_end:
+                    return match.group(0)  # 在代码块内，不替换
+            return f'<strong>{match.group(1)}</strong>'  # 不在代码块内，进行替换
         
         # 执行替换
-        new_content = re.sub(pattern, replacement, content)
+        new_content = re.sub(pattern, replacement_func, content)
         
         # 如果内容有变化，写回文件
         if new_content != content:

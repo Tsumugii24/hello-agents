@@ -38,7 +38,7 @@
 | <strong>第二部分：构建你的大语言模型智能体</strong> |  |  |
 | [第四章 智能体经典范式构建](./docs/chapter4/第四章%20智能体经典范式构建.md) | 手把手实现 ReAct、Plan-and-Solve、Reflection | ✅ |
 | [第五章 基于低代码平台的智能体搭建](./docs/chapter5/第五章%20基于低代码平台的智能体搭建.md) | 了解Coze、n8n等商业化低代码智能体平台使用 | 🚧 |
-| [第六章 框架开发实践](./docs/chapter6/第六章%20框架开发实践.md) | AutoGen、AgentScope、LangGraph 等主流框架应用 | 🚧 |
+| [第六章 框架开发实践](./docs/chapter6/第六章%20框架开发实践.md) | AutoGen、AgentScope、LangGraph 等主流框架应用 | ✅ |
 | [第七章 构建你的Agent框架](./docs/chapter7/第七章%20构建你的Agent框架.md) | 从0开始构建智能体框架 | 🚧 |
 | <strong>第三部分：高级知识扩展</strong> |  |  |
 | [第八章 推理与规划](./docs/chapter8/第八章%20推理与规划.md) | CoT, 逻辑推理, 搜索与规划 | 🚧 |
@@ -55,15 +55,13 @@
 
 ### 社区贡献精选 (Community Blog)
 
-&emsp;&emsp;欢迎大家将在学习 Hello-Agents 或 Agent 相关技术中的独到见解、实践总结，以 PR 的形式贡献到社区精选。如果是独立于正文的内容，也可以投稿至Extra-Chapter！如果是独立于正文的内容，也可以投稿至Extra-Chapter！
-
-<strong>暂无内容，期待你的第一次贡献！</strong>
+&emsp;&emsp;欢迎大家将在学习 Hello-Agents 或 Agent 相关技术中的独到见解、实践总结，以 PR 的形式贡献到社区精选。如果是独立于正文的内容，也可以投稿至Extra-Chapter！<strong>期待你的第一次贡献！</strong>
 
 ### PDF 版本下载
 
 &emsp;&emsp;*<strong>本 Hello-Agents PDF 教程完全开源免费。为防止各类营销号加水印后贩卖给多智能体系统初学者，我们特地在 PDF 文件中预先添加了不影响阅读的 Datawhale 开源标志水印，敬请谅解～</strong>*
 
-> *Hello-Agents PDF : https://github.com/datawhalechina/Hello-Agents/releases/tag/PDF*  
+> *Hello-Agents PDF : https://github.com/datawhalechina/Hello-Agents/releases/tag/PDF(尚未完成)*  
 > *Hello-Agents PDF 国内下载地址 : https://www.datawhale.cn/learn/summary/XXX* 
 
 ## 💡 如何学习
@@ -118,7 +116,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./docs/images/star-history-2025913.png" alt="Datawhale" width="90%">
+    <img src="./docs/images/star-history-2025916.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">
