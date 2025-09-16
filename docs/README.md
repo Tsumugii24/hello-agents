@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/github/forks/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub forks"/>
   <img src="https://img.shields.io/badge/language-Chinese-brightgreen?style=flat" alt="Language"/>
   <a href="https://github.com/datawhalechina/Hello-Agents"><img src="https://img.shields.io/badge/GitHub-Project-blue?style=flat&logo=github" alt="GitHub Project"></a>
+  <a href="https://datawhalechina.github.io/hello-agents/"><img src="https://img.shields.io/badge/在线阅读-Online%20Reading-green?style=flat&logo=gitbook" alt="Online Reading"></a>
 </div>
 
 ---
@@ -16,6 +17,16 @@
 &emsp;&emsp;如果说2024年是"百模大战"的元年，那么2025年无疑开启了"Agent元年"。技术的焦点正从训练更大的基础模型，转向构建更聪明的智能体应用。然而，当前系统性、重实践的教程却极度匮乏。为此，我们发起了 Hello-Agents 项目，希望能为社区提供一本从零开始、理论与实战并重的多智能体系统构建指南。
 
 &emsp;&emsp;Hello-Agents 是一个<strong>系统性的多智能体学习教程</strong>，旨在"授人以渔"。教程将带领你穿透框架表象，从智能体的核心原理出发，深入其核心架构，理解其经典范式，并最终亲手构建起属于自己的、强大的多智能体应用。我们相信，最好的学习方式就是动手实践。希望这本书能成为你探索智能体世界的起点，能够从一名 LLM 的"使用者"，蜕变为一名智能系统的"构建者"。
+
+## 🌐 在线阅读
+
+**[📖 点击这里开始在线阅读](https://datawhalechina.github.io/hello-agents/)**
+
+> 推荐使用在线阅读方式，享受更好的阅读体验，包括：
+> - 📱 响应式设计，支持手机、平板、电脑
+> - 🔍 全文搜索功能
+> - 📑 自动生成目录导航
+> - 🎨 优雅的阅读界面
 
 ### ✨ 你将收获什么？
 

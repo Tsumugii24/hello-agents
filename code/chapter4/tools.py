@@ -61,6 +61,9 @@ class ToolExecutor:
         """
         向工具箱中注册一个新工具。
         """
+        if name in self.tools:
+            print(f"警告：工具 '{name}' 已存在，将被覆盖。")
+        
         self.tools[name] = {"description": description, "func": func}
         print(f"工具 '{name}' 已注册。")
 
