@@ -10,11 +10,6 @@ from dotenv import load_dotenv
 # 加载环境变量
 load_dotenv()
 
-# # 导入 HelloAgentsLLM
-# import sys
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
-# from llm_client import HelloAgentsLLM
-
 # 先测试一个版本，使用 OpenAI 客户端
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 from autogen_agentchat.agents import AssistantAgent, UserProxyAgent
