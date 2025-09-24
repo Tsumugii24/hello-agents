@@ -102,6 +102,30 @@ pip install hello-agents==0.1.1
 
 我们建议采用"先体验，后实现"的学习路径。在本章中，我们提供了完整的测试文件，你可以重写核心函数并运行测试，以检验你的实现是否正确。这种学习方式既保证了实践性，又确保了学习效果。如果你想深入了解框架的实现细节，或者希望参与到框架的开发中来，可以访问这个[GitHub仓库](https://github.com/jjyaoao/helloagents)。
 
+在开始之前，让我们用30秒体验使用Hello-agents构建简单智能体！
+
+```python
+# 配置好同级文件夹下.env中的大模型API, 可参考code文件夹配套的.env.example，也可以拿前几章的案例的.env文件复用。
+from hello_agents import SimpleAgent, HelloAgentsLLM
+
+# 创建LLM实例 - 框架自动检测provider
+llm = HelloAgentsLLM()
+
+# 或手动指定provider（可选）
+# llm = HelloAgentsLLM(provider="modelscope")
+
+# 创建SimpleAgent
+agent = SimpleAgent(
+    name="AI助手",
+    llm=llm,
+    system_prompt="你是一个有用的AI助手"
+)
+
+# 开始对话
+response = agent.run("你好！请介绍一下自己")
+print(response)
+```
+
 
 
 ## 7.2 HelloAgentsLLM扩展
