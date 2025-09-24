@@ -48,9 +48,9 @@
 | [第四章 智能体经典范式构建](./docs/chapter4/第四章%20智能体经典范式构建.md) | 手把手实现 ReAct、Plan-and-Solve、Reflection | ✅ |
 | [第五章 基于低代码平台的智能体搭建](./docs/chapter5/第五章%20基于低代码平台的智能体搭建.md) | 了解Coze、n8n等商业化低代码智能体平台使用 | 🚧 |
 | [第六章 框架开发实践](./docs/chapter6/第六章%20框架开发实践.md) | AutoGen、AgentScope、LangGraph 等主流框架应用 | ✅ |
-| [第七章 构建你的Agent框架](./docs/chapter7/第七章%20构建你的Agent框架.md) | 从0开始构建智能体框架 | 🚧 |
+| [第七章 构建你的Agent框架](./docs/chapter7/第七章%20构建你的Agent框架.md) | 从0开始构建智能体框架 | ✅ |
 | <strong>第三部分：高级知识扩展</strong> |  |  |
-| [第八章 记忆与检索](./docs/chapter9/第八章%20记忆与检索.md) | RAG, 向量数据库, 记忆系统 | 🚧 |
+| [第八章 记忆与检索](./docs/chapter9/第八章%20记忆与检索.md) | 记忆系统, RAG, 图\向量数据库 | 🚧 |
 | [第九章 上下文工程](./docs/chapter8/第九章%20上下文工程.md) | 持续交互的"情境理解" | 🚧 |
 | [第十章 智能体通信协议](./docs/chapter10/第十章%20智能体通信协议.md) | MCP, A2A, ANP 等协议解析 | 🚧 |
 | [第十一章 多智能体系统](./docs/chapter11/第十一章%20多智能体系统.md) | 协作、通信、博弈论与 AI Society | 🚧 |
@@ -125,7 +125,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./docs/images/star-history-2025916.png" alt="Datawhale" width="90%">
+    <img src="./docs/images/star-history-2025922.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">
