@@ -43,7 +43,7 @@
 | <strong>第一部分：智能体与语言模型基础</strong> |  |  |
 | [第一章 初识智能体](./docs/chapter1/第一章%20初识智能体.md) | 智能体定义、类型、范式与应用 | ✅ |
 | [第二章 智能体发展史](./docs/chapter2/第二章%20智能体发展史.md) | 从符号主义到 LLM 驱动的智能体演进 | ✅ |
-| [第三章 大语言模型基础](./docs/chapter3/第三章%20大语言模型基础.md) | Transformer、提示、主流LLM及其局限 | ✅ |
+| [第三章 大语言模型基础](./docs/chapter3/第三章%20大模型基础.md) | Transformer、提示、主流LLM及其局限 | ✅ |
 | <strong>第二部分：构建你的大语言模型智能体</strong> |  |  |
 | [第四章 智能体经典范式构建](./docs/chapter4/第四章%20智能体经典范式构建.md) | 手把手实现 ReAct、Plan-and-Solve、Reflection | ✅ |
 | [第五章 基于低代码平台的智能体搭建](./docs/chapter5/第五章%20基于低代码平台的智能体搭建.md) | 了解Coze、n8n等商业化低代码智能体平台使用 | 🚧 |
