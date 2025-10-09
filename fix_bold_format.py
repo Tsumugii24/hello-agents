@@ -53,7 +53,7 @@ def fix_bold_format_in_file(file_path):
 def main():
     """主函数"""
     # 查找所有Markdown文件
-    docs_dir = "xxx/xxx"
+    docs_dir = "D:\code\multiAgentBok\HL-MAS\hello-agents\docs\chapter10"
     
     # 递归查找所有.md文件
     md_files = []
