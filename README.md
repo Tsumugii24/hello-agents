@@ -56,7 +56,7 @@
 | [第十一章 Agentic-RL](./docs/chapter11/第十一章%20Agentic-RL.md) | 基于LLM的智能体强化学习 | 🚧 |
 | [第十二章 智能体性能评估](./docs/chapter12/第十二章%20智能体性能评估.md) | 核心指标、基准测试与评估框架 | ✅ |
 | <strong>第四部分：综合案例进阶</strong> |  |  |
-| [第十三章 智能旅行助手](./docs/chapter13/第十三章%20智能旅行助手.md) | RAG与多智能体协作的真实世界应用 | 🚧 |
+| [第十三章 智能旅行助手](./docs/chapter13/第十三章%20智能旅行助手.md) | MCP与多智能体协作的真实世界应用 | ✅ |
 | [第十四章 自动化深度研究智能体](./docs/chapter14/第十四章%20自动化深度研究智能体.md) | DeepResearch Agent 复现与解析 | 🚧 |
 | [第十五章 构建赛博小镇](./docs/chapter15/第十五章%20构建赛博小镇.md) | Agent 与游戏的结合，模拟社会动态 | 🚧 |
 | <strong>第五部分：毕业设计及未来展望</strong> |  |  |
@@ -111,7 +111,7 @@
 - [陈思州-项目负责人](https://github.com/jjyaoao) (Datawhale成员)
 - [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员)  
 - [姜舒凡-项目负责人](https://github.com/Tsumugii24) (Datawhale成员)
-- [Jason-Datawhale意向成员](https://github.com/HeteroCat) (第五章Coze\Dify\FastGPT内容贡献者, Agent开发工程师)
+- [Jason-Datawhale意向成员](https://github.com/HeteroCat) (Agent开发工程师, 第五章内容贡献者)
 
 ### 特别感谢
 - 感谢 [@Sm1les](https://github.com/Sm1les) 对本项目的帮助与支持
