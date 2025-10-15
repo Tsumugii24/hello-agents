@@ -66,6 +66,11 @@
 
 &emsp;&emsp;欢迎大家将在学习 Hello-Agents 或 Agent 相关技术中的独到见解、实践总结，以 PR 的形式贡献到社区精选。如果是独立于正文的内容，也可以投稿至Extra-Chapter！<strong>期待你的第一次贡献！</strong>
 
+| 社区精选 | 内容总结 |
+| --- | --- |
+| [Agent面试题总结](./Extra-Chapter/Extra01-面试问题总结.md) | Agent岗位相关面试问题 |
+| [Agent面试题答案](./Extra-Chapter/Extra01-参考答案.md) | 相关面试问题答案 |
+
 ### PDF 版本下载
 
 &emsp;&emsp;*<strong>本 Hello-Agents PDF 教程完全开源免费。为防止各类营销号加水印后贩卖给多智能体系统初学者，我们特地在 PDF 文件中预先添加了不影响阅读的 Datawhale 开源标志水印，敬请谅解～</strong>*
