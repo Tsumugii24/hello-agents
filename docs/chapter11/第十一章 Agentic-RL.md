@@ -154,7 +154,7 @@ HelloAgents的Agentic RL模块采用四层架构设计，如图11.3所示。
   <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/11-figures/11-3.png" alt="" width="85%"/>
   <p>图 11.3 HelloAgents Agentic RL架构</p>
 </div>
-最底层是<strong>数据集层</strong>，包含`GSM8KDataset`类、`create_sft_dataset()`函数和`create_rl_dataset()`函数，负责数据加载和格式转换。第二层是<strong>奖励函数层</strong>，包含`MathRewardFunction`基类、`AccuracyReward`准确率奖励、`LengthPenaltyReward`长度惩罚、`StepReward`步骤奖励，以及便捷创建函数`create_*_reward()`，负责定义什么是好的行为。第三层是<strong>训练器层</strong>，包含`SFTTrainerWrapper`和`GRPOTrainerWrapper`，负责具体的训练逻辑和LoRA支持。最顶层是<strong>统一接口层</strong>，提供`RLTrainingTool`统一训练工具，支持四种操作:`action="train"`(训练模型)、`action="load_dataset"`(加载数据集)、`action="create_reward"`(创建奖励函数)、`action="evaluate"`(评估模型)。
+最底层是<strong>数据集层</strong>，包含`GSM8KDataset`类、`create_sft_dataset()`函数和`create_rl_dataset()`函数，负责数据加载和格式转换。第二层是<strong>奖励函数层</strong>，包含`MathRewardFunction`基类、`AccuracyReward`准确率奖励、`LengthPenaltyReward`长度惩罚、`StepReward`步骤奖励，以及便捷创建函数`create_*_reward()`，负责定义什么是好的行为。第三层是<strong>训练器层</strong>，包含`SFTTrainerWrapper`和`GRPOTrainerWrapper`，负责具体的训练逻辑和LoRA支持。最顶层是<strong>统一接口层</strong>，提供`RLTrainingTool`统一训练工具，支持四种操作:<code>action="train"</code>(训练模型)、<code>action="load_dataset"</code>(加载数据集)、<code>action="create_reward"</code>(创建奖励函数)、<code>action="evaluate"</code>(评估模型)。
 
 ### 11.1.5 快速上手示例
 
