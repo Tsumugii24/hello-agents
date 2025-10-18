@@ -21,15 +21,15 @@ def test_react_agent():
     # 注册计算器工具
     try:
         from hello_agents import calculate
-        tool_registry.register_tool("calculate", calculate, "执行数学计算，支持基本的四则运算")
+        tool_registry.register_function("calculate", "执行数学计算，支持基本的四则运算", calculate)
         print("✅ 计算器工具注册成功")
     except ImportError:
         print("⚠️ 计算器工具未找到，跳过注册")
-    
+
     # 注册搜索工具（如果可用）
     try:
         from hello_agents import search
-        tool_registry.register_tool("search", search, "搜索互联网信息")
+        tool_registry.register_function("search", "搜索互联网信息", search)
         print("✅ 搜索工具注册成功")
     except ImportError:
         print("⚠️ 搜索工具未找到，跳过注册")
