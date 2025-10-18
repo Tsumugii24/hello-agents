@@ -96,7 +96,8 @@ $$
   <p>表 11.1 PBRFT与Agentic RL对比</p>
   <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/11-figures/11-table-1.png" alt="" width="85%"/>
 </div>
-在状态方面，PBRFT的状态 $s_0$ 仅由用户提示构成，时间跨度 $T=1$(单步)，状态不变化，可以表示为 $s_0 = \text{prompt}$。而Agentic RL的状态 $s_t$ 包含历史观察和上下文，时间跨度 $T \gg 1$(多步)，状态随行动演化，可以表示为 $s_t = (\text{prompt}, o_1, o_2, ..., o_t)$,其中 $o_t$ 是第 $t$ 步的观察(如工具返回结果、环境反馈等)。
+
+在状态方面，PBRFT的状态 $s_0$ 仅由用户提示构成，时间跨度 $T=1$(单步)，状态不变化，可以表示为 $s_0 = \text{prompt}$。而Agentic RL的状态 $s_t$ 包含历史观察和上下文，时间跨度 $T \gg 1$(多步)，状态随行动演化，可以表示为 $s_t = (\text{prompt}, o_1, o_2, ..., o_t)$，其中 $o_t$ 是第 $t$ 步的观察(如工具返回结果、环境反馈等)。
 
 在行动方面，PBRFT的行动空间只有文本生成，单一行动类型，表示为 $a = y \sim \pi_\theta(y|s_0)$。而Agentic RL的行动空间包含文本生成、工具调用、环境操作等多种类型，表示为 $a_t \in \{a_t^{\text{text}}, a_t^{\text{tool}}\}$，例如 $a_t^{\text{text}}$ 是生成思考过程或回答，$a_t^{\text{tool}}$ 是调用计算器、搜索引擎等工具。
 
