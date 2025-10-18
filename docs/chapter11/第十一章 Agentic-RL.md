@@ -2152,7 +2152,7 @@ print(f"最佳准确率: {best_accuracy:.2%}")
 
 随机搜索的优点是效率高，适合参数空间大的情况。缺点是可能错过最优解。
 
-**（3）贝叶斯优化<strong>
+<strong>（3）贝叶斯优化</strong>
 
 贝叶斯优化(Bayesian Optimization)使用概率模型指导搜索，更加智能。可以使用Optuna等库:
 
@@ -2205,13 +2205,13 @@ print(f"最佳准确率: {study.best_value:.2%}")
 
 当数据量和模型规模增大时，单GPU训练会变得非常缓慢。这时我们需要使用分布式训练来加速训练过程。HelloAgents基于TRL和Hugging Face Accelerate，天然支持多GPU和多节点分布式训练
 
-</strong>方案选择建议<strong>:
+<strong>方案选择建议</strong>:
 
-- </strong>单机多卡(2-8卡)<strong>: 使用DDP，简单高效
-- </strong>大模型(>7B)<strong>: 使用DeepSpeed ZeRO-2或ZeRO-3
-- </strong>多节点集群<strong>: 使用DeepSpeed ZeRO-3 + Offload
+- <strong>单机多卡(2-8卡)</strong>: 使用DDP，简单高效
+- <strong>大模型(>7B)</strong>: 使用DeepSpeed ZeRO-2或ZeRO-3
+- <strong>多节点集群</strong>: 使用DeepSpeed ZeRO-3 + Offload
 
-</strong>（1）配置Accelerate<strong>
+<strong>（1）配置Accelerate</strong>
 
 首先需要创建Accelerate配置文件。运行以下命令:
 
@@ -2246,11 +2246,11 @@ How many GPU(s) should be used for distributed training?
 
 这会在`~/.cache/huggingface/accelerate/default_config.yaml`生成配置文件。
 
-</strong>（2）使用DDP训练<strong>
+<strong>（2）使用DDP训练</strong>
 
-</strong>数据并行(DDP)<strong>是最简单的分布式方案，每个GPU持有完整模型副本，数据被分割到各个GPU上。
+<strong>数据并行(DDP)</strong>是最简单的分布式方案，每个GPU持有完整模型副本，数据被分割到各个GPU上。
 
-</strong>Accelerate配置文件<strong> (`multi_gpu_ddp.yaml`):
+<strong>Accelerate配置文件</strong> (`multi_gpu_ddp.yaml`):
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -2262,7 +2262,7 @@ gpu_ids: all
 mixed_precision: fp16
 ```
 
-</strong>训练脚本<strong> (无需修改):
+<strong>训练脚本</strong> (无需修改):
 
 ```python
 from hello_agents.tools import RLTrainingTool
@@ -2281,7 +2281,7 @@ result = rl_tool.run({
 })
 ```
 
-</strong>启动训练<strong>:
+<strong>启动训练</strong>:
 
 ```bash
 # 使用配置文件
@@ -2291,11 +2291,11 @@ accelerate launch --config_file multi_gpu_ddp.yaml train_script.py
 accelerate launch --num_processes 4 --mixed_precision fp16 train_script.py
 ```
 
-</strong>（3）使用DeepSpeed ZeRO训练<strong>
+</strong>（3）使用DeepSpeed ZeRO训练</strong>
 
-</strong>DeepSpeed ZeRO<strong>通过分片优化器状态、梯度和模型参数，大幅降低显存占用，支持更大的模型和batch size。
+</strong>DeepSpeed ZeRO</strong>通过分片优化器状态、梯度和模型参数，大幅降低显存占用，支持更大的模型和batch size。
 
-</strong>ZeRO-2配置文件<strong> (`deepspeed_zero2.yaml`):
+</strong>ZeRO-2配置文件</strong> (`deepspeed_zero2.yaml`):
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -2314,7 +2314,7 @@ deepspeed_config:
   zero_stage: 2  # ZeRO-2
 ```
 
-</strong>ZeRO-3配置文件<strong> (`deepspeed_zero3.yaml`):
+</strong>ZeRO-3配置文件</strong> (`deepspeed_zero3.yaml`):
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -2333,7 +2333,7 @@ deepspeed_config:
   zero_stage: 3  # ZeRO-3
 ```
 
-</strong>启动训练<strong>:
+<strong>启动训练</strong>:
 
 ```bash
 # ZeRO-2
@@ -2350,11 +2350,11 @@ accelerate launch --config_file deepspeed_zero3.yaml train_script.py
   <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/11-figures/11-table-9.png" alt="" width="85%"/>
 </div>
 
-</strong>（4）多节点训练<strong>
+<strong>（4）多节点训练</strong>
 
 对于超大规模训练，可以使用多个节点(机器)。
 
-</strong>主节点配置<strong> (`multi_node_main.yaml`):
+<strong>主节点配置</strong> (`multi_node_main.yaml`):
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -2372,14 +2372,14 @@ deepspeed_config:
   offload_param_device: cpu
 ```
 
-</strong>工作节点配置<strong> (修改`machine_rank`为1, 2, 3):
+<strong>工作节点配置</strong> (修改`machine_rank`为1, 2, 3):
 
 ```yaml
 machine_rank: 1  # 工作节点1
 # 其他配置相同
 ```
 
-</strong>启动训练<strong>:
+<strong>启动训练</strong>:
 
 ```bash
 # 在主节点上
@@ -2395,9 +2395,9 @@ accelerate launch --config_file multi_node_worker2.yaml train_script.py
 accelerate launch --config_file multi_node_worker3.yaml train_script.py
 ```
 
-</strong>（5）分布式训练最佳实践<strong>
+<strong>（5）分布式训练最佳实践</strong>
 
-</strong>1. Batch Size调整<strong>
+<strong>1. Batch Size调整</strong>
 
 分布式训练时，总batch size = `per_device_batch_size × num_gpus × gradient_accumulation_steps`
 
@@ -2406,7 +2406,7 @@ accelerate launch --config_file multi_node_worker3.yaml train_script.py
 # 4GPU DDP: batch_size=4, gradient_accumulation=1, 总batch=16 (保持一致)
 ```
 
-</strong>2. 学习率缩放<strong>
+<strong>2. 学习率缩放</strong>
 
 使用线性缩放规则: `lr_new = lr_base × sqrt(total_batch_size_new / total_batch_size_base)`
 
@@ -2415,7 +2415,7 @@ accelerate launch --config_file multi_node_worker3.yaml train_script.py
 # 4GPU: batch=64, lr=5e-5 × sqrt(64/16) = 1e-4
 ```
 
-</strong>3. 监控和调试<strong>
+<strong>3. 监控和调试</strong>
 
 ```python
 # 启用详细日志
@@ -2432,7 +2432,7 @@ watch -n 1 nvidia-smi
 
 训练完成后，我们需要将模型部署到生产环境。下面是一些部署建议。
 
-</strong>（1）模型导出<strong>
+<strong>（1）模型导出</strong>
 
 将LoRA权重合并到基础模型，方便部署:
 
@@ -2459,7 +2459,7 @@ tokenizer.save_pretrained("./models/merged_model")
 print("✓ 模型已导出到: ./models/merged_model")
 ```
 
-</strong>（2）推理优化<strong>
+<strong>（2）推理优化</strong>
 
 使用量化和优化技术加速推理:
 
@@ -2482,7 +2482,7 @@ def generate_answer(question):
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
     outputs = model.generate(
-        </strong>inputs,
+        **inputs,
         max_new_tokens=512,
         temperature=0.7,
         do_sample=True,
@@ -2550,34 +2550,34 @@ def generate(question: Question):
 
 在本章中，我们系统地学习了Agentic RL的理论和实践，从基础概念到完整的训练流程，从数据准备到模型部署。让我们回顾一下本章的主要内容。
 
-**（1）Agentic RL的本质<strong>
+<strong>（1）Agentic RL的本质</strong>
 
 Agentic RL是将LLM作为可学习策略，嵌入到智能体的感知-决策-执行循环中，通过强化学习优化智能体在多步任务中的表现。它与传统的PBRFT(Preference-Based Reinforcement Fine-Tuning)的核心区别在于:
 
-- </strong>任务性质<strong>:从单轮对话优化扩展到多步序贯决策
-- </strong>状态空间<strong>:从静态提示扩展到动态演化的环境状态
-- </strong>行动空间<strong>:从纯文本生成扩展到文本+工具+环境操作
-- </strong>奖励设计<strong>:从单步质量评估扩展到长期累积回报
-- </strong>优化目标<strong>:从短期响应质量扩展到长期任务成功
+- <strong>任务性质</strong>:从单轮对话优化扩展到多步序贯决策
+- <strong>状态空间</strong>:从静态提示扩展到动态演化的环境状态
+- <strong>行动空间</strong>:从纯文本生成扩展到文本+工具+环境操作
+- <strong>奖励设计</strong>:从单步质量评估扩展到长期累积回报
+- <strong>优化目标</strong>:从短期响应质量扩展到长期任务成功
 
-</strong>（2）六大核心能力<strong>
+<strong>（2）六大核心能力</strong>
 
 Agentic RL旨在提升智能体的六大核心能力:
 
-1. </strong>推理(Reasoning)<strong>:多步逻辑推导，学习推理策略
-2. </strong>工具使用(Tool Use)<strong>:API/工具调用，学会何时用、如何用
-3. </strong>记忆(Memory)<strong>:长期信息保持，学习记忆管理
-4. </strong>规划(Planning)<strong>:行动序列规划，学会动态规划
-5. </strong>自我改进(Self-Improvement)<strong>:自我反思优化，从错误中学习
-6. </strong>感知(Perception)<strong>:多模态理解，视觉推理和工具使用
+1. <strong>推理(Reasoning)</strong>:多步逻辑推导，学习推理策略
+2. <strong>工具使用(Tool Use)</strong>:API/工具调用，学会何时用、如何用
+3. <strong>记忆(Memory)</strong>:长期信息保持，学习记忆管理
+4. <strong>规划(Planning)</strong>:行动序列规划，学会动态规划
+5. <strong>自我改进(Self-Improvement)</strong>:自我反思优化，从错误中学习
+6. <strong>感知(Perception)</strong>:多模态理解，视觉推理和工具使用
 
-</strong>（3）训练流程<strong>
+<strong>（3）训练流程</strong>
 
 完整的Agentic RL训练流程包括:
 
-1. </strong>预训练(Pretraining)<strong>:在大规模文本上学习语言知识(通常使用现成的预训练模型)
-2. </strong>监督微调(SFT)<strong>:学习任务格式和基础推理能力
-3. </strong>强化学习(RL)<strong>:通过试错优化推理策略，超越训练数据质量
+1. <strong>预训练(Pretraining)</strong>:在大规模文本上学习语言知识(通常使用现成的预训练模型)
+2. <strong>监督微调(SFT)</strong>:学习任务格式和基础推理能力
+3. <strong>强化学习(RL)</strong>:通过试错优化推理策略，超越训练数据质量
 
 其中，SFT是基础，RL是提升。没有SFT的基础，RL很难成功;没有RL的优化，模型只能模仿训练数据。
 
@@ -2585,23 +2585,23 @@ Agentic RL旨在提升智能体的六大核心能力:
 
 基础阶段
 
-1. </strong>强化学习基础<strong>:学习MDP、策略梯度、PPO等基本概念
-2. </strong>LLM基础<strong>:了解Transformer、预训练、微调等技术
-3. </strong>实践HelloAgents<strong>:运行本章的示例代码，理解完整流程
+1. <strong>强化学习基础</strong>:学习MDP、策略梯度、PPO等基本概念
+2. <strong>LLM基础</strong>:了解Transformer、预训练、微调等技术
+3. <strong>实践HelloAgents</strong>:运行本章的示例代码，理解完整流程
 
 进阶阶段
 
-1. </strong>深入TRL<strong>:学习TRL库的实现，理解SFT和GRPO等算法的细节
-2. </strong>自定义数据集<strong>:使用自己的数据集训练模型
-3. </strong>自定义奖励函数<strong>:设计适合自己任务的奖励函数
-4. </strong>参数调优<strong>:系统地调优超参数，提升模型性能
+1. <strong>深入TRL</strong>:学习TRL库的实现，理解SFT和GRPO等算法的细节
+2. <strong>自定义数据集</strong>:使用自己的数据集训练模型
+3. <strong>自定义奖励函数</strong>:设计适合自己任务的奖励函数
+4. <strong>参数调优</strong>:系统地调优超参数，提升模型性能
 
 高级阶段
 
-1. </strong>多步推理<strong>:研究长序列推理任务
-2. </strong>工具学习<strong>:让智能体学会使用工具
-3. </strong>多智能体<strong>:研究多智能体协作
-4. </strong>前沿论文**:阅读最新的研究论文，跟进前沿进展
+1. <strong>多步推理</strong>:研究长序列推理任务
+2. <strong>工具学习</strong>:让智能体学会使用工具
+3. <strong>多智能体</strong>:研究多智能体协作
+4. <strong>前沿论文</strong>:阅读最新的研究论文，跟进前沿进展
 
 
 
