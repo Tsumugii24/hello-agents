@@ -2,7 +2,7 @@
 
 ## 11.1 从LLM训练到Agentic RL
 
-在前面的章节中，我们实现了多种智能体范式和通信协议。不过智能体处理更复杂的任务时表现不佳，自然会有疑问:**如何让智能体具备更强的推理能力?如何让智能体学会更好地使用工具?如何让智能体能够自我改进?**
+在前面的章节中，我们实现了多种智能体范式和通信协议。不过智能体处理更复杂的任务时表现不佳，自然会有疑问:<strong>如何让智能体具备更强的推理能力?如何让智能体学会更好地使用工具?如何让智能体能够自我改进?</strong>
 
 这正是Agentic RL(基于强化学习的智能体训练)要解决的核心问题。本章将为HelloAgents框架引入强化学习训练能力，让你能够训练出具备推理、工具使用等高级能力的智能体。我们将从LLM训练的基础知识开始，逐步深入到监督微调(Supervised Fine-Tuning，SFT)、群组相对策略优化(Group Relative Policy Optimization， GRPO)等实用技术，最终构建一个完整的智能体训练pipeline。
 
@@ -21,11 +21,11 @@ duck egg. How much in dollars does she make every day at the farmers' market?
 
 这个问题需要多步推理:首先计算Janet每天剩余的鸡蛋数量(16 - 3 - 4 = 9)，然后计算她的收入(9 × 2 = 18)。我们可以将这个任务映射到强化学习框架:
 
-- **智能体**:基于LLM的推理系统
-- **环境**:数学问题和验证系统
-- **状态**:当前的问题描述和已有的推理步骤
-- **行动**:生成下一步推理或最终答案
-- **奖励**:答案是否正确(正确+1，错误0)
+- <strong>智能体</strong>:基于LLM的推理系统
+- <strong>环境</strong>:数学问题和验证系统
+- <strong>状态</strong>:当前的问题描述和已有的推理步骤
+- <strong>行动</strong>:生成下一步推理或最终答案
+- <strong>奖励</strong>:答案是否正确(正确+1，错误0)
 
 传统的监督学习方法存在三个核心局限:一是数据质量完全决定训练质量，模型只能模仿训练数据，难以超越;二是缺乏探索能力，只能被动学习人类提供的路径;三是难以优化长期目标，无法精确优化多步推理的中间过程。
 
@@ -39,7 +39,7 @@ duck egg. How much in dollars does she make every day at the farmers' market?
   <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/11-figures/11-1.png" alt="" width="85%"/>
   <p>图 11.1 LLM训练全景图</p>
 </div>
-**预训练阶段**是LLM训练的第一阶段，目标是让模型学习语言的基本规律和世界知识。这个阶段使用海量的文本数据(通常是数TB级别)，通过自监督学习的方式训练模型。最常见的预训练任务是因果语言建模(Causal Language Modeling)，也称为下一个词预测(Next Token Prediction)。给定一个文本序列 $x_1, x_2, ..., x_t$，模型需要预测下一个词 $x_{t+1}$:
+<strong>预训练阶段</strong>是LLM训练的第一阶段，目标是让模型学习语言的基本规律和世界知识。这个阶段使用海量的文本数据(通常是数TB级别)，通过自监督学习的方式训练模型。最常见的预训练任务是因果语言建模(Causal Language Modeling)，也称为下一个词预测(Next Token Prediction)。给定一个文本序列 $x_1, x_2, ..., x_t$，模型需要预测下一个词 $x_{t+1}$:
 $$
 \mathcal{L}_{\text{pretrain}} = -\sum_{t=1}^{T} \log P(x_t | x_1, x_2, ..., x_{t-1}; \theta)
 $$
@@ -48,9 +48,9 @@ $$
 
 预训练阶段的特点是数据量巨大、计算成本高、学到的是通用的语言理解和生成能力、采用无监督学习。
 
-**后训练阶段**则是要解决预训练模型的不足。预训练后的模型虽然具备了强大的语言能力，但它只是一个"预测下一个词"的模型，并不知道如何遵循人类的指令、生成有帮助无害诚实的回答、拒绝不当的请求，以及以对话的方式与人交互。后训练阶段就是要解决这些问题，让模型对齐人类的偏好和价值观。
+<strong>后训练阶段</strong>则是要解决预训练模型的不足。预训练后的模型虽然具备了强大的语言能力，但它只是一个"预测下一个词"的模型，并不知道如何遵循人类的指令、生成有帮助无害诚实的回答、拒绝不当的请求，以及以对话的方式与人交互。后训练阶段就是要解决这些问题，让模型对齐人类的偏好和价值观。
 
-后训练通常包含三个步骤。第一步是**监督微调(SFT)**<sup>[15]</sup>，目标是让模型学会遵循指令和对话格式。训练数据是(prompt， completion)对，训练目标与预训练类似，仍然是最大化正确输出的概率:
+后训练通常包含三个步骤。第一步是<strong>监督微调(SFT)</strong><sup>[15]</sup>，目标是让模型学会遵循指令和对话格式。训练数据是(prompt， completion)对，训练目标与预训练类似，仍然是最大化正确输出的概率:
 
 $$
 \mathcal{L}_{\text{SFT}} = -\sum_{i=1}^{N} \log P(y_i | x_i; \theta)
@@ -58,7 +58,7 @@ $$
 
 其中 $x_i$ 是输入提示(prompt)，$y_i$ 是期望的输出，$N$ 是训练样本数量。SFT的特点是数据量较小、需要人工标注、快速见效、主要学习任务格式和基本能力。
 
-第二步是**奖励建模(RM)**。SFT后的模型虽然能遵循指令，但生成的回答质量参差不齐。我们需要一种方式来评估回答的质量，这就是奖励模型的作用<sup>[13,14]</sup>。奖励模型的训练数据是偏好对比数据,包含同一个问题的两个回答,一个更好(chosen),一个更差(rejected)。奖励模型的训练目标是学习人类的偏好:
+第二步是<strong>奖励建模(RM)</strong>。SFT后的模型虽然能遵循指令，但生成的回答质量参差不齐。我们需要一种方式来评估回答的质量，这就是奖励模型的作用<sup>[13,14]</sup>。奖励模型的训练数据是偏好对比数据,包含同一个问题的两个回答,一个更好(chosen),一个更差(rejected)。奖励模型的训练目标是学习人类的偏好:
 
 $$
 \mathcal{L}_{\text{RM}} = -\mathbb{E}_{(x, y_w, y_l)} [\log \sigma(r_\phi(x, y_w) - r_\phi(x, y_l))]
@@ -66,7 +66,7 @@ $$
 
 其中 $r_\phi(x, y)$ 是奖励模型，输入是(提示，回答)对，输出是质量分数;$y_w$ 是更好的回答(chosen)，$y_l$ 是更差的回答(rejected)，$\sigma$ 是sigmoid函数，目标是让奖励模型给更好的回答更高的分数。
 
-第三步是**强化学习微调**。有了奖励模型后，我们就可以用强化学习来优化语言模型，让它生成更高质量的回答。最经典的算法是PPO(Proximal Policy Optimization)<sup>[1]</sup>，训练目标是:
+第三步是<strong>强化学习微调</strong>。有了奖励模型后，我们就可以用强化学习来优化语言模型，让它生成更高质量的回答。最经典的算法是PPO(Proximal Policy Optimization)<sup>[1]</sup>，训练目标是:
 
 $$
 \mathcal{L}_{\text{PPO}} = \mathbb{E}_{x, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \cdot D_{KL}(\pi_\theta || \pi_{\text{ref}})
@@ -80,7 +80,7 @@ $$
 
 在理解了LLM的基础训练流程后，让我们来看看Agentic RL与传统训练方法的区别。传统的后训练(我们称之为PBRFT: Preference-Based Reinforcement Fine-Tuning)主要关注单轮对话的质量优化:给定一个用户问题，模型生成一个回答，然后根据回答的质量获得奖励。这种方式适合优化对话助手，但对于需要多步推理、工具使用、长期规划的智能体任务来说，就显得力不从心了。
 
-**Agentic RL**则是一种新的范式，它将LLM视为一个可学习的策略，嵌入在一个顺序决策循环中。在这个框架下，智能体需要在动态环境中与外部世界交互，执行多步行动来完成复杂任务，获得中间反馈来指导后续决策，优化长期累积奖励而非单步奖励。
+<strong>Agentic RL</strong>则是一种新的范式，它将LLM视为一个可学习的策略，嵌入在一个顺序决策循环中。在这个框架下，智能体需要在动态环境中与外部世界交互，执行多步行动来完成复杂任务，获得中间反馈来指导后续决策，优化长期累积奖励而非单步奖励。
 
 让我们通过一个具体例子来理解这个区别。在PBRFT场景中，用户问"请解释什么是强化学习"，模型生成完整回答，然后根据回答质量直接给分。而在Agentic RL场景中，用户请求"帮我分析这个GitHub仓库的代码质量"，智能体需要经历多个步骤:首先调用GitHub API获取仓库信息，成功获得仓库结构和文件列表，得到+0.1的奖;然后读取主要代码文件，成功获得代码内容，得到+0.1的奖励;接着分析代码质量合理，得到+0.2的奖励;最后生成分析报告质量高，得到+0.6的奖励。总奖励是所有步骤的累积:1.0。
 
@@ -129,17 +129,17 @@ Agentic RL的目标是赋予LLM智能体六大核心能力，如图11.2所示。
   <p>图 11.2 Agentic RL的六大核心能力</p>
 </div>
 
-**推理(Reasoning)**是指从给定信息中逻辑地得出结论的过程，是智能体的核心能力。传统的CoT提示方法依赖少样本示例，泛化能力有限;SFT只能模仿训练数据中的推理模式，难以创新。强化学习的优势在于通过试错学习有效的推理策略，发现训练数据中没有的推理路径，学会何时需要深度思考、何时可以快速回答。推理任务可以建模为序列决策问题，给定问题 $q$，智能体需要生成推理链 $c = (c_1, c_2, ..., c_n)$ 和最终答案 $a$。奖励函数通常设计为 $r(q, c, a) = 1$ if $a = a^*$ else $0$，训练目标是 $\max_\theta \mathbb{E}_{q, (c,a) \sim \pi_\theta} [r(q, c, a)]$。通过这种方式，模型学会生成高质量的推理链，而不仅仅是记忆答案。
+<strong>推理(Reasoning)</strong>是指从给定信息中逻辑地得出结论的过程，是智能体的核心能力。传统的CoT提示方法依赖少样本示例，泛化能力有限;SFT只能模仿训练数据中的推理模式，难以创新。强化学习的优势在于通过试错学习有效的推理策略，发现训练数据中没有的推理路径，学会何时需要深度思考、何时可以快速回答。推理任务可以建模为序列决策问题，给定问题 $q$，智能体需要生成推理链 $c = (c_1, c_2, ..., c_n)$ 和最终答案 $a$。奖励函数通常设计为 $r(q, c, a) = 1$ if $a = a^*$ else $0$，训练目标是 $\max_\theta \mathbb{E}_{q, (c,a) \sim \pi_\theta} [r(q, c, a)]$。通过这种方式，模型学会生成高质量的推理链，而不仅仅是记忆答案。
 
-**工具使用(Tool Use)**是指智能体调用外部工来完成任务的能力。在工具使用任务中，行动空间扩展为 $a_t \in \{a_t^{\text{think}}, a_t^{\text{tool}}\}$,其中 $a_t^{\text{think}}$ 是生成思考过程,$a_t^{\text{tool}} = (\text{tool\_name}， \text{arguments})$ 是调用工具。强化学习让智能体学会何时需要使用工具、选择哪个工具、如何组合多个工具。例如，在解决数学问题时，智能体需要学会何时使用计算器、何时使用代码解释器、何时直接推理。
+<strong>工具使用(Tool Use)</strong>是指智能体调用外部工来完成任务的能力。在工具使用任务中，行动空间扩展为 $a_t \in \{a_t^{\text{think}}, a_t^{\text{tool}}\}$,其中 $a_t^{\text{think}}$ 是生成思考过程,$a_t^{\text{tool}} = (\text{tool\_name}， \text{arguments})$ 是调用工具。强化学习让智能体学会何时需要使用工具、选择哪个工具、如何组合多个工具。例如，在解决数学问题时，智能体需要学会何时使用计算器、何时使用代码解释器、何时直接推理。
 
-**记忆(Memory)**是指智能体保持和重用过去信息的能力，对于长期任务至关重要。LLM的上下文窗口有限，静态检索策略(如RAG)无法针对任务优化。强化学习让智能体学会记忆管理策略:决定哪些信息值得记住、何时更新记忆、何时删除过时信息。这类似于人类的工作记忆，我们会主动管理大脑中的信息，保留重要的、遗忘无关的。
+<strong>记忆(Memory)</strong>是指智能体保持和重用过去信息的能力，对于长期任务至关重要。LLM的上下文窗口有限，静态检索策略(如RAG)无法针对任务优化。强化学习让智能体学会记忆管理策略:决定哪些信息值得记住、何时更新记忆、何时删除过时信息。这类似于人类的工作记忆，我们会主动管理大脑中的信息，保留重要的、遗忘无关的。
 
-**规划(Planning)**是指制定行动序列以达成目标的能力。传统的CoT是线性思考，无法回溯;提示工程使用静态规划模板，难以适应新情况。强化学习让智能体学会动态规划:通过试错发现有效的行动序列，学会权衡短期和长期收益。例如，在多步任务中，智能体可能需要先执行一些看似"绕路"的步骤，例如收集信息，才能最终完成任务。
+<strong>规划(Planning)</strong>是指制定行动序列以达成目标的能力。传统的CoT是线性思考，无法回溯;提示工程使用静态规划模板，难以适应新情况。强化学习让智能体学会动态规划:通过试错发现有效的行动序列，学会权衡短期和长期收益。例如，在多步任务中，智能体可能需要先执行一些看似"绕路"的步骤，例如收集信息，才能最终完成任务。
 
-**自我改进(Self-Improvement)**是指智能体回顾自身输出、纠正错误并优化策略的能力。强化学习让智能体学会自我反思:识别自己的错误、分析失败原因、调整策略。这种能力使得智能体能够在没有人工干预的情况下持续改进，类似于人类的"从错误中学习"。
+<strong>自我改进(Self-Improvement)</strong>是指智能体回顾自身输出、纠正错误并优化策略的能力。强化学习让智能体学会自我反思:识别自己的错误、分析失败原因、调整策略。这种能力使得智能体能够在没有人工干预的情况下持续改进，类似于人类的"从错误中学习"。
 
-**感知(Perception)**是指理解多模态信息的能力。例如，强化学习可以提升视觉推理能力，让模型学会使用视觉工具，学会视觉规划。这使得智能体不仅能理解文本，还能理解和操作视觉世界。
+<strong>感知(Perception)</strong>是指理解多模态信息的能力。例如，强化学习可以提升视觉推理能力，让模型学会使用视觉工具，学会视觉规划。这使得智能体不仅能理解文本，还能理解和操作视觉世界。
 
 ### 11.1.4 HelloAgents的Agentic RL设计
 
@@ -153,7 +153,7 @@ HelloAgents的Agentic RL模块采用四层架构设计，如图11.3所示。
   <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/11-figures/11-3.png" alt="" width="85%"/>
   <p>图 11.3 HelloAgents Agentic RL架构</p>
 </div>
-最底层是**数据集层**，包含`GSM8KDataset`类、`create_sft_dataset()`函数和`create_rl_dataset()`函数，负责数据加载和格式转换。第二层是**奖励函数层**，包含`MathRewardFunction`基类、`AccuracyReward`准确率奖励、`LengthPenaltyReward`长度惩罚、`StepReward`步骤奖励，以及便捷创建函数`create_*_reward()`，负责定义什么是好的行为。第三层是**训练器层**，包含`SFTTrainerWrapper`和`GRPOTrainerWrapper`，负责具体的训练逻辑和LoRA支持。最顶层是**统一接口层**，提供`RLTrainingTool`统一训练工具，支持四种操作:`action="train"`(训练模型)、`action="load_dataset"`(加载数据集)、`action="create_reward"`(创建奖励函数)、`action="evaluate"`(评估模型)。
+最底层是<strong>数据集层</strong>，包含`GSM8KDataset`类、`create_sft_dataset()`函数和`create_rl_dataset()`函数，负责数据加载和格式转换。第二层是<strong>奖励函数层</strong>，包含`MathRewardFunction`基类、`AccuracyReward`准确率奖励、`LengthPenaltyReward`长度惩罚、`StepReward`步骤奖励，以及便捷创建函数`create_*_reward()`，负责定义什么是好的行为。第三层是<strong>训练器层</strong>，包含`SFTTrainerWrapper`和`GRPOTrainerWrapper`，负责具体的训练逻辑和LoRA支持。最顶层是<strong>统一接口层</strong>，提供`RLTrainingTool`统一训练工具，支持四种操作:`action="train"`(训练模型)、`action="load_dataset"`(加载数据集)、`action="create_reward"`(创建奖励函数)、`action="evaluate"`(评估模型)。
 
 ### 11.1.5 快速上手示例
 
@@ -361,7 +361,7 @@ HelloAgents提供了三种内置奖励函数，可以单独使用或组合使用
   <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/11-figures/11-5.png" alt="" width="85%"/>
   <p>图 11.5 奖励函数设计</p>
 </div>
-**（1）准确率奖励**
+<strong>（1）准确率奖励</strong>
 
 准确率奖励(AccuracyReward)是最基础的奖励函数，它只关心答案是否正确。数学定义为:
 
@@ -407,7 +407,7 @@ print(f"描述: {reward_data['description']}")
 
 准确率奖励的优点是简单直接，容易理解和实现，适合有明确正确答案的任务。缺点是奖励稀疏，只有答案完全正确才有奖励，无法区分"接近正确"和"完全错误"，可能导致训练初期缺乏有效反馈。
 
-**（2）长度惩罚**
+<strong>（2）长度惩罚</strong>
 
 长度惩罚(LengthPenaltyReward)鼓励模型生成简洁的回答，避免冗长啰嗦。数学定义为:
 
@@ -448,7 +448,7 @@ print(f"惩罚权重: {reward_data['penalty_weight']}")
 
 长度惩罚的优点是鼓励简洁表达，避免模型生成冗余内容，可以控制推理成本(更短的输出意味着更少的token消耗)。缺点是可能抑制详细推理，需要仔细调整惩罚系数，不同任务的最优长度差异很大。
 
-**（3）步骤奖励**
+<strong>（3）步骤奖励</strong>
 
 步骤奖励(StepReward)鼓励模型生成清晰的推理步骤，提高可解释性。数学定义为:
 
@@ -489,19 +489,19 @@ print(f"步骤奖励: {reward_data['step_bonus']}")
 
 在实际应用中，我们通常会组合多个奖励函数，以平衡不同的目标。常见的组合策略包括:
 
-**准确率 + 长度惩罚**:鼓励简洁正确的答案，适合对话系统、问答系统。公式为:
+<strong>准确率 + 长度惩罚</strong>:鼓励简洁正确的答案，适合对话系统、问答系统。公式为:
 
 $$
 r = r_{\text{acc}} - \alpha \cdot \max(0, l - l_{\text{target}})
 $$
 
-**准确率 + 步骤奖励**:鼓励详细的推理过程，适合教育场景、可解释AI。公式为:
+<strong>准确率 + 步骤奖励</strong>:鼓励详细的推理过程，适合教育场景、可解释AI。公式为:
 
 $$
 r = r_{\text{acc}} + \beta \cdot s
 $$
 
-**三者平衡**:全面优化答案质量、简洁性和可解释性。公式为:
+<strong>三者平衡</strong>:全面优化答案质量、简洁性和可解释性。公式为:
 $$
 r = r_{\text{acc}} - \alpha \cdot \max(0, l - l_{\text{target}}) + \beta \cdot s
 $$
@@ -563,18 +563,18 @@ print("步骤奖励:", json.loads(step_result)['description'])
 
 在使用自定义数据集之前，需要了解两种训练格式的数据要求:
 
-**SFT格式**:用于监督微调，需要包含以下字段:
+<strong>SFT格式</strong>:用于监督微调，需要包含以下字段:
 - `prompt`: 输入提示(包含system和user消息)
 - `completion`: 期望的输出
 - `text`: 完整的对话文本(可选)
 
-**RL格式**:用于强化学习，需要包含以下字段:
+<strong>RL格式</strong>:用于强化学习，需要包含以下字段:
 - `question`: 原始问题
 - `prompt`: 输入提示(包含system和user消息)
 - `ground_truth`: 正确答案
 - `full_answer`: 完整答案(包含推理过程)
 
-**（1）使用format_math_dataset转换**
+<strong>（1）使用format_math_dataset转换</strong>
 
 最简单的方法是准备包含`question`和`answer`字段的原始数据，然后使用`format_math_dataset()`函数自动转换:
 
@@ -620,7 +620,7 @@ print(f"RL数据集: {len(rl_dataset)}个样本")
 print(f"字段: {rl_dataset.column_names}")
 ```
 
-**（2）直接传入自定义数据集**
+<strong>（2）直接传入自定义数据集</strong>
 
 使用RLTrainingTool时，可以通过`custom_dataset`参数直接传入自定义数据集:
 
@@ -731,7 +731,7 @@ def custom_reward_function(
 
 有两种方式使用自定义奖励函数:
 
-**（1）直接传入**
+<strong>（1）直接传入</strong>
 
 ```python
 result = rl_tool.run({
@@ -744,7 +744,7 @@ result = rl_tool.run({
 })
 ```
 
-**（2）注册使用(推荐)**
+<strong>（2）注册使用(推荐)</strong>
 
 ```python
 # 1. 注册奖励函数
@@ -995,34 +995,34 @@ print(f"  - 最终损失: {result['final_loss']:.4f}")
 
 如果训练过程中损失逐渐下降，说明模型正在学习。
 
-**（1）训练参数详解**
+<strong>（1）训练参数详解</strong>
 
 让我们详细了解各个训练参数的含义和调优建议。
 
-**数据参数**:
+<strong>数据参数</strong>:
 
 - `max_samples`: 使用的训练样本数量。快速测试时可以用100-1000个样本，完整训练建议使用全部数据(7473个样本)。更多数据通常带来更好的效果，但训练时间也更长。
 - `split`: 数据集划分，默认"train"。可以设置为"train[:1000]"只使用前1000个样本。
 
-**训练参数**:
+<strong>训练参数</strong>:
 
 - `num_epochs`: 训练轮数。1轮表示遍历整个数据集一次。太少(1-2轮)可能欠拟合，太多(>10轮)可能过拟合。建议从3轮开始，观察损失曲线调整。
 - `batch_size`: 每次更新使用的样本数。越大训练越稳定，但显存占用越高。建议根据显存调整:4GB显存用batch_size=1-2，8GB显存用batch_size=4-8，16GB显存用batch_size=8-16。
 - `learning_rate`: 学习率，控制参数更新的步长。太小(1e-6)收敛慢，太大(1e-3)可能不收敛。SFT推荐5e-5，LoRA可以稍大(1e-4)。
 
-**LoRA参数**:
+<strong>LoRA参数</strong>:
 
 - `use_lora`: 是否使用LoRA。建议始终开启，除非有充足的显存。
 - `lora_rank`: LoRA秩，控制表达能力。4-8适合小任务，16-32适合复杂任务，64适合大规模微调。
 - `lora_alpha`: LoRA缩放因子，通常设置为rank的2倍。rank=8时，alpha=16;rank=16时，alpha=32。
 
-**优化器参数**:
+<strong>优化器参数</strong>:
 
 - `optimizer`: 优化器类型，默认"adamw"。AdamW是最常用的选择，也可以尝试"sgd"或"adafactor"等。
 - `weight_decay`: 权重衰减，防止过拟合。默认0.01，可以尝试0.001-0.1。
 - `warmup_ratio`: 学习率预热比例。前warmup_ratio的步数学习率线性增加，然后线性衰减。默认0.1(前10%步数预热)。
 
-**（2）完整训练示例**
+<strong>（2）完整训练示例</strong>
 
 让我们进行一次完整的SFT训练，使用全部数据和最佳实践:
 
@@ -1067,7 +1067,7 @@ print(f"训练完成! 模型保存在: {result['model_path']}")
 
 这个配置适合在8GB显存的GPU上训练，预计耗时30-60分钟。
 
-**（3）训练监控和调试**
+<strong>（3）训练监控和调试</strong>
 
 在训练过程中，我们需要监控三个关键指标。损失(Loss)应该逐渐下降，如果不下降可能是学习率太小或数据有问题，如果下降后又上升则可能是学习率太大或出现过拟合。梯度范数(Gradient Norm)应该在0.1-10的合理范围内，过大(>100)说明出现梯度爆炸需要降低学习率，过小(<0.01)说明梯度消失需要检查模型配置。学习率(Learning Rate)应该按照warmup策略变化，前10%步数线性增加，然后线性衰减到0。
 
@@ -1077,11 +1077,11 @@ print(f"训练完成! 模型保存在: {result['model_path']}")
 
 训练完成后，我们需要评估模型的效果。评估指标包括:
 
-- **准确率(Accuracy)**:答案完全正确的比例，最直接的指标，范围0-1，越高越好。
+- <strong>准确率(Accuracy)</strong>:答案完全正确的比例，最直接的指标，范围0-1，越高越好。
 
-- **平均奖励(Average Reward)**:所有样本的平均奖励，综合考虑准确率、长度、步骤等因素，范围取决于奖励函数设计。
+- <strong>平均奖励(Average Reward)</strong>:所有样本的平均奖励，综合考虑准确率、长度、步骤等因素，范围取决于奖励函数设计。
 
-- **推理质量(Reasoning Quality)**:推理过程的清晰度和逻辑性，需要人工评估或使用专门的评估模型。
+- <strong>推理质量(Reasoning Quality)</strong>:推理过程的清晰度和逻辑性，需要人工评估或使用专门的评估模型。
 
 使用HelloAgents评估模型:
 
@@ -1240,19 +1240,19 @@ print(f"  - 平均奖励: {result['average_reward']:.4f}")
 
 GRPO有一些特定的参数需要理解和调优。
 
-**生成参数**:
+<strong>生成参数</strong>:
 
 - `num_generations`: 每个问题生成多少个答案。越多越好，但计算成本也越高。典型值为4-8。生成多个答案的目的是计算组内相对奖励，增加训练信号的多样性。
 - `max_new_tokens`: 每个答案最多生成多少个token。太少可能截断答案，太多浪费计算。建议256-512。
 - `temperature`: 生成温度，控制随机性。0表示贪婪解码，1表示标准采样。GRPO建议0.7-1.0，保持一定的探索性。
 
-**优化参数**:
+<strong>优化参数</strong>:
 
 - `learning_rate`: GRPO的学习率通常比SFT小，因为我们不想偏离SFT模型太远。建议1e-5到5e-5。
 - `kl_coef`: KL散度惩罚系数，控制策略更新的幅度。太小(0.01)可能导致策略偏离太远，太大(0.5)可能限制学习。建议0.05-0.1。
 - `clip_range`: 策略比率裁剪范围，类似PPO的epsilon。建议0.2。
 
-**奖励参数**:
+<strong>奖励参数</strong>:
 
 - `reward_type`: 奖励函数类型，可以是"accuracy"、"length_penalty"、"step"或"combined"。
 - `reward_config`: 奖励函数的额外配置，如长度惩罚的目标长度、步骤奖励的系数等。
@@ -1316,19 +1316,19 @@ print(f"训练完成! 模型保存在: {result['model_path']}")
 
 让我们深入理解GRPO的训练过程，看看每一步都发生了什么。
 
-**（1）训练循环**
+<strong>（1）训练循环</strong>
 
 GRPO的训练循环包括以下步骤:
 
-1. **采样阶段**:对于每个问题，使用当前策略生成多个答案(`num_generations`个)。这些答案构成一个"组"，用于计算相对奖励。
+1. <strong>采样阶段</strong>:对于每个问题，使用当前策略生成多个答案(`num_generations`个)。这些答案构成一个"组"，用于计算相对奖励。
 
-2. **奖励计算**:对每个生成的答案计算奖励 $r_i$。奖励可以是准确率、长度惩罚、步骤奖励或它们的组合。
+2. <strong>奖励计算</strong>:对每个生成的答案计算奖励 $r_i$。奖励可以是准确率、长度惩罚、步骤奖励或它们的组合。
 
-3. **相对奖励**:计算组内平均奖励 $\bar{r} = \frac{1}{N}\sum_{i=1}^{N} r_i$，然后计算相对奖励 $\hat{r}_i = r_i - \bar{r}$。这样做的好处是减少奖励方差，使训练更稳定。
+3. <strong>相对奖励</strong>:计算组内平均奖励 $\bar{r} = \frac{1}{N}\sum_{i=1}^{N} r_i$，然后计算相对奖励 $\hat{r}_i = r_i - \bar{r}$。这样做的好处是减少奖励方差，使训练更稳定。
 
-4. **策略更新**:使用相对奖励更新策略，同时添加KL散度惩罚，防止策略偏离参考模型太远。
+4. <strong>策略更新</strong>:使用相对奖励更新策略，同时添加KL散度惩罚，防止策略偏离参考模型太远。
 
-5. **重复**:重复上述步骤，直到完成所有训练轮次。
+5. <strong>重复</strong>:重复上述步骤，直到完成所有训练轮次。
 
 让我们通过一个具体例子来理解:
 
@@ -1363,7 +1363,7 @@ relative_rewards = [
 
 可以看到，相对奖励机制鼓励模型生成"比平均水平更好"的答案，而不是简单地追求高奖励。这样可以减少奖励方差，提高训练稳定性。
 
-**（2）KL散度惩罚**
+<strong>（2）KL散度惩罚</strong>
 
 KL散度惩罚是GRPO的关键组成部分，它防止策略偏离参考模型太远。KL散度定义为:
 
@@ -1385,21 +1385,21 @@ KL散度越大，说明当前策略与参考模型差异越大。通过添加KL�
 - 太大(0.5):策略更新受限，学习缓慢，难以超越SFT模型
 - 建议(0.05-0.1):平衡探索和稳定性
 
-**（3）训练监控**
+<strong>（3）训练监控</strong>
 
 在GRPO训练过程中，我们需要监控以下指标:
 
-- **平均奖励(Average Reward)**:应该逐渐上升。如果奖励不上升，可能是学习率太小、KL惩罚太大、奖励函数设计不合理。如果奖励先升后降，可能是过拟合或奖励崩塌。
+- <strong>平均奖励(Average Reward)</strong>:应该逐渐上升。如果奖励不上升，可能是学习率太小、KL惩罚太大、奖励函数设计不合理。如果奖励先升后降，可能是过拟合或奖励崩塌。
 
-- **KL散度(KL Divergence)**:应该保持在合理范围内(0.01-0.1)。如果KL散度过大(>0.5)，说明策略偏离太远，需要增大kl_coef或降低学习率。如果KL散度过小(<0.001)，说明策略几乎没有更新，需要减小kl_coef或增大学习率。
+- <strong>KL散度(KL Divergence)</strong>:应该保持在合理范围内(0.01-0.1)。如果KL散度过大(>0.5)，说明策略偏离太远，需要增大kl_coef或降低学习率。如果KL散度过小(<0.001)，说明策略几乎没有更新，需要减小kl_coef或增大学习率。
 
-- **准确率(Accuracy)**:应该逐渐提升。这是最直观的指标，反映模型的实际能力。
+- <strong>准确率(Accuracy)</strong>:应该逐渐提升。这是最直观的指标，反映模型的实际能力。
 
-- **生成质量(Generation Quality)**:需要人工检查生成的答案，确保格式正确、推理清晰。
+- <strong>生成质量(Generation Quality)</strong>:需要人工检查生成的答案，确保格式正确、推理清晰。
 
 HelloAgents集成了两种主流的训练监控工具:Weights & Biases(wandb)和TensorBoard。
 
-**方式1:使用Weights & Biases(推荐)**
+<strong>方式1:使用Weights & Biases(推荐)</strong>
 
 Weights & Biases是目前最流行的机器学习实验跟踪平台，提供了强大的可视化和实验管理功能。
 
@@ -1432,7 +1432,7 @@ wandb会自动记录以下指标:
 - `train/learning_rate`: 学习率
 - `train/epoch`: 训练轮数
 
-**方式2:使用TensorBoard**
+<strong>方式2:使用TensorBoard</strong>
 
 TensorBoard是TensorFlow提供的可视化工具，也支持PyTorch训练。
 
@@ -1454,7 +1454,7 @@ result = rl_tool.run({
 # 然后访问 http://localhost:6006
 ```
 
-**方式3:离线监控(无需外部工具)**
+<strong>方式3:离线监控(无需外部工具)</strong>
 
 如果不想使用wandb或TensorBoard，也可以通过训练日志进行监控:
 
@@ -1492,25 +1492,25 @@ GRPO训练的显存占用比SFT高，因为需要同时生成多个答案并存�
 
 一个好的评估体系应该是多维度的，从不同角度衡量模型的能力。我们将评估指标分为三类:准确性指标、效率指标、质量指标。
 
-**（1）准确性指标**
+<strong>（1）准确性指标</strong>
 
 准确性指标衡量模型是否能够得出正确答案。
 
-**准确率(Accuracy)**:最基本的指标，答案完全正确的比例。计算公式为:
+<strong>准确率(Accuracy)</strong>:最基本的指标，答案完全正确的比例。计算公式为:
 $$
 \text{Accuracy} = \frac{\text{正确答案数}}{\text{总问题数}}
 $$
 
 优点是简单直观，易于理解和比较。缺点是无法区分"接近正确"和"完全错误",对于复杂任务可能过于粗糙。
 
-**Top-K准确率**:生成K个答案，只要有一个正确就算对。计算公式为:
+<strong>Top-K准确率</strong>:生成K个答案，只要有一个正确就算对。计算公式为:
 $$
 \text{Accuracy@K} = \frac{\text{至少有一个正确答案的问题数}}{\text{总问题数}}
 $$
 
 这个指标反映了模型的"潜力"，即通过多次采样能否找到正确答案。
 
-**数值误差(Numerical Error)**:对于数学问题，可以计算预测值与真实值的误差。计算公式为:
+<strong>数值误差(Numerical Error)</strong>:对于数学问题，可以计算预测值与真实值的误差。计算公式为:
 
 $$
 \text{Error} = \frac{1}{N} \sum_{i=1}^{N} |y_i - \hat{y}_i|
@@ -1518,11 +1518,11 @@ $$
 
 这个指标可以区分"接近正确"(如预测72.5，真实72)和"完全错误"(如预测100，真实72)。
 
-**（2）效率指标**
+<strong>（2）效率指标</strong>
 
 效率指标衡量模型生成答案的成本。
 
-**平均长度(Average Length)**:生成答案的平均token数。计算公式为:
+<strong>平均长度(Average Length)</strong>:生成答案的平均token数。计算公式为:
 
 $$
 \text{Avg Length} = \frac{1}{N} \sum_{i=1}^{N} |y_i|
@@ -1530,7 +1530,7 @@ $$
 
 更短的答案意味着更低的推理成本和更快的响应速度。
 
-**推理步骤数(Reasoning Steps)**:答案中包含的推理步骤数量。计算公式为:
+<strong>推理步骤数(Reasoning Steps)</strong>:答案中包含的推理步骤数量。计算公式为:
 
 $$
 \text{Avg Steps} = \frac{1}{N} \sum_{i=1}^{N} s_i
@@ -1538,22 +1538,22 @@ $$
 
 适当的步骤数(2-5步)说明模型能够系统地分解问题，过多的步骤可能说明推理冗余。
 
-**推理时间(Inference Time)**:生成一个答案所需的时间。这个指标在实际部署中很重要，影响用户体验。
+<strong>推理时间(Inference Time)</strong>:生成一个答案所需的时间。这个指标在实际部署中很重要，影响用户体验。
 
-**（3）质量指标**
+<strong>（3）质量指标</strong>
 
 质量指标衡量答案的可读性和可解释性。
 
-**格式正确率(Format Correctness)**:答案是否符合预期格式(如包含"Step 1"， "Final Answer"等标记)。计算公式为:
+<strong>格式正确率(Format Correctness)</strong>:答案是否符合预期格式(如包含"Step 1"， "Final Answer"等标记)。计算公式为:
 $$
 \text{Format Correctness} = \frac{\text{格式正确的答案数}}{\text{总答案数}}
 $$
 
 格式正确是基本要求，格式混乱的答案即使结果正确也难以使用。
 
-**推理连贯性(Reasoning Coherence)**:推理步骤之间是否逻辑连贯。这个指标通常需要人工评估或使用专门的评估模型。
+<strong>推理连贯性(Reasoning Coherence)</strong>:推理步骤之间是否逻辑连贯。这个指标通常需要人工评估或使用专门的评估模型。
 
-**可解释性(Explainability)**:答案是否容易理解和验证。包含清晰步骤的答案比直接给出结果的答案更具可解释性。
+<strong>可解释性(Explainability)</strong>:答案是否容易理解和验证。包含清晰步骤的答案比直接给出结果的答案更具可解释性。
 
 如表11.7所示，不同指标的对比。
 
@@ -2024,9 +2024,9 @@ if __name__ == "__main__":
 
 运行小建议：
 
-**从小规模开始**:不要一开始就用全部数据训练。先用100-1000个样本快速迭代，验证流程和参数，确认效果后再扩大规模。这样可以节省大量时间和计算资源。
+<strong>从小规模开始</strong>:不要一开始就用全部数据训练。先用100-1000个样本快速迭代，验证流程和参数，确认效果后再扩大规模。这样可以节省大量时间和计算资源。
 
-**数据质量检查**:在训练前检查数据质量，确保格式正确、答案准确、没有重复样本。可以使用以下代码:
+<strong>数据质量检查</strong>:在训练前检查数据质量，确保格式正确、答案准确、没有重复样本。可以使用以下代码:
 
 ```python
 def check_data_quality(dataset):
@@ -2062,13 +2062,13 @@ else:
     print("✓ 数据质量检查通过")
 ```
 
-**数据增强**:如果数据量不足，可以考虑数据增强，如改写问题(保持答案不变)、生成相似问题、反向翻译(translate back)。但要注意保持数据质量，避免引入噪声。
+<strong>数据增强</strong>:如果数据量不足，可以考虑数据增强，如改写问题(保持答案不变)、生成相似问题、反向翻译(translate back)。但要注意保持数据质量，避免引入噪声。
 
 ### 11.6.2 超参数调优
 
 超参数调优是提升模型性能的关键。下面是一些常用的调优策略。
 
-**（1）网格搜索**
+<strong>（1）网格搜索</strong>
 
 网格搜索(Grid Search)是最简单的调优方法，遍历所有参数组合，选择最佳的一组。
 
@@ -2116,7 +2116,7 @@ print(f"最佳准确率: {best_accuracy:.2%}")
 
 网格搜索的优点是简单直接，能找到全局最优。缺点是计算成本高，参数多时不可行。
 
-**（2）随机搜索**
+<strong>（2）随机搜索</strong>
 
 随机搜索(Random Search)随机采样参数组合，比网格搜索更高效。
 
@@ -2152,7 +2152,7 @@ print(f"最佳准确率: {best_accuracy:.2%}")
 
 随机搜索的优点是效率高，适合参数空间大的情况。缺点是可能错过最优解。
 
-**（3）贝叶斯优化**
+**（3）贝叶斯优化<strong>
 
 贝叶斯优化(Bayesian Optimization)使用概率模型指导搜索，更加智能。可以使用Optuna等库:
 
@@ -2205,13 +2205,13 @@ print(f"最佳准确率: {study.best_value:.2%}")
 
 当数据量和模型规模增大时，单GPU训练会变得非常缓慢。这时我们需要使用分布式训练来加速训练过程。HelloAgents基于TRL和Hugging Face Accelerate，天然支持多GPU和多节点分布式训练
 
-**方案选择建议**:
+</strong>方案选择建议<strong>:
 
-- **单机多卡(2-8卡)**: 使用DDP，简单高效
-- **大模型(>7B)**: 使用DeepSpeed ZeRO-2或ZeRO-3
-- **多节点集群**: 使用DeepSpeed ZeRO-3 + Offload
+- </strong>单机多卡(2-8卡)<strong>: 使用DDP，简单高效
+- </strong>大模型(>7B)<strong>: 使用DeepSpeed ZeRO-2或ZeRO-3
+- </strong>多节点集群<strong>: 使用DeepSpeed ZeRO-3 + Offload
 
-**（1）配置Accelerate**
+</strong>（1）配置Accelerate<strong>
 
 首先需要创建Accelerate配置文件。运行以下命令:
 
@@ -2246,11 +2246,11 @@ How many GPU(s) should be used for distributed training?
 
 这会在`~/.cache/huggingface/accelerate/default_config.yaml`生成配置文件。
 
-**（2）使用DDP训练**
+</strong>（2）使用DDP训练<strong>
 
-**数据并行(DDP)**是最简单的分布式方案，每个GPU持有完整模型副本，数据被分割到各个GPU上。
+</strong>数据并行(DDP)<strong>是最简单的分布式方案，每个GPU持有完整模型副本，数据被分割到各个GPU上。
 
-**Accelerate配置文件** (`multi_gpu_ddp.yaml`):
+</strong>Accelerate配置文件<strong> (`multi_gpu_ddp.yaml`):
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -2262,7 +2262,7 @@ gpu_ids: all
 mixed_precision: fp16
 ```
 
-**训练脚本** (无需修改):
+</strong>训练脚本<strong> (无需修改):
 
 ```python
 from hello_agents.tools import RLTrainingTool
@@ -2281,7 +2281,7 @@ result = rl_tool.run({
 })
 ```
 
-**启动训练**:
+</strong>启动训练<strong>:
 
 ```bash
 # 使用配置文件
@@ -2291,11 +2291,11 @@ accelerate launch --config_file multi_gpu_ddp.yaml train_script.py
 accelerate launch --num_processes 4 --mixed_precision fp16 train_script.py
 ```
 
-**（3）使用DeepSpeed ZeRO训练**
+</strong>（3）使用DeepSpeed ZeRO训练<strong>
 
-**DeepSpeed ZeRO**通过分片优化器状态、梯度和模型参数，大幅降低显存占用，支持更大的模型和batch size。
+</strong>DeepSpeed ZeRO<strong>通过分片优化器状态、梯度和模型参数，大幅降低显存占用，支持更大的模型和batch size。
 
-**ZeRO-2配置文件** (`deepspeed_zero2.yaml`):
+</strong>ZeRO-2配置文件<strong> (`deepspeed_zero2.yaml`):
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -2314,7 +2314,7 @@ deepspeed_config:
   zero_stage: 2  # ZeRO-2
 ```
 
-**ZeRO-3配置文件** (`deepspeed_zero3.yaml`):
+</strong>ZeRO-3配置文件<strong> (`deepspeed_zero3.yaml`):
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -2333,7 +2333,7 @@ deepspeed_config:
   zero_stage: 3  # ZeRO-3
 ```
 
-**启动训练**:
+</strong>启动训练<strong>:
 
 ```bash
 # ZeRO-2
@@ -2350,11 +2350,11 @@ accelerate launch --config_file deepspeed_zero3.yaml train_script.py
   <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/11-figures/11-table-9.png" alt="" width="85%"/>
 </div>
 
-**（4）多节点训练**
+</strong>（4）多节点训练<strong>
 
 对于超大规模训练，可以使用多个节点(机器)。
 
-**主节点配置** (`multi_node_main.yaml`):
+</strong>主节点配置<strong> (`multi_node_main.yaml`):
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -2372,14 +2372,14 @@ deepspeed_config:
   offload_param_device: cpu
 ```
 
-**工作节点配置** (修改`machine_rank`为1, 2, 3):
+</strong>工作节点配置<strong> (修改`machine_rank`为1, 2, 3):
 
 ```yaml
 machine_rank: 1  # 工作节点1
 # 其他配置相同
 ```
 
-**启动训练**:
+</strong>启动训练<strong>:
 
 ```bash
 # 在主节点上
@@ -2395,9 +2395,9 @@ accelerate launch --config_file multi_node_worker2.yaml train_script.py
 accelerate launch --config_file multi_node_worker3.yaml train_script.py
 ```
 
-**（5）分布式训练最佳实践**
+</strong>（5）分布式训练最佳实践<strong>
 
-**1. Batch Size调整**
+</strong>1. Batch Size调整<strong>
 
 分布式训练时，总batch size = `per_device_batch_size × num_gpus × gradient_accumulation_steps`
 
@@ -2406,7 +2406,7 @@ accelerate launch --config_file multi_node_worker3.yaml train_script.py
 # 4GPU DDP: batch_size=4, gradient_accumulation=1, 总batch=16 (保持一致)
 ```
 
-**2. 学习率缩放**
+</strong>2. 学习率缩放<strong>
 
 使用线性缩放规则: `lr_new = lr_base × sqrt(total_batch_size_new / total_batch_size_base)`
 
@@ -2415,7 +2415,7 @@ accelerate launch --config_file multi_node_worker3.yaml train_script.py
 # 4GPU: batch=64, lr=5e-5 × sqrt(64/16) = 1e-4
 ```
 
-**3. 监控和调试**
+</strong>3. 监控和调试<strong>
 
 ```python
 # 启用详细日志
@@ -2432,7 +2432,7 @@ watch -n 1 nvidia-smi
 
 训练完成后，我们需要将模型部署到生产环境。下面是一些部署建议。
 
-**（1）模型导出**
+</strong>（1）模型导出<strong>
 
 将LoRA权重合并到基础模型，方便部署:
 
@@ -2459,7 +2459,7 @@ tokenizer.save_pretrained("./models/merged_model")
 print("✓ 模型已导出到: ./models/merged_model")
 ```
 
-**（2）推理优化**
+</strong>（2）推理优化<strong>
 
 使用量化和优化技术加速推理:
 
@@ -2482,7 +2482,7 @@ def generate_answer(question):
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
     outputs = model.generate(
-        **inputs,
+        </strong>inputs,
         max_new_tokens=512,
         temperature=0.7,
         do_sample=True,
@@ -2497,7 +2497,7 @@ answer = generate_answer(question)
 print(answer)
 ```
 
-**（3）API服务**
+<strong>（3）API服务</strong>
 
 使用FastAPI创建推理服务:
 
@@ -2550,34 +2550,34 @@ def generate(question: Question):
 
 在本章中，我们系统地学习了Agentic RL的理论和实践，从基础概念到完整的训练流程，从数据准备到模型部署。让我们回顾一下本章的主要内容。
 
-**（1）Agentic RL的本质**
+**（1）Agentic RL的本质<strong>
 
 Agentic RL是将LLM作为可学习策略，嵌入到智能体的感知-决策-执行循环中，通过强化学习优化智能体在多步任务中的表现。它与传统的PBRFT(Preference-Based Reinforcement Fine-Tuning)的核心区别在于:
 
-- **任务性质**:从单轮对话优化扩展到多步序贯决策
-- **状态空间**:从静态提示扩展到动态演化的环境状态
-- **行动空间**:从纯文本生成扩展到文本+工具+环境操作
-- **奖励设计**:从单步质量评估扩展到长期累积回报
-- **优化目标**:从短期响应质量扩展到长期任务成功
+- </strong>任务性质<strong>:从单轮对话优化扩展到多步序贯决策
+- </strong>状态空间<strong>:从静态提示扩展到动态演化的环境状态
+- </strong>行动空间<strong>:从纯文本生成扩展到文本+工具+环境操作
+- </strong>奖励设计<strong>:从单步质量评估扩展到长期累积回报
+- </strong>优化目标<strong>:从短期响应质量扩展到长期任务成功
 
-**（2）六大核心能力**
+</strong>（2）六大核心能力<strong>
 
 Agentic RL旨在提升智能体的六大核心能力:
 
-1. **推理(Reasoning)**:多步逻辑推导，学习推理策略
-2. **工具使用(Tool Use)**:API/工具调用，学会何时用、如何用
-3. **记忆(Memory)**:长期信息保持，学习记忆管理
-4. **规划(Planning)**:行动序列规划，学会动态规划
-5. **自我改进(Self-Improvement)**:自我反思优化，从错误中学习
-6. **感知(Perception)**:多模态理解，视觉推理和工具使用
+1. </strong>推理(Reasoning)<strong>:多步逻辑推导，学习推理策略
+2. </strong>工具使用(Tool Use)<strong>:API/工具调用，学会何时用、如何用
+3. </strong>记忆(Memory)<strong>:长期信息保持，学习记忆管理
+4. </strong>规划(Planning)<strong>:行动序列规划，学会动态规划
+5. </strong>自我改进(Self-Improvement)<strong>:自我反思优化，从错误中学习
+6. </strong>感知(Perception)<strong>:多模态理解，视觉推理和工具使用
 
-**（3）训练流程**
+</strong>（3）训练流程<strong>
 
 完整的Agentic RL训练流程包括:
 
-1. **预训练(Pretraining)**:在大规模文本上学习语言知识(通常使用现成的预训练模型)
-2. **监督微调(SFT)**:学习任务格式和基础推理能力
-3. **强化学习(RL)**:通过试错优化推理策略，超越训练数据质量
+1. </strong>预训练(Pretraining)<strong>:在大规模文本上学习语言知识(通常使用现成的预训练模型)
+2. </strong>监督微调(SFT)<strong>:学习任务格式和基础推理能力
+3. </strong>强化学习(RL)<strong>:通过试错优化推理策略，超越训练数据质量
 
 其中，SFT是基础，RL是提升。没有SFT的基础，RL很难成功;没有RL的优化，模型只能模仿训练数据。
 
@@ -2585,23 +2585,23 @@ Agentic RL旨在提升智能体的六大核心能力:
 
 基础阶段
 
-1. **强化学习基础**:学习MDP、策略梯度、PPO等基本概念
-2. **LLM基础**:了解Transformer、预训练、微调等技术
-3. **实践HelloAgents**:运行本章的示例代码，理解完整流程
+1. </strong>强化学习基础<strong>:学习MDP、策略梯度、PPO等基本概念
+2. </strong>LLM基础<strong>:了解Transformer、预训练、微调等技术
+3. </strong>实践HelloAgents<strong>:运行本章的示例代码，理解完整流程
 
 进阶阶段
 
-1. **深入TRL**:学习TRL库的实现，理解SFT和GRPO等算法的细节
-2. **自定义数据集**:使用自己的数据集训练模型
-3. **自定义奖励函数**:设计适合自己任务的奖励函数
-4. **参数调优**:系统地调优超参数，提升模型性能
+1. </strong>深入TRL<strong>:学习TRL库的实现，理解SFT和GRPO等算法的细节
+2. </strong>自定义数据集<strong>:使用自己的数据集训练模型
+3. </strong>自定义奖励函数<strong>:设计适合自己任务的奖励函数
+4. </strong>参数调优<strong>:系统地调优超参数，提升模型性能
 
 高级阶段
 
-1. **多步推理**:研究长序列推理任务
-2. **工具学习**:让智能体学会使用工具
-3. **多智能体**:研究多智能体协作
-4. **前沿论文**:阅读最新的研究论文，跟进前沿进展
+1. </strong>多步推理<strong>:研究长序列推理任务
+2. </strong>工具学习<strong>:让智能体学会使用工具
+3. </strong>多智能体<strong>:研究多智能体协作
+4. </strong>前沿论文**:阅读最新的研究论文，跟进前沿进展
 
 
 
