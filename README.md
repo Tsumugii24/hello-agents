@@ -33,7 +33,7 @@
 - 🏗️ <strong>亲手实现</strong> 编码复现 ReAct、Plan-and-Solve 等经典智能体架构
 - 🛠️ <strong>掌握高级技能</strong> 学习并应用 上下文工程、RAG、工具使用等前沿技术
 - 🤝 <strong>构建多智能体</strong> 掌握多智能体协作、通信与评估的核心方法
-- 🚀 <strong>驱动真实案例</strong> 实战开发智能旅行助手、自动化研究员等综合项目"
+- 🚀 <strong>驱动真实案例</strong> 实战开发智能旅行助手、赛博小镇等综合项目"
 
 ## 📖 内容导航
 
@@ -53,7 +53,7 @@
 | [第八章 记忆与检索](./docs/chapter8/第八章%20记忆与检索.md) | 记忆系统，RAG，存储 | ✅ |
 | [第九章 上下文工程](./docs/chapter9/第九章%20上下文工程.md) | 持续交互的"情境理解" | 🚧 |
 | [第十章 智能体通信协议](./docs/chapter10/第十章%20智能体通信协议.md) | MCP、A2A、ANP 等协议解析 | ✅ |
-| [第十一章 Agentic-RL](./docs/chapter11/第十一章%20Agentic-RL.md) | 基于LLM的智能体强化学习 | 🚧 |
+| [第十一章 Agentic-RL](./docs/chapter11/第十一章%20Agentic-RL.md) | 从SFT到GRPO的LLM训练实战 | ✅ |
 | [第十二章 智能体性能评估](./docs/chapter12/第十二章%20智能体性能评估.md) | 核心指标、基准测试与评估框架 | ✅ |
 | <strong>第四部分：综合案例进阶</strong> |  |  |
 | [第十三章 智能旅行助手](./docs/chapter13/第十三章%20智能旅行助手.md) | MCP与多智能体协作的真实世界应用 | ✅ |
