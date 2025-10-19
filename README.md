@@ -46,7 +46,7 @@
 | [第三章 大语言模型基础](./docs/chapter3/第三章%20大语言模型基础.md) | Transformer、提示、主流LLM及其局限 | ✅ |
 | <strong>第二部分：构建你的大语言模型智能体</strong> |  |  |
 | [第四章 智能体经典范式构建](./docs/chapter4/第四章%20智能体经典范式构建.md) | 手把手实现 ReAct、Plan-and-Solve、Reflection | ✅ |
-| [第五章 基于低代码平台的智能体搭建](./docs/chapter5/第五章%20基于低代码平台的智能体搭建.md) | 了解Coze、Dify、n8n等低代码智能体平台使用 | 🚧 |
+| [第五章 基于低代码平台的智能体搭建](./docs/chapter5/第五章%20基于低代码平台的智能体搭建.md) | 了解Coze、Dify、n8n等低代码智能体平台使用 | ✅ |
 | [第六章 框架开发实践](./docs/chapter6/第六章%20框架开发实践.md) | AutoGen、AgentScope、LangGraph 等主流框架应用 | ✅ |
 | [第七章 构建你的Agent框架](./docs/chapter7/第七章%20构建你的Agent框架.md) | 从0开始构建智能体框架 | ✅ |
 | <strong>第三部分：高级知识扩展</strong> |  |  |
