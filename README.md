@@ -1,7 +1,7 @@
 <div align='center'>
   <img src="./docs/images/hello-agents.png" alt="alt text" width="100%">
   <h1>Hello-Agents</h1>
-  <h3>🤖 从零开始构建智能体系统实战教程</h3>
+  <h3>🤖 从零开始构建智能体系统原理与实践教程</h3>
   <p><em>从基础理论到实际应用，全面掌握智能体系统的设计与实现</em></p>
   <img src="https://img.shields.io/github/stars/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub stars"/>
   <img src="https://img.shields.io/github/forks/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub forks"/>
@@ -16,7 +16,7 @@
 
 &emsp;&emsp;如果说2024年是"百模大战"的元年，那么2025年无疑开启了"Agent元年"。技术的焦点正从训练更大的基础模型，转向构建更聪明的智能体应用。然而，当前系统性、重实践的教程却极度匮乏。为此，我们发起了 Hello-Agents 项目，希望能为社区提供一本从零开始、理论与实战并重的多智能体系统构建指南。
 
-&emsp;&emsp;Hello-Agents 是一个<strong>系统性的智能体学习教程</strong>，旨在"授人以渔"。教程将带领你穿透框架表象，从智能体的核心原理出发，深入其核心架构，理解其经典范式，并最终亲手构建起属于自己的多智能体应用。我们相信，最好的学习方式就是动手实践。希望这本书能成为你探索智能体世界的起点，能够从一名 LLM 的"使用者"，蜕变为一名智能系统的"构建者"。
+&emsp;&emsp;Hello-Agents 是Datawhale社区的一个<strong>系统性的智能体学习教程</strong>，旨在"授人以渔"。教程将带领你穿透框架表象，从智能体的核心原理出发，深入其核心架构，理解其经典范式，并最终亲手构建起属于自己的多智能体应用。我们相信，最好的学习方式就是动手实践。希望这本书能成为你探索智能体世界的起点，能够从一名 LLM 的"使用者"，蜕变为一名智能系统的"构建者"。
 
 ## 📚 快速开始
 
