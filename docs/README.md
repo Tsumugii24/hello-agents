@@ -31,11 +31,13 @@
 ### ✨ 你将收获什么？
 
 - 📖 <strong>Datawhale 开源免费</strong> 完全免费学习本项目所有内容，与社区共同成长
-- 🔍 <strong>理解核心原理</strong> 深入理解智能体（Agent）的构件、原则与经典范式
-- 🏗️ <strong>亲手实现</strong> 编码复现 ReAct、Plan-and-Solve 等经典智能体架构
-- 🛠️ <strong>掌握高级技能</strong> 学习并应用 上下文工程、RAG、工具使用等前沿技术
-- 🤝 <strong>构建多智能体</strong> 掌握多智能体协作、通信与评估的核心方法
+- 🔍 <strong>理解核心原理</strong> 深入理解智能体的概念、历史与经典范式
+- 🏗️ <strong>亲手实现</strong> 掌握热门低代码平台和智能体代码框架的使用
+- 🛠️ <strong>自研框架</strong> 基于Openai原生API从零构建一个自己的智能体框架
+- ⚙️ <strong>掌握高级技能</strong> 一步步实现上下文工程、Memory、协议、评估等系统性技术
+- 🤝 <strong>模型训练</strong> 掌握Agentic RL，从SFT到GRPO的全流程实战训练LLM
 - 🚀 <strong>驱动真实案例</strong> 实战开发智能旅行助手、赛博小镇等综合项目
+- 📖 <strong>求职面试</strong> 学习智能体求职相关面试问题
 
 ## 📖 内容导航
 
