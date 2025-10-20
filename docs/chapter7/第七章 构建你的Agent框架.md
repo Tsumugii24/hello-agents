@@ -269,7 +269,7 @@ for chunk in response_stream:
 
 VLLM 是一个为 LLM 推理设计的高性能 Python 库。它通过 PagedAttention 等先进技术，可以实现比标准 Transformers 实现高出数倍的吞吐量。下面是在本地部署一个 VLLM 服务的完整步骤：
 
-首先，需要根据你的硬件环境（特别是 CUDA 版本）安装 VLLM。推荐遵循其(官方文档)[https://docs.vllm.ai/en/latest/getting_started/installation.html]进行安装，以避免版本不匹配问题。
+首先，需要根据你的硬件环境（特别是 CUDA 版本）安装 VLLM。推荐遵循其[官方文档](https://docs.vllm.ai/en/latest/getting_started/installation.html)进行安装，以避免版本不匹配问题。
 
 ```python
 pip install vllm
