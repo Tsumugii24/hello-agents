@@ -20,13 +20,9 @@
 
 ## 🌐 在线阅读
 
-**[📖 点击这里开始在线阅读](https://datawhalechina.github.io/hello-agents/)**
+**[🌐 点击这里开始在线阅读](https://datawhalechina.github.io/hello-agents/)**
 
-> 推荐使用在线阅读方式，享受更好的阅读体验，包括：
-> - 📱 响应式设计，支持手机、平板、电脑
-> - 🔍 全文搜索功能
-> - 📑 自动生成目录导航
-> - 🎨 优雅的阅读界面
+**[📖 Cookbook(测试版)](https://book.heterocat.com.cn/)**
 
 ### ✨ 你将收获什么？
 
