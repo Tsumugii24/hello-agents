@@ -1530,7 +1530,7 @@ if __name__ == "__main__":
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/7-figures/01.png" alt="" width="90%"/>
-  <p>表 7.1 基于Helloagents的SimpleAgent运行工作流</p>
+  <p>图 7.1 基于Helloagents的SimpleAgent运行工作流</p>
 </div>
 
 ### 7.5.3 多源搜索工具
