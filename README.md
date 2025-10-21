@@ -39,6 +39,8 @@
 - 🚀 <strong>驱动真实案例</strong> 实战开发智能旅行助手、赛博小镇等综合项目
 - 📖 <strong>求职面试</strong> 学习智能体求职相关面试问题
 
+- 🎯 <strong>[HelloAgents](https://github.com/jjyaoao/helloagents)</strong> 教程配套学习智能体框架，基于Openai原生依赖开发
+
 ## 📖 内容导航
 
 | 章节 | 关键内容 | 状态 |
