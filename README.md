@@ -138,7 +138,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="https://api.star-history.com/svg?repos=datawhalechina/hello-agents&type=date&legend=top-left" alt="Datawhale" width="90%">
+    <img src="./docs/images/star-history-20251022.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">
