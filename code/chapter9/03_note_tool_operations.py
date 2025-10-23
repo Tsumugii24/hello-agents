@@ -12,7 +12,15 @@ NoteTool 基本操作示例
 """
 
 from hello_agents.tools import NoteTool
-import json
+import re
+
+
+def extract_note_id(output: str) -> str:
+    """从 NoteTool 的输出文本中提取 note_id"""
+    match = re.search(r"ID:\s*(note_[0-9_]+)", output)
+    if not match:
+        raise ValueError(f"无法从输出解析 note_id:\n{output}")
+    return match.group(1)
 
 
 def main():
@@ -25,7 +33,7 @@ def main():
 
     # 1. 创建笔记
     print("1. 创建笔记...")
-    note_id_1 = notes.run({
+    create_output_1 = notes.run({
         "action": "create",
         "title": "重构项目 - 第一阶段",
         "content": """## 完成情况
@@ -36,10 +44,11 @@ def main():
         "note_type": "task_state",
         "tags": ["refactoring", "phase1"]
     })
-    print(f"✅ 笔记创建成功,ID: {note_id_1}\n")
+    print(create_output_1 + "\n")
+    note_id_1 = extract_note_id(create_output_1)
 
     # 创建第二个笔记
-    note_id_2 = notes.run({
+    create_output_2 = notes.run({
         "action": "create",
         "title": "依赖冲突问题",
         "content": """## 问题描述
@@ -55,21 +64,20 @@ def main():
         "note_type": "blocker",
         "tags": ["dependency", "urgent"]
     })
-    print(f"✅ 笔记创建成功,ID: {note_id_2}\n")
+    print(create_output_2 + "\n")
+    note_id_2 = extract_note_id(create_output_2)
 
     # 2. 读取笔记
     print("2. 读取笔记...")
-    note = notes.run({
+    note_detail = notes.run({
         "action": "read",
         "note_id": note_id_1
     })
-    print(f"标题: {note['metadata']['title']}")
-    print(f"类型: {note['metadata']['type']}")
-    print(f"内容:\n{note['content']}\n")
+    print(note_detail + "\n")
 
     # 3. 更新笔记
     print("3. 更新笔记...")
-    result = notes.run({
+    update_result = notes.run({
         "action": "update",
         "note_id": note_id_1,
         "content": """## 完成情况
@@ -81,7 +89,7 @@ def main():
 ## 下一步
 先解决依赖冲突,再继续重构业务逻辑层"""
     })
-    print(f"{result}\n")
+    print(update_result + "\n")
 
     # 4. 搜索笔记
     print("4. 搜索笔记...")
@@ -90,10 +98,7 @@ def main():
         "query": "依赖",
         "limit": 5
     })
-    print(f"找到 {len(search_results)} 个相关笔记:")
-    for note in search_results:
-        print(f"  - {note['title']} ({note['type']})")
-    print()
+    print(search_results + "\n")
 
     # 5. 列出笔记
     print("5. 列出所有 blocker 类型的笔记...")
@@ -102,28 +107,23 @@ def main():
         "note_type": "blocker",
         "limit": 10
     })
-    print(f"找到 {len(blockers)} 个 blocker:")
-    for blocker in blockers:
-        print(f"  - {blocker['title']} (更新于: {blocker['updated_at']})")
-    print()
+    print(blockers + "\n")
 
     # 6. 笔记摘要
     print("6. 生成笔记摘要...")
-    summary = notes.run({
+    summary_output = notes.run({
         "action": "summary"
     })
-    print("笔记摘要:")
-    print(json.dumps(summary, indent=2, ensure_ascii=False))
-    print()
+    print(summary_output + "\n")
 
     # 7. 删除笔记 (演示，实际使用时谨慎)
     print("7. 删除笔记 (演示)...")
-    # result = notes.run({
+    # delete_result = notes.run({
     #     "action": "delete",
     #     "note_id": note_id_2
     # })
-    # print(f"{result}\n")
-    print("(已跳过实际删除操作)\n")
+    # print(delete_result + "\n")
+    print(f"(已跳过实际删除操作, 笔记ID: {note_id_2})\n")
 
     print("=" * 80)
     print("NoteTool 操作演示完成!")
