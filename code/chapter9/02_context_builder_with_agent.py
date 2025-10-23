@@ -20,13 +20,15 @@ class ContextAwareAgent(SimpleAgent):
     def __init__(self, name: str, llm: HelloAgentsLLM, **kwargs):
         super().__init__(name=name, llm=llm, **kwargs)
 
-        # 初始化上下文构建器
-        self.memory_tool = MemoryTool(user_id=kwargs.get("user_id", "default"))
-        self.rag_tool = RAGTool(knowledge_base_path=kwargs.get("knowledge_base_path", "./kb"))
+        
+        #（Optional）
+        # self.memory_tool = MemoryTool(user_id=kwargs.get("user_id", "default")) 
+        # self.rag_tool = RAGTool(knowledge_base_path=kwargs.get("knowledge_base_path", "./kb"))
 
+        # 初始化上下文构建器
         self.context_builder = ContextBuilder(
-            memory_tool=self.memory_tool,
-            rag_tool=self.rag_tool,
+            # memory_tool=self.memory_tool,
+            # rag_tool=self.rag_tool,
             config=ContextConfig(max_tokens=4000)
         )
 
@@ -43,7 +45,11 @@ class ContextAwareAgent(SimpleAgent):
         )
 
         # 2. 使用优化后的上下文调用 LLM
-        response = self.llm.invoke(optimized_context)
+        messages = [
+            {"role": "system", "content": optimized_context},
+            {"role": "user", "content": user_input}
+        ]
+        response = self.llm.invoke(messages)
 
         # 3. 更新对话历史
         self.conversation_history.append(
@@ -54,12 +60,12 @@ class ContextAwareAgent(SimpleAgent):
         )
 
         # 4. 将重要交互记录到记忆系统
-        self.memory_tool.execute(
-            "add",
-            content=f"Q: {user_input}\nA: {response[:200]}...",  # 摘要
-            memory_type="episodic",
-            importance=0.6
-        )
+        # self.memory_tool.execute(
+        #     "add",
+        #     content=f"Q: {user_input}\nA: {response[:200]}...",  # 摘要
+        #     memory_type="episodic",
+        #     importance=0.6
+        # )
 
         return response
 
@@ -82,8 +88,6 @@ def main():
     agent = ContextAwareAgent(
         name="数据分析顾问",
         llm=llm,
-        user_id="user123",
-        knowledge_base_path="./data_science_kb",
         system_prompt="你是一位资深的Python数据工程顾问。"
     )
 

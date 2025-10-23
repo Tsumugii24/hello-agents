@@ -8,7 +8,12 @@ TerminalTool 使用示例
 4. 代码库分析
 """
 
+import os
+from pathlib import Path
 from hello_agents.tools import TerminalTool
+
+# 获取脚本所在目录
+SCRIPT_DIR = Path(__file__).parent.absolute()
 
 
 def demo_exploratory_navigation():
@@ -17,27 +22,27 @@ def demo_exploratory_navigation():
     print("场景1: 探索式导航")
     print("=" * 80 + "\n")
 
-    terminal = TerminalTool(workspace="./my_project")
+    terminal = TerminalTool(workspace=str(SCRIPT_DIR))
 
-    # 第一步:查看项目根目录
-    print("1. 查看项目根目录:")
+    # 第一步:查看当前目录
+    print("1. 查看当前目录:")
     result = terminal.run({"command": "ls -la"})
     print(result)
 
-    # 第二步:进入源代码目录
-    print("\n2. 进入源代码目录:")
-    result = terminal.run({"command": "cd src"})
+    # 第二步:查看Python文件
+    print("\n2. 查看Python文件:")
+    result = terminal.run({"command": "ls -la *.py"})
     print(result)
 
     # 第三步:查找特定文件
     print("\n3. 查找特定模式的文件:")
-    result = terminal.run({"command": "find . -name '*service*.py'"})
+    result = terminal.run({"command": "find . -name '*codebase_maintainer.py'"})
     print(result)
 
     # 第四步:查看文件内容
     print("\n4. 查看文件内容:")
-    result = terminal.run({"command": "cat user_service.py"})
-    print(result[:500] + "..." if len(result) > 500 else result)
+    result = terminal.run({"command": "head -n 20 codebase_maintainer.py"})
+    print(result)
 
 
 def demo_data_file_analysis():
@@ -46,7 +51,7 @@ def demo_data_file_analysis():
     print("场景2: 数据文件分析")
     print("=" * 80 + "\n")
 
-    terminal = TerminalTool(workspace="./data")
+    terminal = TerminalTool(workspace=str(SCRIPT_DIR / "data"))
 
     # 查看 CSV 文件的前几行
     print("1. 查看 CSV 文件前5行:")
@@ -60,7 +65,7 @@ def demo_data_file_analysis():
 
     # 提取和统计产品类别
     print("\n3. 统计产品类别分布:")
-    result = terminal.run({"command": "tail -n +2 sales_2024.csv | cut -d',' -f2 | sort | uniq -c"})
+    result = terminal.run({"command": "tail -n +2 sales_2024.csv | cut -d',' -f3 | sort | uniq -c"})
     print(result)
 
 
@@ -70,7 +75,7 @@ def demo_log_analysis():
     print("场景3: 日志文件分析")
     print("=" * 80 + "\n")
 
-    terminal = TerminalTool(workspace="/var/log")
+    terminal = TerminalTool(workspace=str(SCRIPT_DIR / "logs"))
 
     # 查看最新的错误日志
     print("1. 查看最新的错误日志:")
@@ -94,7 +99,7 @@ def demo_codebase_analysis():
     print("场景4: 代码库分析")
     print("=" * 80 + "\n")
 
-    terminal = TerminalTool(workspace="./codebase")
+    terminal = TerminalTool(workspace=str(SCRIPT_DIR / "codebase"))
 
     # 统计代码行数
     print("1. 统计代码行数:")
@@ -118,7 +123,7 @@ def demo_security_features():
     print("安全特性演示")
     print("=" * 80 + "\n")
 
-    terminal = TerminalTool(workspace="./project")
+    terminal = TerminalTool(workspace=str(SCRIPT_DIR / "project"))
 
     # 尝试执行不允许的命令
     print("1. 尝试执行危险命令 (rm):")

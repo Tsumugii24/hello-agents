@@ -8,6 +8,20 @@ CodebaseMaintainer 三天工作流演示
 - 一周后: 检查进度
 """
 
+import os
+# 配置嵌入模型（三选一）
+# 方案一：TF-IDF（最简单，无需额外依赖）
+os.environ['EMBED_MODEL_TYPE'] = 'tfidf'
+os.environ['EMBED_MODEL_NAME'] = ''  # 重要：必须清空，否则会传递不兼容的参数
+# 方案二：本地Transformer（需要: pip install sentence-transformers 和 HF token）
+# os.environ['EMBED_MODEL_TYPE'] = 'local'
+# os.environ['EMBED_MODEL_NAME'] = 'sentence-transformers/all-MiniLM-L6-v2'
+# os.environ['HF_TOKEN'] = 'your_hf_token_here'  # 或使用 huggingface-cli login
+# 方案三：通义千问（需要API key）
+# os.environ['EMBED_MODEL_TYPE'] = 'dashscope'
+# os.environ['EMBED_MODEL_NAME'] = 'text-embedding-v3'
+# os.environ['EMBED_API_KEY'] = 'your_api_key_here'
+
 from hello_agents import HelloAgentsLLM
 from datetime import datetime
 import json
@@ -31,8 +45,8 @@ def day_1_exploration(maintainer):
     print(f"\n助手总结:\n{response[:500]}...\n")
 
     # 2. 深入分析某个模块
-    print("### 2. 深入分析数据模型 ###")
-    response = maintainer.run("请分析 app/models/ 目录下的数据模型设计")
+    print("### 2. 分析数据处理模块 ###")
+    response = maintainer.run("请查看 data_processor.py 文件，分析其代码设计")
     print(f"\n助手总结:\n{response[:500]}...\n")
 
     # 模拟时间流逝
@@ -46,14 +60,14 @@ def day_2_analysis(maintainer):
     print("=" * 80 + "\n")
 
     # 1. 整体质量分析
-    print("### 1. 整体代码质量分析 ###")
+    print("### 1. 查找所有 TODO 注释 ###")
     response = maintainer.analyze()
     print(f"\n助手总结:\n{response[:500]}...\n")
 
     # 2. 查看具体问题
-    print("### 2. 深入分析问题方法 ###")
+    print("### 2. 分析 API 客户端代码 ###")
     response = maintainer.run(
-        "请查看 order_service.py 的 process_order 方法,给出重构建议"
+        "请分析 api_client.py 的代码质量，特别是错误处理部分，给出改进建议"
     )
     print(f"\n助手总结:\n{response[:500]}...\n")
 
@@ -77,23 +91,23 @@ def day_3_planning(maintainer):
     maintainer.create_note(
         title="本周重构计划 - Week 1",
         content="""## 目标
-完成数据模型层的优化
+完成代码质量改进和 TODO 清理
 
 ## 任务清单
-- [ ] 为 User.email 添加唯一约束
-- [ ] 为 Order 添加 created_at, updated_at 字段
-- [ ] 编写数据库迁移脚本
-- [ ] 更新相关测试用例
+- [ ] 实现 data_processor.py 中的数据验证逻辑
+- [ ] 添加 api_client.py 的重试和错误处理机制
+- [ ] 优化 utils.py 的格式化逻辑
+- [ ] 补充 models.py 的用户验证方法
 
 ## 时间安排
-- 周一: 设计迁移脚本
-- 周二-周三: 执行迁移并测试
-- 周四: 更新测试用例
-- 周五: Code Review
+- 周一: 实现数据验证逻辑
+- 周二: 完善错误处理
+- 周三-周四: 优化工具函数
+- 周五: Code Review 和测试
 
 ## 风险
-- 数据库迁移可能影响线上环境,需要在非高峰期执行
-- 现有数据中可能存在重复email,需要先清理
+- 新增验证逻辑可能影响现有功能
+- 需要充分的单元测试覆盖
 """,
         note_type="task_state",
         tags=["refactoring", "week1", "high_priority"]
@@ -133,17 +147,17 @@ def demonstrate_cross_session_continuity():
     # 第一次会话
     print("### 第一次会话 (session_1) ###")
     maintainer_1 = CodebaseMaintainer(
-        project_name="my_flask_app",
-        codebase_path="./my_flask_app",
+        project_name="demo_codebase",
+        codebase_path="./codebase",
         llm=HelloAgentsLLM()
     )
 
     # 创建一些笔记
     maintainer_1.create_note(
-        title="数据模型问题",
-        content="User.email 缺少唯一约束",
+        title="代码质量问题",
+        content="发现多处 TODO 注释需要实现，特别是数据验证和错误处理部分",
         note_type="blocker",
-        tags=["database", "urgent"]
+        tags=["quality", "urgent"]
     )
 
     stats_1 = maintainer_1.get_stats()
@@ -155,14 +169,14 @@ def demonstrate_cross_session_continuity():
     # 第二次会话 (新的会话ID,但笔记被保留)
     print("### 第二次会话 (session_2) ###")
     maintainer_2 = CodebaseMaintainer(
-        project_name="my_flask_app",  # 同一个项目
-        codebase_path="./my_flask_app",
+        project_name="demo_codebase",  # 同一个项目
+        codebase_path="./codebase",
         llm=HelloAgentsLLM()
     )
 
     # 检索之前的笔记
     response = maintainer_2.run(
-        "我们之前发现了什么问题?现在应该如何处理?"
+        "我们之前发现了什么代码质量问题？现在应该优先处理哪些？"
     )
     print(f"\n助手回答:\n{response[:300]}...\n")
 
@@ -183,34 +197,34 @@ def demonstrate_tool_synergy():
 
     maintainer = CodebaseMaintainer(
         project_name="synergy_demo",
-        codebase_path="./demo_project",
+        codebase_path="./codebase",
         llm=HelloAgentsLLM()
     )
 
     # 1. TerminalTool 发现问题
-    print("### 1. TerminalTool 发现项目结构 ###")
-    structure = maintainer.execute_command("ls -la")
-    print(f"项目结构:\n{structure[:200]}...\n")
+    print("### 1. TerminalTool 查找 TODO 注释 ###")
+    todos = maintainer.execute_command("grep -rn 'TODO' --include='*.py' .")
+    print(f"发现的 TODO:\n{todos[:300]}...\n")
 
     # 2. NoteTool 记录发现
     print("### 2. NoteTool 记录发现 ###")
     maintainer.create_note(
-        title="项目结构分析",
-        content=f"项目包含以下主要目录:\n{structure}",
+        title="待实现功能清单",
+        content=f"通过代码扫描发现以下待实现功能:\n{todos[:500]}",
         note_type="conclusion",
-        tags=["structure", "analysis"]
+        tags=["todo", "analysis"]
     )
     print("✅ 已记录到笔记\n")
 
     # 3. MemoryTool 存储关键信息 (通过对话)
     print("### 3. MemoryTool 存储关键信息 ###")
-    response = maintainer.run("项目的主要结构是什么?")
+    response = maintainer.run("代码库中有哪些待实现的功能？")
     print(f"助手回答:\n{response[:200]}...\n")
 
     # 4. ContextBuilder 整合所有信息
     print("### 4. ContextBuilder 整合所有信息 ###")
     response = maintainer.run(
-        "基于我们之前的分析,项目有哪些需要改进的地方?"
+        "基于我们的代码分析，应该优先实现哪些 TODO 功能？"
     )
     print(f"助手回答:\n{response[:300]}...\n")
 
@@ -227,11 +241,15 @@ def main():
     print("=" * 80)
     print("CodebaseMaintainer 三天工作流演示")
     print("=" * 80)
+    
+    print("\n💡 使用我们在 chapter9 创建的示例代码库")
+    print("📁 代码库路径: ./codebase")
+    print("📦 包含文件: data_processor.py, api_client.py, utils.py, models.py\n")
 
     # 初始化助手
     maintainer = CodebaseMaintainer(
-        project_name="my_flask_app",
-        codebase_path="./my_flask_app",
+        project_name="demo_codebase",
+        codebase_path="./codebase",
         llm=HelloAgentsLLM()
     )
 
