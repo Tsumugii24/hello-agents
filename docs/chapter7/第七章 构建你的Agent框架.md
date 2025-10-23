@@ -96,7 +96,7 @@ hello-agents/
 为了让读者能够快速体验本章的完整功能，我们提供了可直接安装的Python包。你可以通过以下命令安装本章对应的版本：
 
 ```bash
-pip install hello-agents==0.1.1
+pip install "hello-agents==0.1.1"
 ```
 
 本章的学习可以采用两种方式：
@@ -1542,7 +1542,7 @@ if __name__ == "__main__":
 在实际应用中，我们经常需要整合多个外部服务来提供更强大的功能。搜索工具就是一个典型的例子，它整合多个搜索引擎，能提供更加完备的真实信息。在第一章我们使用过Tavily的搜索API，在第四章我们使用过SerpApi的搜索API。因此这次我们使用这两个API来实现多源搜索功能。如果没安装对应的python依赖可以运行下面这条脚本：
 
 ```bash
-pip install hello-agents[search]==0.1.1
+pip install "hello-agents[search]==0.1.1"
 ```
 
 （1）搜索工具的统一接口设计
