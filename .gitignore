@@ -160,3 +160,6 @@ cython_debug/
 #.idea/
 .DS_Store
 .obsidian
+
+# 忽略各种文件夹下codex AGENRS.md
+AGENTS.md
