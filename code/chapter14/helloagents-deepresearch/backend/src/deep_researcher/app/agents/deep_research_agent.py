@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from queue import Empty, Queue
 from threading import Lock, Thread
-from typing import Any, Callable, Iterator, Optional
+from typing import Any, Callable, Iterator
 
 from hello_agents import HelloAgentsLLM
 from hello_agents.tools import ToolRegistry
@@ -34,6 +34,7 @@ class DeepResearchAgent:
     """Coordinator orchestrating TODO-based research workflow using HelloAgents."""
 
     def __init__(self, config: Configuration | None = None) -> None:
+        """Initialise the coordinator with configuration and shared tools."""
         self.config = config or Configuration.from_env()
         self.llm = self._init_llm()
 
@@ -78,7 +79,6 @@ class DeepResearchAgent:
     # ------------------------------------------------------------------
     def _init_llm(self) -> HelloAgentsLLM:
         """Instantiate HelloAgentsLLM following configuration preferences."""
-
         llm_kwargs: dict[str, Any] = {"temperature": 0.0}
 
         model_id = self.config.llm_model_id or self.config.local_llm
@@ -109,7 +109,6 @@ class DeepResearchAgent:
 
     def _create_tool_aware_agent(self, *, name: str, system_prompt: str) -> ToolAwareSimpleAgent:
         """Instantiate a ToolAwareSimpleAgent sharing tool registry and tracker."""
-
         return ToolAwareSimpleAgent(
             name=name,
             llm=self.llm,
@@ -119,15 +118,13 @@ class DeepResearchAgent:
             tool_call_listener=self._tool_tracker.record,
         )
 
-    def _set_tool_event_sink(self, sink: Optional[Callable[[dict[str, Any]], None]]) -> None:
+    def _set_tool_event_sink(self, sink: Callable[[dict[str, Any]], None] | None) -> None:
         """Enable or disable immediate tool event callbacks."""
-
         self._tool_event_sink_enabled = sink is not None
         self._tool_tracker.set_event_sink(sink)
 
     def run(self, topic: str) -> SummaryStateOutput:
         """Execute the research workflow and return the final report."""
-
         state = SummaryState(research_topic=topic)
         state.todo_items = self.planner.plan_todo_list(state)
         self._drain_tool_events(state)
@@ -153,7 +150,6 @@ class DeepResearchAgent:
 
     def run_stream(self, topic: str) -> Iterator[dict[str, Any]]:
         """Execute the workflow yielding incremental progress events."""
-
         state = SummaryState(research_topic=topic)
         logger.debug("Starting streaming research: topic=%s", topic)
         yield {"type": "status", "message": "初始化研究流程"}
@@ -181,8 +177,8 @@ class DeepResearchAgent:
         def enqueue(
             event: dict[str, Any],
             *,
-            task: Optional[TodoItem] = None,
-            step_override: Optional[int] = None,
+            task: TodoItem | None = None,
+            step_override: int | None = None,
         ) -> None:
             payload = dict(event)
             target_task_id = payload.get("task_id")
@@ -300,7 +296,6 @@ class DeepResearchAgent:
         step: int | None = None,
     ) -> Iterator[dict[str, Any]]:
         """Run search + summarization for a single task."""
-
         task.status = "in_progress"
 
         search_result, notices, answer_text, backend = dispatch_search(
@@ -362,7 +357,7 @@ class DeepResearchAgent:
             state.sources_gathered.append(sources_summary)
             state.research_loop_count += 1
 
-        summary_text: Optional[str] = None
+        summary_text: str | None = None
 
         if emit_stream:
             for event in self._drain_tool_events(state, step=step):
@@ -422,10 +417,9 @@ class DeepResearchAgent:
         self,
         state: SummaryState,
         *,
-        step: Optional[int] = None,
+        step: int | None = None,
     ) -> list[dict[str, Any]]:
         """Proxy to the shared tool call tracker."""
-
         events = self._tool_tracker.drain(state, step=step)
         if self._tool_event_sink_enabled:
             return []
@@ -434,12 +428,10 @@ class DeepResearchAgent:
     @property
     def _tool_call_events(self) -> list[dict[str, Any]]:
         """Expose recorded tool events for legacy integrations."""
-
         return self._tool_tracker.as_dicts()
 
     def _serialize_task(self, task: TodoItem) -> dict[str, Any]:
         """Convert task dataclass to serializable dict for frontend."""
-
         return {
             "id": task.id,
             "title": task.title,
@@ -453,7 +445,7 @@ class DeepResearchAgent:
             "stream_token": task.stream_token,
         }
 
-    def _persist_final_report(self, state: SummaryState, report: str) -> Optional[dict[str, Any]]:
+    def _persist_final_report(self, state: SummaryState, report: str) -> dict[str, Any] | None:
         if not self.note_tool or not report or not report.strip():
             return None
 
@@ -511,7 +503,7 @@ class DeepResearchAgent:
 
         return payload
 
-    def _find_existing_report_note_id(self, state: SummaryState) -> Optional[str]:
+    def _find_existing_report_note_id(self, state: SummaryState) -> str | None:
         if state.report_note_id:
             return state.report_note_id
 
@@ -543,7 +535,7 @@ class DeepResearchAgent:
         return None
 
     @staticmethod
-    def _extract_note_id_from_text(response: str) -> Optional[str]:
+    def _extract_note_id_from_text(response: str) -> str | None:
         if not response:
             return None
 
@@ -554,8 +546,7 @@ class DeepResearchAgent:
         return match.group(1).strip()
 
 
-def run_deep_research(topic: str, config: Optional[Configuration] = None) -> SummaryStateOutput:
+def run_deep_research(topic: str, config: Configuration | None = None) -> SummaryStateOutput:
     """Convenience function mirroring the class-based API."""
-
     agent = DeepResearchAgent(config=config)
     return agent.run(topic)
