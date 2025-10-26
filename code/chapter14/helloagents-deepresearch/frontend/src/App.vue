@@ -1,13 +1,14 @@
 <template>
-  <main class="app-shell">
+  <main class="app-shell" :class="{ expanded: isExpanded }">
     <div class="aurora" aria-hidden="true">
       <span></span>
       <span></span>
       <span></span>
     </div>
 
-    <div class="layout">
-      <section class="panel panel-form">
+    <!-- 初始状态：居中输入卡片 -->
+    <div v-if="!isExpanded" class="layout layout-centered">
+      <section class="panel panel-form panel-centered">
         <header class="panel-head">
           <div class="logo">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -86,8 +87,54 @@
           正在收集线索与证据，实时进展见右侧区域。
         </p>
       </section>
+    </div>
 
-            <section
+    <!-- 全屏状态：左右分栏布局 -->
+    <div v-else class="layout layout-fullscreen">
+      <!-- 左侧：研究信息 -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <button class="back-btn" @click="goBack" :disabled="loading">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            返回
+          </button>
+          <h2>🔍 深度研究助手</h2>
+        </div>
+
+        <div class="research-info">
+          <div class="info-item">
+            <label>研究主题</label>
+            <p class="topic-display">{{ form.topic }}</p>
+          </div>
+
+          <div class="info-item" v-if="form.searchApi">
+            <label>搜索引擎</label>
+            <p>{{ form.searchApi }}</p>
+          </div>
+
+          <div class="info-item" v-if="totalTasks > 0">
+            <label>研究进度</label>
+            <div class="progress-bar">
+              <div class="progress-fill" :style="{ width: `${(completedTasks / totalTasks) * 100}%` }"></div>
+            </div>
+            <p class="progress-text">{{ completedTasks }} / {{ totalTasks }} 任务完成</p>
+          </div>
+        </div>
+
+        <div class="sidebar-actions">
+          <button class="new-research-btn" @click="startNewResearch">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+            开始新研究
+          </button>
+        </div>
+      </aside>
+
+      <!-- 右侧：研究结果 -->
+      <section
         class="panel panel-result"
         v-if="todoTasks.length || reportMarkdown || progressLogs.length"
       >
@@ -338,6 +385,7 @@ const loading = ref(false);
 const error = ref("");
 const progressLogs = ref<string[]>([]);
 const logsCollapsed = ref(false);
+const isExpanded = ref(false);
 
 const todoTasks = ref<TodoTaskView[]>([]);
 const activeTaskId = ref<number | null>(null);
@@ -633,6 +681,7 @@ const handleSubmit = async () => {
 
   loading.value = true;
   error.value = "";
+  isExpanded.value = true;
   resetWorkflowState();
 
   const controller = new AbortController();
@@ -917,6 +966,23 @@ const cancelResearch = () => {
   currentController.abort();
 };
 
+const goBack = () => {
+  if (loading.value) {
+    return; // 研究进行中不允许返回
+  }
+  isExpanded.value = false;
+};
+
+const startNewResearch = () => {
+  if (loading.value) {
+    cancelResearch();
+  }
+  resetWorkflowState();
+  isExpanded.value = false;
+  form.topic = "";
+  form.searchApi = "";
+};
+
 onBeforeUnmount(() => {
   if (currentController) {
     currentController.abort();
@@ -933,10 +999,17 @@ onBeforeUnmount(() => {
   padding: 72px 24px;
   display: flex;
   justify-content: center;
+  align-items: center;
   background: radial-gradient(circle at 20% 20%, #f8fafc, #dbeafe 60%);
   color: #1f2937;
   overflow: hidden;
   box-sizing: border-box;
+  transition: padding 0.4s ease;
+}
+
+.app-shell.expanded {
+  padding: 0;
+  align-items: stretch;
 }
 
 .aurora {
@@ -979,12 +1052,24 @@ onBeforeUnmount(() => {
 
 .layout {
   position: relative;
-  width: min(1280px, 100%);
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
   gap: 24px;
   z-index: 1;
-  align-items: flex-start;
+  transition: all 0.4s ease;
+}
+
+.layout-centered {
+  max-width: 600px;
+  justify-content: center;
+  align-items: center;
+}
+
+.layout-fullscreen {
+  height: 100vh;
+  max-width: 100%;
+  gap: 0;
+  align-items: stretch;
 }
 
 .panel {
@@ -1001,6 +1086,20 @@ onBeforeUnmount(() => {
 
 .panel-form {
   max-width: 420px;
+}
+
+.panel-centered {
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  box-shadow: 0 32px 64px rgba(15, 23, 42, 0.15);
+  transform: scale(1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.panel-centered:hover {
+  transform: scale(1.02);
+  box-shadow: 0 40px 80px rgba(15, 23, 42, 0.2);
 }
 
 .panel-result {
@@ -2018,6 +2117,188 @@ select:focus {
 
   .panel-form h1 {
     font-size: 24px;
+  }
+}
+
+/* 侧边栏样式 */
+.sidebar {
+  width: 400px;
+  min-width: 400px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.98);
+  border-right: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.08);
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: #1f2937;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.back-btn:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.back-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.research-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-item label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+}
+
+.info-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+.topic-display {
+  font-size: 16px !important;
+  font-weight: 600;
+  color: #0f172a !important;
+  padding: 12px;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #3b82f6;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  font-size: 13px !important;
+  color: #64748b !important;
+  font-weight: 500;
+}
+
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.new-research-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.new-research-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.new-research-btn:active {
+  transform: translateY(0);
+}
+
+/* 全屏状态下的结果面板 */
+.layout-fullscreen .panel-result {
+  flex: 1;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+  overflow-y: auto;
+  max-width: none;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 320px;
+    min-width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-fullscreen {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    max-height: 40vh;
+  }
+
+  .layout-fullscreen .panel-result {
+    height: 60vh;
   }
 }
 </style>

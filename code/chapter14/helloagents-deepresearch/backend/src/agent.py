@@ -9,23 +9,22 @@ from queue import Empty, Queue
 from threading import Lock, Thread
 from typing import Any, Callable, Iterator
 
-from hello_agents import HelloAgentsLLM
+from hello_agents import HelloAgentsLLM, ToolAwareSimpleAgent
 from hello_agents.tools import ToolRegistry
 from hello_agents.tools.builtin.note_tool import NoteTool
 
-from ...configuration import Configuration
-from ...prompts import (
+from config import Configuration
+from prompts import (
     report_writer_instructions,
     task_summarizer_instructions,
     todo_planner_system_prompt,
 )
-from ..models import SummaryState, SummaryStateOutput, TodoItem
-from ..services.planner_service import PlanningService
-from ..services.reporting_service import ReportingService
-from ..services.search_service import dispatch_search, prepare_research_context
-from ..services.summarization_service import SummarizationService
-from ..services.tool_events import ToolCallTracker
-from .tool_aware_agent import ToolAwareSimpleAgent
+from models import SummaryState, SummaryStateOutput, TodoItem
+from services.planner import PlanningService
+from services.reporter import ReportingService
+from services.search import dispatch_search, prepare_research_context
+from services.summarizer import SummarizationService
+from services.tool_events import ToolCallTracker
 
 logger = logging.getLogger(__name__)
 

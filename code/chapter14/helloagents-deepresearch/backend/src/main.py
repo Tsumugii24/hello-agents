@@ -12,8 +12,8 @@ from fastapi.responses import StreamingResponse
 from loguru import logger
 from pydantic import BaseModel, Field
 
-from ...configuration import Configuration, SearchAPI
-from ..agents.deep_research_agent import DeepResearchAgent
+from config import Configuration, SearchAPI
+from agent import DeepResearchAgent
 
 # 添加控制台日志处理程序
 logger.add(
@@ -176,3 +176,15 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        log_level="info"
+    )

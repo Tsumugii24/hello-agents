@@ -9,7 +9,7 @@ from pathlib import Path
 from threading import Lock
 from typing import Any, Callable, Optional
 
-from ..models import SummaryState, TodoItem
+from models import SummaryState, TodoItem
 
 logger = logging.getLogger(__name__)
 

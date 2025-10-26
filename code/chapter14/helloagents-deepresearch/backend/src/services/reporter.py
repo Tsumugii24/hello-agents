@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import json
 
-from ..models import SummaryState
-from ...configuration import Configuration
-from ...utils import strip_thinking_tokens
-from ..agents.tool_aware_agent import ToolAwareSimpleAgent
-from .text_processing import strip_tool_calls
+from hello_agents import ToolAwareSimpleAgent
+
+from models import SummaryState
+from config import Configuration
+from utils import strip_thinking_tokens
+from services.text_processing import strip_tool_calls
 
 
 class ReportingService:

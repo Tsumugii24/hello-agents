@@ -42,7 +42,7 @@ class Configuration(BaseModel):
         description="Whether to store task progress in NoteTool",
     )
     notes_workspace: str = Field(
-        default="./notes/deep_research",
+        default="./notes",
         title="Notes Workspace",
         description="Directory for NoteTool to persist task notes",
     )
@@ -140,3 +140,4 @@ class Configuration(BaseModel):
         """Best-effort resolution of the model identifier to use."""
 
         return self.llm_model_id or self.local_llm
+

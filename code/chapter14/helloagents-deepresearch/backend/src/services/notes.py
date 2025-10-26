@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from ..models import TodoItem
+from models import TodoItem
 
 
 def build_note_guidance(task: TodoItem) -> str:

@@ -7,8 +7,8 @@ from typing import Any, Optional, Tuple
 
 from hello_agents.tools import SearchTool
 
-from ...configuration import Configuration
-from ...utils import (
+from config import Configuration
+from utils import (
     deduplicate_and_format_sources,
     format_sources,
     get_config_value,
