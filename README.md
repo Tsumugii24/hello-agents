@@ -121,10 +121,11 @@
 - [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员, 第九\十六章内容和全文校对)  
 - [姜舒凡-项目负责人](https://github.com/Tsumugii24)（Datawhale成员, 章节习题设计和校对）
 - [黄佩林-Datawhale意向成员](https://github.com/HeteroCat) (Agent开发工程师, 第五章内容贡献者)
-- [曾鑫民-agent工程师](https://github.com/fancyboi999) (牛客科技, 第十四章案例开发)
+- [曾鑫民-Agent工程师](https://github.com/fancyboi999) (牛客科技, 第十四章案例开发)
 
 ### Extra-Chapter 贡献者
 - [WH](https://github.com/WHQAQ11) (内容贡献者)
+- [周奥杰-DW贡献者团队](https://github.com/thunderbolt-fire) (西安交通大学, Extra02内容贡献)
 
 ### 特别感谢
 - 感谢 [@Sm1les](https://github.com/Sm1les) 对本项目的帮助与支持
@@ -139,7 +140,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./docs/images/star-history-20251027.png" alt="Datawhale" width="90%">
+    <img src="./docs/images/star-history-20251028.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">
