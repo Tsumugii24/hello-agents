@@ -146,7 +146,15 @@ class ThreeKingdomsWerewolfGame:
             # 统计投票
             votes = {}
             for i, vote_msg in enumerate(kill_votes):
-                votes[self.werewolves[i].name] = vote_msg.metadata.get("target")
+                # 检查vote_msg是否为None或metadata是否存在
+                if vote_msg is not None and hasattr(vote_msg, 'metadata') and vote_msg.metadata is not None:
+                    votes[self.werewolves[i].name] = vote_msg.metadata.get("target")
+                else:
+                    # 如果返回无效,随机选择一个目标
+                    print(f"⚠️ {self.werewolves[i].name} 的击杀投票无效,随机选择目标")
+                    import random
+                    valid_targets = [p.name for p in self.alive_players if p.name not in [w.name for w in self.werewolves]]
+                    votes[self.werewolves[i].name] = random.choice(valid_targets) if valid_targets else None
             
             killed_player, _ = majority_vote_cn(votes)
             return killed_player
@@ -162,8 +170,17 @@ class ThreeKingdomsWerewolfGame:
         check_result = await seer_agent(
             structured_model=get_seer_model_cn(self.alive_players)
         )
-        
+
+        # 检查返回结果是否有效
+        if check_result is None or not hasattr(check_result, 'metadata') or check_result.metadata is None:
+            print(f"⚠️ 预言家查验失败,跳过此阶段")
+            return
+
         target_name = check_result.metadata.get("target")
+        if not target_name:
+            print(f"⚠️ 预言家未选择查验目标,跳过此阶段")
+            return
+
         target_role = self.roles.get(target_name, "村民")
         
         # 告知预言家结果
@@ -184,21 +201,25 @@ class ThreeKingdomsWerewolfGame:
         
         # 女巫行动
         witch_action = await witch_agent(structured_model=WitchActionModelCN)
-        
+
         saved_player = None
         poisoned_player = None
-        
-        if witch_action.metadata.get("use_antidote") and self.witch_has_antidote:
-            if killed_player:
-                saved_player = killed_player
-                self.witch_has_antidote = False
-                await witch_agent.observe(await self.moderator.announce(f"你使用解药救了{killed_player}"))
-        
-        if witch_action.metadata.get("use_poison") and self.witch_has_poison:
-            poisoned_player = witch_action.metadata.get("target_name")
-            if poisoned_player:
-                self.witch_has_poison = False
-                await witch_agent.observe(await self.moderator.announce(f"你使用毒药毒杀了{poisoned_player}"))
+
+        # 检查返回结果是否有效
+        if witch_action is None or not hasattr(witch_action, 'metadata') or witch_action.metadata is None:
+            print(f"⚠️ 女巫行动失败,视为不使用技能")
+        else:
+            if witch_action.metadata.get("use_antidote") and self.witch_has_antidote:
+                if killed_player:
+                    saved_player = killed_player
+                    self.witch_has_antidote = False
+                    await witch_agent.observe(await self.moderator.announce(f"你使用解药救了{killed_player}"))
+
+            if witch_action.metadata.get("use_poison") and self.witch_has_poison:
+                poisoned_player = witch_action.metadata.get("target_name")
+                if poisoned_player:
+                    self.witch_has_poison = False
+                    await witch_agent.observe(await self.moderator.announce(f"你使用毒药毒杀了{poisoned_player}"))
         
         # 确定最终死亡玩家
         final_killed = killed_player if not saved_player else None
@@ -217,11 +238,20 @@ class ThreeKingdomsWerewolfGame:
             hunter_action = await hunter_agent(
                 structured_model=get_hunter_model_cn(self.alive_players)
             )
-            
+
+            # 检查返回结果是否有效
+            if hunter_action is None or not hasattr(hunter_action, 'metadata') or hunter_action.metadata is None:
+                print(f"⚠️ 猎人技能使用失败,视为放弃开枪")
+                return None
+
             if hunter_action.metadata.get("shoot"):
                 target = hunter_action.metadata.get("target")
-                await self.moderator.announce(f"猎人{hunter_agent.name}开枪带走了{target}")
-                return target
+                if target:
+                    await self.moderator.announce(f"猎人{hunter_agent.name}开枪带走了{target}")
+                    return target
+                else:
+                    print(f"⚠️ 猎人选择开枪但未指定目标,视为放弃")
+                    return None
         
         return None
     
@@ -265,7 +295,13 @@ class ThreeKingdomsWerewolfGame:
             # 统计投票
             votes = {}
             for i, vote_msg in enumerate(vote_msgs):
-                votes[self.alive_players[i].name] = vote_msg.metadata.get("vote")
+                # 检查vote_msg是否为None或metadata是否存在
+                if vote_msg is not None and hasattr(vote_msg, 'metadata') and vote_msg.metadata is not None:
+                    votes[self.alive_players[i].name] = vote_msg.metadata.get("vote")
+                else:
+                    # 如果返回无效,默认弃票
+                    print(f"⚠️ {self.alive_players[i].name} 的投票无效,视为弃票")
+                    votes[self.alive_players[i].name] = None
             
             voted_out, vote_count = majority_vote_cn(votes)
             await self.moderator.vote_result_announcement(voted_out, vote_count)
