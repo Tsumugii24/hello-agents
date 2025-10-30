@@ -144,11 +144,8 @@ class ReflectionAgent:
     def _get_llm_response(self, prompt: str) -> str:
         """一个辅助方法，用于调用LLM并获取完整的流式响应。"""
         messages = [{"role": "user", "content": prompt}]
-        response_text = ""
         # 确保能处理生成器可能返回None的情况
-        for chunk in self.llm_client.think(messages=messages):
-            if chunk:
-                response_text += chunk
+        response_text = self.llm_client.think(messages=messages) or ""
         return response_text
 
 if __name__ == '__main__':
