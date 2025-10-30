@@ -16,7 +16,7 @@
 
 &emsp;&emsp;如果说2024年是"百模大战"的元年，那么2025年无疑开启了"Agent元年"。技术的焦点正从训练更大的基础模型，转向构建更聪明的智能体应用。然而，当前系统性、重实践的教程却极度匮乏。为此，我们发起了 Hello-Agents 项目，希望能为社区提供一本从零开始、理论与实战并重的智能体系统构建指南。
 
-&emsp;&emsp;Hello-Agents 是Datawhale社区的<strong>系统性智能体学习教程</strong>，旨在"授人以渔"。教程将带领你穿透框架表象，从智能体的核心原理出发，深入其核心架构，理解其经典范式，并最终亲手构建起属于自己的多智能体应用。我们相信，最好的学习方式就是动手实践。希望这本教程能成为你探索智能体世界的起点，能够从一名大语言模型的"使用者"，蜕变为一名智能体系统的"构建者"。
+&emsp;&emsp;Hello-Agents 是Datawhale社区的<strong>系统性智能体学习教程</strong>。如今Agent构建主要分为两派，一派是Dify，Coze，n8n这类软件工程类Agent，其本质是流程驱动的软件开发，LLM作为数据处理的后端；另一派则是AI原生的Agent，即真正以AI驱动的Agent。本教程旨在带领大家深入理解并构建后者——真正的AI Native Agent。教程将带领你穿透框架表象，从智能体的核心原理出发，深入其核心架构，理解其经典范式，并最终亲手构建起属于自己的多智能体应用。我们相信，最好的学习方式就是动手实践。希望这本教程能成为你探索智能体世界的起点，能够从一名大语言模型的"使用者"，蜕变为一名智能体系统的"构建者"。
 
 ## 📚 快速开始
 
@@ -33,7 +33,7 @@
 - 📖 <strong>Datawhale 开源免费</strong> 完全免费学习本项目所有内容，与社区共同成长
 - 🔍 <strong>理解核心原理</strong> 深入理解智能体的概念、历史与经典范式
 - 🏗️ <strong>亲手实现</strong> 掌握热门低代码平台和智能体代码框架的使用
-- 🛠️ <strong>自研框架</strong> 基于Openai原生API从零构建一个自己的智能体框架
+- 🛠️ <strong>自研框架[HelloAgents](https://github.com/jjyaoao/helloagents)</strong> 基于Openai原生API从零构建一个自己的智能体框架
 - ⚙️ <strong>掌握高级技能</strong> 一步步实现上下文工程、Memory、协议、评估等系统性技术
 - 🤝 <strong>模型训练</strong> 掌握Agentic RL，从SFT到GRPO的全流程实战训练LLM
 - 🚀 <strong>驱动真实案例</strong> 实战开发智能旅行助手、赛博小镇等综合项目
@@ -61,7 +61,7 @@
 | [第十二章 智能体性能评估](./docs/chapter12/第十二章%20智能体性能评估.md) | 核心指标、基准测试与评估框架 | ✅ |
 | <strong>第四部分：综合案例进阶</strong> |  |  |
 | [第十三章 智能旅行助手](./docs/chapter13/第十三章%20智能旅行助手.md) | MCP与多智能体协作的真实世界应用 | ✅ |
-| [第十四章 自动化深度研究智能体](./docs/chapter14/第十四章%20自动化深度研究智能体.md) | DeepResearch Agent 复现与解析 | 🚧 |
+| [第十四章 自动化深度研究智能体](./docs/chapter14/第十四章%20自动化深度研究智能体.md) | DeepResearch Agent 复现与解析 | ✅ |
 | [第十五章 构建赛博小镇](./docs/chapter15/第十五章%20构建赛博小镇.md) | Agent 与游戏的结合，模拟社会动态 | ✅ |
 | <strong>第五部分：毕业设计及未来展望</strong> |  |  |
 | [第十六章 毕业设计](./docs/chapter17/第十六章%20毕业设计.md) | 构建属于你的完整多智能体应用 | 🚧 |
@@ -74,6 +74,7 @@
 | --- | --- |
 | [01-Agent面试题总结](./Extra-Chapter/Extra01-面试问题总结.md) | Agent岗位相关面试问题 |
 | [01-Agent面试题答案](./Extra-Chapter/Extra01-参考答案.md) | 相关面试问题答案 |
+| [02-上下文工程内容补充](./Extra-Chapter/Extra02-上下文工程补充知识.md) | 上下文工程内容扩展 |
 
 ### PDF 版本下载
 
@@ -96,7 +97,7 @@
 
 - <strong>第三部分：高级知识扩展</strong>（第8章～第12章），在这一部分，你的智能体将“学会”思考与协作。我们将使用第二部分的自研框架，深入探索记忆与检索、上下文工程、Agent训练等核心技术，并学习多智能体间的通信协议。最终，你将掌握评估智能体系统性能的专业方法。
 
-- <strong>第四部分：综合案例进阶</strong>（第13章～第15章），这里是理论与实践的交汇点。你将把所学融会贯通，亲手打造 智能旅行助手、自动化深度研究智能体，乃至一个模拟社会动态的赛博小镇，在真实有趣的项目中淬炼你的构建能力。
+- <strong>第四部分：综合案例进阶</strong>（第13章～第15章），这里是理论与实践的交汇点。你将把所学融会贯通，亲手打造智能旅行助手、自动化深度研究智能体，乃至一个模拟社会动态的赛博小镇，在真实有趣的项目中淬炼你的构建能力。
 
 - <strong>第五部分：毕业设计及未来展望</strong>（第16章），在旅程的终点，你将迎来一个毕业设计，构建一个完整的、属于你自己的多智能体应用，全面检验你的学习成果。我们还将与你一同展望智能体的未来，探索激动人心的前沿方向。
 
@@ -118,12 +119,14 @@
 
 ### 核心贡献者
 - [陈思州-项目负责人](https://github.com/jjyaoao) (Datawhale成员, 全文写作和校对)
-- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员, 第九\十四章内容和全文校对)  
-- [姜舒凡-项目负责人](https://github.com/Tsumugii24)（Datawhale成员, 全文校对）
-- [Jason-Datawhale意向成员](https://github.com/HeteroCat) (Agent开发工程师, 第五章内容贡献者)
+- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员, 第九\十六章内容和全文校对)  
+- [姜舒凡-项目负责人](https://github.com/Tsumugii24)（Datawhale成员, 章节习题设计和校对）
+- [黄佩林-Datawhale意向成员](https://github.com/HeteroCat) (Agent开发工程师, 第五章内容贡献者)
+- [曾鑫民-Agent工程师](https://github.com/fancyboi999) (牛客科技, 第十四章案例开发)
 
 ### Extra-Chapter 贡献者
 - [WH](https://github.com/WHQAQ11) (内容贡献者)
+- [周奥杰-DW贡献者团队](https://github.com/thunderbolt-fire) (西安交通大学, Extra02内容贡献)
 
 ### 特别感谢
 - 感谢 [@Sm1les](https://github.com/Sm1les) 对本项目的帮助与支持
@@ -138,7 +141,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./docs/images/star-history-20251020.png" alt="Datawhale" width="90%">
+    <img src="./docs/images/star-history-20251028.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">

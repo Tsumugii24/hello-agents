@@ -41,7 +41,10 @@ class CodebaseMaintainer:
         self.llm = llm or HelloAgentsLLM()
 
         # 初始化工具
-        self.memory_tool = MemoryTool(user_id=project_name)
+        self.memory_tool = MemoryTool(
+            user_id=project_name,
+            memory_types=["working"]
+        )
         self.note_tool = NoteTool(workspace=f"./{project_name}_notes")
         self.terminal_tool = TerminalTool(workspace=codebase_path, timeout=60)
 
@@ -102,12 +105,22 @@ class CodebaseMaintainer:
             user_query=user_input,
             conversation_history=self.conversation_history,
             system_instructions=self._build_system_instructions(mode),
-            custom_packets=note_packets + pre_context
+            additional_packets=note_packets + pre_context
         )
 
         # 第四步:调用 LLM
         print("🤖 正在思考...")
-        response = self.llm.invoke(context)
+        messages = [
+            {
+                "role": "system",
+                "content": context
+            },
+            {
+                "role": "user",
+                "content": user_input
+            }
+        ]
+        response = self.llm.invoke(messages)
 
         # 第五步:后处理
         self._postprocess_response(user_input, response)
@@ -167,14 +180,15 @@ class CodebaseMaintainer:
             # 规划模式:加载最近的笔记
             print("📋 加载任务规划...")
 
-            task_notes = self.note_tool.run({
+            task_notes_raw = self.note_tool.run({
                 "action": "list",
                 "note_type": "task_state",
                 "limit": 3
             })
+            task_notes = self._normalize_note_results(task_notes_raw)
 
             if task_notes:
-                content = "\n".join([f"- {note['title']}" for note in task_notes])
+                content = "\n".join([f"- {note.get('title', 'Untitled')}" for note in task_notes])
                 packets.append(ContextPacket(
                     content=f"[当前任务]\n{content}",
                     timestamp=datetime.now(),
@@ -189,32 +203,70 @@ class CodebaseMaintainer:
         """检索相关笔记"""
         try:
             # 优先检索 blocker
-            blockers = self.note_tool.run({
+            blockers_raw = self.note_tool.run({
                 "action": "list",
                 "note_type": "blocker",
                 "limit": 2
             })
+            blockers = self._normalize_note_results(blockers_raw)
 
             # 搜索相关笔记
-            search_results = self.note_tool.run({
+            search_results_raw = self.note_tool.run({
                 "action": "search",
                 "query": query,
                 "limit": limit
             })
+            search_results = self._normalize_note_results(search_results_raw)
 
             # 合并去重
-            all_notes = {note.get('note_id') or note.get('id'): note for note in (blockers or []) + (search_results or [])}
+            all_notes = {}
+            for note in blockers + search_results:
+                if not isinstance(note, dict):
+                    continue
+                note_id = note.get('note_id') or note.get('id')
+                if not note_id:
+                    continue
+                if note_id not in all_notes:
+                    all_notes[note_id] = note
+
             return list(all_notes.values())[:limit]
 
         except Exception as e:
             print(f"[WARNING] 笔记检索失败: {e}")
             return []
 
+    def _normalize_note_results(self, result: Any) -> List[Dict]:
+        """将笔记工具的返回值转换为笔记字典列表"""
+        if not result:
+            return []
+
+        if isinstance(result, dict):
+            return [result]
+
+        if isinstance(result, list):
+            return [item for item in result if isinstance(item, dict)]
+
+        if isinstance(result, str):
+            text = result.strip()
+            if not text:
+                return []
+            if text.startswith("{") or text.startswith("["):
+                try:
+                    parsed = json.loads(text)
+                    return self._normalize_note_results(parsed)
+                except Exception:
+                    return []
+            return []
+
+        return []
+
     def _notes_to_packets(self, notes: List[Dict]) -> List[ContextPacket]:
         """将笔记转换为上下文包"""
         packets = []
 
         for note in notes:
+            if not isinstance(note, dict):
+                continue
             # 根据笔记类型设置不同的相关性分数
             relevance_map = {
                 "blocker": 0.9,
@@ -227,10 +279,15 @@ class CodebaseMaintainer:
             relevance = relevance_map.get(note_type, 0.6)
 
             content = f"[笔记:{note.get('title', 'Untitled')}]\n类型: {note_type}\n\n{note.get('content', '')}"
+            updated_at = note.get('updated_at')
+            try:
+                note_timestamp = datetime.fromisoformat(updated_at) if updated_at else datetime.now()
+            except (ValueError, TypeError):
+                note_timestamp = datetime.now()
 
             packets.append(ContextPacket(
                 content=content,
-                timestamp=datetime.fromisoformat(note.get('updated_at', datetime.now().isoformat())),
+                timestamp=note_timestamp,
                 token_count=len(content) // 4,
                 relevance_score=relevance,
                 metadata={

@@ -167,7 +167,7 @@ HelloAgents的Agentic RL模块采用四层架构设计，如图11.3所示。
 
 ```bash
 # 安装HelloAgents框架(第11章版本)
-pip install hello-agents[rl]==0.2.5
+pip install "hello-agents[rl]==0.2.5"
 
 # 或者从源码安装
 cd HelloAgents

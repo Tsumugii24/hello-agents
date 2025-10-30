@@ -19,23 +19,23 @@ def main():
     print("ContextBuilder 基础使用示例")
     print("=" * 80 + "\n")
 
-    # 1. 初始化工具
+    # 1. 初始化工具（Optional）
     print("1. 初始化工具...")
-    memory_tool = MemoryTool(user_id="user123")
-    rag_tool = RAGTool(knowledge_base_path="./knowledge_base")
+    # memory_tool = MemoryTool(user_id="user123")
+    # rag_tool = RAGTool(knowledge_base_path="./knowledge_base")
 
     # 2. 创建 ContextBuilder
     print("2. 创建 ContextBuilder...")
     config = ContextConfig(
         max_tokens=3000,
         reserve_ratio=0.2,
-        min_relevance=0.2,
+        min_relevance=0,#最小相关性阈值，0代表所有历史信息会被保留,
         enable_compression=True
     )
 
     builder = ContextBuilder(
-        memory_tool=memory_tool,
-        rag_tool=rag_tool,
+        # memory_tool=memory_tool,
+        # rag_tool=rag_tool,
         config=config
     )
 
@@ -50,19 +50,19 @@ def main():
 
     # 4. 添加一些记忆
     print("4. 添加记忆...")
-    memory_tool.execute(
-        "add",
-        content="用户正在开发数据分析工具,使用Python和Pandas",
-        memory_type="semantic",
-        importance=0.8
-    )
+    # memory_tool.execute(
+    #     "add",
+    #     content="用户正在开发数据分析工具,使用Python和Pandas",
+    #     memory_type="semantic",
+    #     importance=0.8
+    # )
 
-    memory_tool.execute(
-        "add",
-        content="已完成CSV读取模块的开发",
-        memory_type="episodic",
-        importance=0.7
-    )
+    # memory_tool.execute(
+    #     "add",
+    #     content="已完成CSV读取模块的开发",
+    #     memory_type="episodic",
+    #     importance=0.7
+    # )
 
     # 5. 构建上下文
     print("5. 构建上下文...\n")
@@ -82,14 +82,21 @@ def main():
     # 6. 将上下文字符串转换为消息格式供 LLM 使用
     print("6. 将上下文传给 LLM...")
     messages = [
-        {"role": "system", "content": context_str}
+        {"role": "system", "content": context_str},
+        {"role": "user", "content": "请回答"}
+
     ]
 
+    from hello_agents.core.llm import HelloAgentsLLM
+    llm = HelloAgentsLLM(
+        model="ZhipuAI/GLM-4.6",
+        api_key="6ff5219e-410a-4293-8772-0c948bfa691c",
+        base_url="https://api-inference.modelscope.cn/v1/",
+        provider="modelscope"
+    )
     # 注意: 实际使用时需要配置 LLM
-    # from config_helper import get_llm
-    # llm = get_llm()
-    # response = llm.invoke(messages)
-    # print(f"LLM 回答: {response}")
+    response = llm.invoke(messages)
+    print(f"LLM 回答: {response}")
 
     print("✅ ContextBuilder 演示完成!")
     print("\n提示: ContextBuilder 返回的是结构化的上下文字符串,")

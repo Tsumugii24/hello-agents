@@ -28,14 +28,14 @@ class ProjectAssistant(SimpleAgent):
         self.project_name = project_name
 
         # 初始化工具
-        self.memory_tool = MemoryTool(user_id=project_name)
-        self.rag_tool = RAGTool(knowledge_base_path=f"./{project_name}_kb")
+        # self.memory_tool = MemoryTool(user_id=project_name)
+        # self.rag_tool = RAGTool(knowledge_base_path=f"./{project_name}_kb")
         self.note_tool = NoteTool(workspace=f"./{project_name}_notes")
 
         # 初始化上下文构建器
         self.context_builder = ContextBuilder(
-            memory_tool=self.memory_tool,
-            rag_tool=self.rag_tool,
+            # memory_tool=self.memory_tool,
+            # rag_tool=self.rag_tool,
             config=ContextConfig(max_tokens=4000)
         )
 
@@ -51,15 +51,19 @@ class ProjectAssistant(SimpleAgent):
         note_packets = self._notes_to_packets(relevant_notes)
 
         # 3. 构建优化的上下文
-        context = self.context_builder.build(
+        optimized_context = self.context_builder.build(
             user_query=user_input,
             conversation_history=self.conversation_history,
             system_instructions=self._build_system_instructions(),
-            custom_packets=note_packets
+            additional_packets=note_packets
         )
 
-        # 4. 调用 LLM
-        response = self.llm.invoke(context)
+        # 4. 调用 LLM (以 messages 数组形式传入)
+        messages = [
+            {"role": "system", "content": optimized_context},
+            {"role": "user", "content": user_input}
+        ]
+        response = self.llm.invoke(messages)
 
         # 5. 如果需要,将交互记录为笔记
         if note_as_action:
@@ -74,43 +78,107 @@ class ProjectAssistant(SimpleAgent):
         """检索相关笔记"""
         try:
             # 优先检索 blocker 和 action 类型的笔记
-            blockers = self.note_tool.run({
+            blockers_raw = self.note_tool.run({
                 "action": "list",
                 "note_type": "blocker",
                 "limit": 2
             })
 
             # 通用搜索
-            search_results = self.note_tool.run({
+            search_results_raw = self.note_tool.run({
                 "action": "search",
                 "query": query,
                 "limit": limit
             })
 
+            blockers = self._ensure_list_of_dicts(blockers_raw)
+            search_results = self._ensure_list_of_dicts(search_results_raw)
+
             # 合并并去重
-            all_notes = {note['note_id']: note for note in blockers + search_results}
+            all_notes = {}
+            for note in blockers + search_results:
+                if not isinstance(note, dict):
+                    continue
+                note_id = (
+                    note.get("note_id")
+                    or note.get("id")
+                    or note.get("uuid")
+                    or note.get("title")
+                    or str(hash(str(note)))
+                )
+                all_notes[note_id] = note
             return list(all_notes.values())[:limit]
 
         except Exception as e:
             print(f"[WARNING] 笔记检索失败: {e}")
             return []
 
+    def _ensure_list_of_dicts(self, data) -> List[Dict]:
+        """将 NoteTool 返回规范化为字典列表"""
+        import json
+        if data is None:
+            return []
+        if isinstance(data, str):
+            try:
+                data = json.loads(data)
+            except Exception:
+                return []
+        if isinstance(data, dict):
+            # 兼容 {"items": [...]} 或单条记录
+            if "items" in data and isinstance(data["items"], list):
+                return [item for item in data["items"] if isinstance(item, dict)]
+            return [data]
+        if isinstance(data, list):
+            return [item for item in data if isinstance(item, dict)]
+        return []
+
     def _notes_to_packets(self, notes: List[Dict]) -> List[ContextPacket]:
         """将笔记转换为上下文包"""
         packets = []
 
         for note in notes:
-            content = f"[笔记:{note['title']}]\n{note['content']}"
+            title = note.get("title", "")
+            body = note.get("content", "")
+            content = f"[笔记:{title}]\n{body}"
+
+            # 安全解析时间戳
+            ts = None
+            for key in ("updated_at", "updatedAt", "time", "timestamp"):
+                if key in note:
+                    ts = note.get(key)
+                    break
+            parsed_ts = None
+            if isinstance(ts, (int, float)):
+                try:
+                    parsed_ts = datetime.fromtimestamp(ts)
+                except Exception:
+                    parsed_ts = None
+            elif isinstance(ts, str):
+                try:
+                    parsed_ts = datetime.fromisoformat(ts)
+                except Exception:
+                    parsed_ts = None
+            if parsed_ts is None:
+                parsed_ts = datetime.now()
+
+            note_type = note.get("type") or note.get("note_type") or "note"
+            note_id = (
+                note.get("note_id")
+                or note.get("id")
+                or note.get("uuid")
+                or title
+                or str(hash(str(note)))
+            )
 
             packets.append(ContextPacket(
                 content=content,
-                timestamp=datetime.fromisoformat(note['updated_at']),
+                timestamp=parsed_ts,
                 token_count=len(content) // 4,  # 简单估算
                 relevance_score=0.75,  # 笔记具有较高相关性
                 metadata={
                     "type": "note",
-                    "note_type": note['type'],
-                    "note_id": note['note_id']
+                    "note_type": note_type,
+                    "note_id": note_id
                 }
             ))
 
