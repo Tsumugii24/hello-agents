@@ -38,7 +38,7 @@ class Planner:
         messages = [{"role": "user", "content": prompt}]
         
         print("--- 正在生成计划 ---")
-        response_text = "".join(self.llm_client.think(messages=messages))
+        response_text = self.llm_client.think(messages=messages) or ""
         print(f"✅ 计划已生成:\n{response_text}")
         
         try:
@@ -90,7 +90,7 @@ class Executor:
             )
             messages = [{"role": "user", "content": prompt}]
             
-            response_text = "".join(self.llm_client.think(messages=messages))
+            response_text = self.llm_client.think(messages=messages) or ""
             
             history += f"步骤 {i}: {step}\n结果: {response_text}\n\n"
             final_answer = response_text

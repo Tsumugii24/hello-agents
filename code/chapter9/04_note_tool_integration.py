@@ -265,7 +265,7 @@ def main():
     print("查看笔记摘要:")
     summary = assistant.note_tool.run({"action": "summary"})
     import json
-    print(json.dumps(summary, indent=2, ensure_ascii=False))
+    print(json.dumps(summary, indent=2, ensure_ascii=False).replace("\\n", "\n"))
 
     print("\n" + "=" * 80)
     print("演示完成!")

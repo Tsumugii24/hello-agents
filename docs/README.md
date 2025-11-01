@@ -70,6 +70,7 @@
 | --- | --- |
 | [01-Agent面试题总结](../Extra-Chapter/Extra01-面试问题总结.md) | Agent岗位相关面试问题 |
 | [01-Agent面试题答案](../Extra-Chapter/Extra01-参考答案.md) | 相关面试问题答案 |
+| [02-上下文工程内容补充](../Extra-Chapter/Extra02-上下文工程补充知识.md) | 上下文工程内容扩展 |
 
 ### PDF 版本下载
 
@@ -117,10 +118,11 @@
 - [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员, 第九\十六章内容和全文校对)  
 - [姜舒凡-项目负责人](https://github.com/Tsumugii24)（Datawhale成员, 章节习题设计和校对）
 - [黄佩林-Datawhale意向成员](https://github.com/HeteroCat) (Agent开发工程师, 第五章内容贡献者)
-- [曾鑫民-agent工程师](https://github.com/fancyboi999) (牛客科技, 第十四章案例开发)
+- [曾鑫民-Agent工程师](https://github.com/fancyboi999) (牛客科技, 第十四章案例开发)
 
 ### Extra-Chapter 贡献者
 - [WH](https://github.com/WHQAQ11) (内容贡献者)
+- [周奥杰-DW贡献者团队](https://github.com/thunderbolt-fire) (西安交通大学, Extra02内容贡献)
 
 ### 特别感谢
 - 感谢 [@Sm1les](https://github.com/Sm1les) 对本项目的帮助与支持
@@ -135,7 +137,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./images/star-history-20251027.png" alt="Datawhale" width="90%">
+    <img src="./images/star-history-2025111.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">
