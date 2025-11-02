@@ -119,7 +119,7 @@
 
 ### 核心贡献者
 - [陈思州-项目负责人](https://github.com/jjyaoao) (Datawhale成员, 全文写作和校对)
-- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员, 第九\十六章内容和全文校对)  
+- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员, 第九章内容和校对)  
 - [姜舒凡-项目负责人](https://github.com/Tsumugii24)（Datawhale成员, 章节习题设计和校对）
 - [黄佩林-Datawhale意向成员](https://github.com/HeteroCat) (Agent开发工程师, 第五章内容贡献者)
 - [曾鑫民-Agent工程师](https://github.com/fancyboi999) (牛客科技, 第十四章案例开发)
