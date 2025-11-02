@@ -60,7 +60,7 @@
 | [第十四章 自动化深度研究智能体](./chapter14/第十四章%20自动化深度研究智能体.md) | DeepResearch Agent 复现与解析 | ✅ |
 | [第十五章 构建赛博小镇](./chapter15/第十五章%20构建赛博小镇.md) | Agent 与游戏的结合，模拟社会动态 | ✅ |
 | <strong>第五部分：毕业设计及未来展望</strong> |  |  |
-| [第十六章 毕业设计](./chapter17/第十六章%20毕业设计.md) | 构建属于你的完整多智能体应用 | 🚧 |
+| [第十六章 毕业设计](./chapter16/第十六章%20毕业设计.md) | 构建属于你的完整多智能体应用 | ✅ |
 
 ### 社区贡献精选 (Community Blog)
 
@@ -115,7 +115,7 @@
 
 ### 核心贡献者
 - [陈思州-项目负责人](https://github.com/jjyaoao) (Datawhale成员, 全文写作和校对)
-- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员, 第九\十六章内容和全文校对)  
+- [孙韬-项目负责人](https://github.com/fengju0213) (Datawhale成员, 第九章内容和校对)  
 - [姜舒凡-项目负责人](https://github.com/Tsumugii24)（Datawhale成员, 章节习题设计和校对）
 - [黄佩林-Datawhale意向成员](https://github.com/HeteroCat) (Agent开发工程师, 第五章内容贡献者)
 - [曾鑫民-Agent工程师](https://github.com/fancyboi999) (牛客科技, 第十四章案例开发)
@@ -137,7 +137,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./images/star-history-20251028.png" alt="Datawhale" width="90%">
+    <img src="./images/star-history-2025111.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">
