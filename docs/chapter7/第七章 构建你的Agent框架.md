@@ -137,7 +137,8 @@ print(response)
 # 添加工具功能（可选）
 from hello_agents.tools import CalculatorTool
 calculator = CalculatorTool()
-agent.add_tool(calculator)
+# 需要实现7.4.1的MySimpleAgent进行调用，后续章节会支持此类调用方式
+# agent.add_tool(calculator)
 
 # 现在可以使用工具了
 response = agent.run("请帮我计算 2 + 3 * 4")
@@ -2048,7 +2049,7 @@ async def test_parallel_execution():
 
    - 参考7.2.1节的示例，尝试为 `HelloAgentsLLM` 添加一个新模型供应商的支持（如`Gemini`、`Anthropic`、`Kim`）。要求通过继承方式实现，并能够自动检测该提供商的环境变量。
    - 在7.2.3节中介绍了自动检测机制的三个优先级。请分析：如果同时设置了 `OPENAI_API_KEY` 和 `LLM_BASE_URL="http://localhost:11434/v1"`，框架最后会选择哪个提供商？这种优先级设计是否合理？
-   - `VLLM`，`SGLang` 和  `Ollama` 都提供了本地模型的部署和推理方案。请对比它们各自在易用性、资源占用、推理速度、推理精度等方面的优劣。
+   - 除了本章介绍的 `VLLM` 和 `Ollama`，还有 `SGLang` 等其他本地模型部署方案。请先搜索并了解 `SGLang` 的基本信息和特点，然后对比 `VLLM`、`SGLang` 和 `Ollama` 这三者在易用性、资源占用、推理速度、推理精度等方面的优劣。
 
 3. 在7.3节中，我们实现了 `Message` 类、`Config` 类和 `Agent` 基类。请分析：
 
