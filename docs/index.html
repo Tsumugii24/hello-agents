@@ -41,16 +41,6 @@
     <div id="app"></div>
     <script src="//cdn.jsdelivr.net/npm/mermaid@8.0.0-rc.8/dist/mermaid.min.js"></script>
     <script>
-        // 检查语言偏好并设置侧边栏
-        const preferredLang = localStorage.getItem('preferredLanguage');
-        const currentHash = window.location.hash;
-
-        // 判断当前应该使用哪个语言
-        let isEnglish = false;
-        if (preferredLang === 'en' || currentHash.includes('/en/')) {
-            isEnglish = true;
-        }
-
         window.$docsify = {
             name: 'Hello-Agents',
             repo: 'https://github.com/datawhalechina/Hello-Agents',
@@ -65,25 +55,46 @@
                 '/en/_sidebar.md': '/_sidebar_en.md',
                 '/en/chapter(\\d+)/Chapter(.*)': '/chapter$1/Chapter$2',
 
-                // 根据语言偏好动态设置默认侧边栏
-                '/_sidebar.md': isEnglish ? '/_sidebar_en.md' : '/_sidebar.md'
+                // 默认中文侧边栏
+                '/_sidebar.md': '/_sidebar.md'
             },
             pagination: {
-                previousText: isEnglish ? 'Previous' : '上一章节',
-                nextText: isEnglish ? 'Next' : '下一章节',
+                previousText: '上一章节',
+                nextText: '下一章节',
             },
             count: {
                 countable: true,
                 fontsize: '0.9em',
                 color: 'rgb(90,90,90)',
-                language: isEnglish ? 'english' : 'chinese'
+                language: 'chinese'
             },
             // 多语言配置
             fallbackLanguages: ['en'],
             nameLink: {
                 '/en/': '#/en/',
                 '/': '#/'
-            }
+            },
+            // 使用钩子动态处理侧边栏
+            plugins: [
+                function(hook, vm) {
+                    // 在每次路由变化时检查语言偏好
+                    hook.beforeEach(function(content) {
+                        const preferredLang = localStorage.getItem('preferredLanguage');
+                        const currentPath = vm.route.path;
+
+                        // 根据当前路径或语言偏好更新分页文本
+                        if (currentPath.includes('/en/') || preferredLang === 'en') {
+                            window.$docsify.pagination.previousText = 'Previous';
+                            window.$docsify.pagination.nextText = 'Next';
+                        } else {
+                            window.$docsify.pagination.previousText = '上一章节';
+                            window.$docsify.pagination.nextText = '下一章节';
+                        }
+
+                        return content;
+                    });
+                }
+            ]
         }
     </script>
     <!-- Put them above docsify.min.js -->
@@ -215,36 +226,40 @@
             const langBtn = document.getElementById('langBtn');
             const preferredLang = localStorage.getItem('preferredLanguage');
 
-            // 如果用户有语言偏好,且当前 URL 不匹配偏好,则自动切换
-            if (preferredLang === 'en' && !currentHash.includes('/en/')) {
-                // 用户偏好英文,但当前是中文页面
-                let path = currentHash.replace('#/', '');
+            // 只有在用户明确设置了语言偏好后,才自动切换
+            // 首次访问(没有偏好设置)时,默认显示中文版
+            if (preferredLang) {
+                // 如果用户有语言偏好,且当前 URL 不匹配偏好,则自动切换
+                if (preferredLang === 'en' && !currentHash.includes('/en/')) {
+                    // 用户偏好英文,但当前是中文页面
+                    let path = currentHash.replace('#/', '');
 
-                if (path === '' || path === '/') {
-                    window.location.hash = '#/en/README_EN.md';
-                } else {
-                    const parts = path.split('/');
+                    if (path === '' || path === '/') {
+                        window.location.hash = '#/en/README_EN.md';
+                    } else {
+                        const parts = path.split('/');
+                        const filename = parts[parts.length - 1];
+
+                        if (chapterMapping.zh2en[filename]) {
+                            parts[parts.length - 1] = chapterMapping.zh2en[filename];
+                            window.location.hash = '#/en/' + parts.join('/');
+                        }
+                    }
+                } else if (preferredLang === 'zh' && currentHash.includes('/en/')) {
+                    // 用户偏好中文,但当前是英文页面
+                    let newHash = currentHash.replace('#/', '').replace('en/', '');
+                    const parts = newHash.split('/');
                     const filename = parts[parts.length - 1];
 
-                    if (chapterMapping.zh2en[filename]) {
-                        parts[parts.length - 1] = chapterMapping.zh2en[filename];
-                        window.location.hash = '#/en/' + parts.join('/');
+                    if (chapterMapping.en2zh[filename]) {
+                        parts[parts.length - 1] = chapterMapping.en2zh[filename];
+                        window.location.hash = '#/' + parts.join('/');
                     }
-                }
-            } else if (preferredLang === 'zh' && currentHash.includes('/en/')) {
-                // 用户偏好中文,但当前是英文页面
-                let newHash = currentHash.replace('#/', '').replace('en/', '');
-                const parts = newHash.split('/');
-                const filename = parts[parts.length - 1];
-
-                if (chapterMapping.en2zh[filename]) {
-                    parts[parts.length - 1] = chapterMapping.en2zh[filename];
-                    window.location.hash = '#/' + parts.join('/');
                 }
             }
 
             // 设置按钮文本
-            if (currentHash.includes('/en/') || preferredLang === 'en') {
+            if (currentHash.includes('/en/')) {
                 langBtn.textContent = '中文';
             } else {
                 langBtn.textContent = 'English';
