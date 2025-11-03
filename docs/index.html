@@ -221,19 +221,16 @@
                 let path = currentHash.replace('#/', '');
 
                 if (path === '' || path === '/') {
-                    window.location.replace('#/en/README_EN.md');
-                    window.location.reload();
+                    window.location.hash = '#/en/README_EN.md';
                 } else {
                     const parts = path.split('/');
                     const filename = parts[parts.length - 1];
 
                     if (chapterMapping.zh2en[filename]) {
                         parts[parts.length - 1] = chapterMapping.zh2en[filename];
-                        window.location.replace('#/en/' + parts.join('/'));
-                        window.location.reload();
+                        window.location.hash = '#/en/' + parts.join('/');
                     }
                 }
-                return; // 停止执行,等待重新加载
             } else if (preferredLang === 'zh' && currentHash.includes('/en/')) {
                 // 用户偏好中文,但当前是英文页面
                 let newHash = currentHash.replace('#/', '').replace('en/', '');
@@ -242,10 +239,8 @@
 
                 if (chapterMapping.en2zh[filename]) {
                     parts[parts.length - 1] = chapterMapping.en2zh[filename];
-                    window.location.replace('#/' + parts.join('/'));
-                    window.location.reload();
+                    window.location.hash = '#/' + parts.join('/');
                 }
-                return; // 停止执行,等待重新加载
             }
 
             // 设置按钮文本
