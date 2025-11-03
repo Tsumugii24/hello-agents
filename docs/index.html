@@ -41,13 +41,23 @@
     <div id="app"></div>
     <script src="//cdn.jsdelivr.net/npm/mermaid@8.0.0-rc.8/dist/mermaid.min.js"></script>
     <script>
+        // 检查语言偏好并设置侧边栏
+        const preferredLang = localStorage.getItem('preferredLanguage');
+        const currentHash = window.location.hash;
+
+        // 判断当前应该使用哪个语言
+        let isEnglish = false;
+        if (preferredLang === 'en' || currentHash.includes('/en/')) {
+            isEnglish = true;
+        }
+
         window.$docsify = {
             name: 'Hello-Agents',
             repo: 'https://github.com/datawhalechina/Hello-Agents',
             loadSidebar: true,
             auto2top: true,
             subMaxLevel: 3,
-            relativePath: false,  // 启用相对路径支持
+            relativePath: false,
             alias: {
                 // 英文路径映射
                 '/en/README.md': '/README_EN.md',
@@ -55,18 +65,18 @@
                 '/en/_sidebar.md': '/_sidebar_en.md',
                 '/en/chapter(\\d+)/Chapter(.*)': '/chapter$1/Chapter$2',
 
-                // 默认中文路径保持不变
-                '/_sidebar.md': '/_sidebar.md'
+                // 根据语言偏好动态设置默认侧边栏
+                '/_sidebar.md': isEnglish ? '/_sidebar_en.md' : '/_sidebar.md'
             },
             pagination: {
-                previousText: '上一章节',
-                nextText: '下一章节',
+                previousText: isEnglish ? 'Previous' : '上一章节',
+                nextText: isEnglish ? 'Next' : '下一章节',
             },
             count: {
                 countable: true,
                 fontsize: '0.9em',
                 color: 'rgb(90,90,90)',
-                language: 'chinese'
+                language: isEnglish ? 'english' : 'chinese'
             },
             // 多语言配置
             fallbackLanguages: ['en'],
@@ -211,16 +221,19 @@
                 let path = currentHash.replace('#/', '');
 
                 if (path === '' || path === '/') {
-                    window.location.hash = '#/en/README_EN.md';
+                    window.location.replace('#/en/README_EN.md');
+                    window.location.reload();
                 } else {
                     const parts = path.split('/');
                     const filename = parts[parts.length - 1];
 
                     if (chapterMapping.zh2en[filename]) {
                         parts[parts.length - 1] = chapterMapping.zh2en[filename];
-                        window.location.hash = '#/en/' + parts.join('/');
+                        window.location.replace('#/en/' + parts.join('/'));
+                        window.location.reload();
                     }
                 }
+                return; // 停止执行,等待重新加载
             } else if (preferredLang === 'zh' && currentHash.includes('/en/')) {
                 // 用户偏好中文,但当前是英文页面
                 let newHash = currentHash.replace('#/', '').replace('en/', '');
@@ -229,8 +242,10 @@
 
                 if (chapterMapping.en2zh[filename]) {
                     parts[parts.length - 1] = chapterMapping.en2zh[filename];
-                    window.location.hash = '#/' + parts.join('/');
+                    window.location.replace('#/' + parts.join('/'));
+                    window.location.reload();
                 }
+                return; // 停止执行,等待重新加载
             }
 
             // 设置按钮文本
