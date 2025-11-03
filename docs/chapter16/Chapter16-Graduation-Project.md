@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第十六章%20毕业设计.md">中文</a>
-</div>
-
 # Chapter 16: Graduation Project - Building Your Own Multi-Agent Application
 
 Congratulations on reaching the final chapter of the Hello-Agents tutorial! In the previous 15 chapters, we built the HelloAgents framework from scratch and learned about core agent concepts, multiple paradigms, tool systems, memory mechanisms, communication protocols, reinforcement learning training, and performance evaluation. In Chapters 13-15, we also demonstrated how to integrate all learned knowledge through three complete practical projects (Intelligent Travel Assistant, Automated Deep Research Agent, and Cyber Town).

@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第三章 大语言模型基础.md">中文</a>
-</div>
-
 # Chapter 3: Fundamentals of Large Language Models
 
 The first two chapters introduced the definition and development history of agents. This chapter will focus entirely on large language models themselves to answer a key question: How do modern agents work? We will start from the basic definition of language models, and through learning these principles, lay a solid foundation for understanding how LLMs acquire powerful knowledge reserves and reasoning capabilities.

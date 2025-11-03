@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第九章%20上下文工程.md">中文</a>
-</div>
-
 # Chapter 9 Context Engineering
 
 In previous chapters, we have introduced memory systems and RAG for agents. However, to enable agents to stably "think" and "act" in real complex scenarios, memory and retrieval alone are not enough—we need an engineering methodology to continuously and systematically construct appropriate "context" for the model. This is the theme of this chapter: Context Engineering. It focuses on "how to assemble and optimize input context in a reusable, measurable, and evolvable way before each model call", thereby improving correctness, robustness, and efficiency<sup>[1][2]</sup>.

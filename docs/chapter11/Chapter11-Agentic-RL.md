@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第十一章%20Agentic-RL.md">中文</a>
-</div>
-
 # Chapter 11 Agentic-RL
 
 ## 11.1 From LLM Training to Agentic RL

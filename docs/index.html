@@ -94,49 +94,99 @@
 
     <!-- 语言切换脚本 -->
     <script>
+        // 章节文件名映射
+        const chapterMapping = {
+            // 中文 -> 英文
+            'zh2en': {
+                'README.md': 'README_EN.md',
+                '前言.md': 'Preface.md',
+                '第一章 初识智能体.md': 'Chapter1-Introduction-to-Agents.md',
+                '第二章 智能体发展史.md': 'Chapter2-History-of-Agents.md',
+                '第三章 大语言模型基础.md': 'Chapter3-Fundamentals-of-Large-Language-Models.md',
+                '第四章 智能体经典范式构建.md': 'Chapter4-Building-Classic-Agent-Paradigms.md',
+                '第五章 基于低代码平台的智能体搭建.md': 'Chapter5-Building-Agents-with-Low-Code-Platforms.md',
+                '第六章 框架开发实践.md': 'Chapter6-Framework-Development-Practice.md',
+                '第七章 构建你的Agent框架.md': 'Chapter7-Building-Your-Agent-Framework.md',
+                '第八章 记忆与检索.md': 'Chapter8-Memory-and-Retrieval.md',
+                '第九章 上下文工程.md': 'Chapter9-Context-Engineering.md',
+                '第十章 智能体通信协议.md': 'Chapter10-Agent-Communication-Protocols.md',
+                '第十一章 Agentic-RL.md': 'Chapter11-Agentic-RL.md',
+                '第十二章 智能体性能评估.md': 'Chapter12-Agent-Performance-Evaluation.md',
+                '第十三章 智能旅行助手.md': 'Chapter13-Intelligent-Travel-Assistant.md',
+                '第十四章 自动化深度研究智能体.md': 'Chapter14-Automated-Deep-Research-Agent.md',
+                '第十五章 构建赛博小镇.md': 'Chapter15-Building-Cyber-Town.md',
+                '第十六章 毕业设计.md': 'Chapter16-Graduation-Project.md'
+            },
+            // 英文 -> 中文
+            'en2zh': {
+                'README_EN.md': 'README.md',
+                'Preface.md': '前言.md',
+                'Chapter1-Introduction-to-Agents.md': '第一章 初识智能体.md',
+                'Chapter2-History-of-Agents.md': '第二章 智能体发展史.md',
+                'Chapter3-Fundamentals-of-Large-Language-Models.md': '第三章 大语言模型基础.md',
+                'Chapter4-Building-Classic-Agent-Paradigms.md': '第四章 智能体经典范式构建.md',
+                'Chapter5-Building-Agents-with-Low-Code-Platforms.md': '第五章 基于低代码平台的智能体搭建.md',
+                'Chapter6-Framework-Development-Practice.md': '第六章 框架开发实践.md',
+                'Chapter7-Building-Your-Agent-Framework.md': '第七章 构建你的Agent框架.md',
+                'Chapter8-Memory-and-Retrieval.md': '第八章 记忆与检索.md',
+                'Chapter9-Context-Engineering.md': '第九章 上下文工程.md',
+                'Chapter10-Agent-Communication-Protocols.md': '第十章 智能体通信协议.md',
+                'Chapter11-Agentic-RL.md': '第十一章 Agentic-RL.md',
+                'Chapter12-Agent-Performance-Evaluation.md': '第十二章 智能体性能评估.md',
+                'Chapter13-Intelligent-Travel-Assistant.md': '第十三章 智能旅行助手.md',
+                'Chapter14-Automated-Deep-Research-Agent.md': '第十四章 自动化深度研究智能体.md',
+                'Chapter15-Building-Cyber-Town.md': '第十五章 构建赛博小镇.md',
+                'Chapter16-Graduation-Project.md': '第十六章 毕业设计.md'
+            }
+        };
+
         function switchLanguage() {
             const currentHash = window.location.hash;
             const langBtn = document.getElementById('langBtn');
 
             // 检测当前语言
             if (currentHash.includes('/en/')) {
-                // 从英文切换到中文 (移除 /en/ 前缀)
-                let newHash = currentHash.replace('/en/', '/');
-                // 将英文文件名转换为中文文件名
-                newHash = newHash.replace('/README_EN.md', '/README.md');
-                newHash = newHash.replace('/Preface.md', '/前言.md');
-                // 将 Chapter*.md 转换为 第*章 *.md (需要根据实际文件名映射)
-                // 这里简化处理,直接跳转到首页
-                if (newHash.includes('Chapter')) {
+                // 从英文切换到中文
+                let newHash = currentHash.replace('#/', '').replace('en/', '');
+
+                // 提取文件名
+                const parts = newHash.split('/');
+                const filename = parts[parts.length - 1];
+
+                // 查找对应的中文文件名
+                if (chapterMapping.en2zh[filename]) {
+                    parts[parts.length - 1] = chapterMapping.en2zh[filename];
+                    newHash = '#/' + parts.join('/');
+                } else {
                     newHash = '#/';
                 }
-                window.location.hash = newHash || '#/';
+
+                window.location.hash = newHash;
                 langBtn.textContent = 'English';
-                // 更新分页按钮文本
                 window.$docsify.pagination.previousText = '上一章节';
                 window.$docsify.pagination.nextText = '下一章节';
             } else {
-                // 从中文切换到英文 (添加 /en/ 前缀)
-                let newHash;
-                if (currentHash === '' || currentHash === '#/' || currentHash === '#') {
+                // 从中文切换到英文
+                let path = currentHash.replace('#/', '');
+
+                if (path === '' || path === '/') {
                     // 首页
-                    newHash = '#/en/README.md';
+                    window.location.hash = '#/en/README_EN.md';
                 } else {
-                    // 其他页面,添加 /en/ 前缀
-                    const path = currentHash.replace('#/', '');
-                    // 将中文文件名转换为英文文件名
-                    let enPath = path.replace('README.md', 'README_EN.md');
-                    enPath = enPath.replace('前言.md', 'Preface.md');
-                    // 将 第*章 *.md 转换为 Chapter*.md (需要根据实际文件名映射)
-                    // 这里简化处理,直接跳转到英文首页
-                    if (enPath.includes('第') && enPath.includes('章')) {
-                        enPath = 'README_EN.md';
+                    // 提取文件名
+                    const parts = path.split('/');
+                    const filename = parts[parts.length - 1];
+
+                    // 查找对应的英文文件名
+                    if (chapterMapping.zh2en[filename]) {
+                        parts[parts.length - 1] = chapterMapping.zh2en[filename];
+                        window.location.hash = '#/en/' + parts.join('/');
+                    } else {
+                        window.location.hash = '#/en/README_EN.md';
                     }
-                    newHash = '#/en/' + enPath;
                 }
-                window.location.hash = newHash;
+
                 langBtn.textContent = '中文';
-                // 更新分页按钮文本
                 window.$docsify.pagination.previousText = 'Previous';
                 window.$docsify.pagination.nextText = 'Next';
             }

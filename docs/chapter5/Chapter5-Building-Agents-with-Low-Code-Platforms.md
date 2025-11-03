@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第五章%20基于低代码平台的智能体搭建.md">中文</a>
-</div>
-
 # Chapter 5: Building Agents with Low-Code Platforms
 
 In the previous chapter, by writing Python code, we implemented various classic agent workflows from scratch, including ReAct, Plan-and-Solve, and Reflection. This process laid a solid technical foundation for us and gave us a deep understanding of the internal mechanisms of agents. However, for a rapidly developing field, pure code development is not always the most efficient choice, especially in scenarios where ideas need to be quickly validated or non-professional developers want to participate in building.

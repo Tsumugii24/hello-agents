@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第十四章%20自动化深度研究智能体.md">中文</a>
-</div>
-
 # Chapter 14: Automated Deep Research Agent
 
 In Chapter 13's travel assistant project, we experienced how to apply HelloAgents to a multi-agent product. In this chapter, we continue forward, focusing on **knowledge-intensive applications**: **building an agent assistant that can automatically execute deep research tasks.**

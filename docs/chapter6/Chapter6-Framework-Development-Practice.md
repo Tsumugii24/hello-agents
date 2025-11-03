@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第六章%20框架开发实践.md">中文</a>
-</div>
-
 # Chapter 6 Framework Development Practice
 
 In Chapter 4, we implemented the core workflows of several agents such as ReAct, Plan-and-Solve, and Reflection by writing native code. This process gave us an understanding of the internal execution logic of agents. Subsequently, in Chapter 5, we switched to the "user" perspective and experienced the convenience and efficiency brought by low-code platforms.

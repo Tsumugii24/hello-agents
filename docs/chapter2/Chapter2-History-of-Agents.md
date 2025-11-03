@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第二章 智能体发展史.md">中文</a>
-</div>
-
 # Chapter 2: History of Agents
 
 To deeply understand why modern agents present their current form and the origins of their core design philosophies, this chapter will trace back through history: starting from the classical era of artificial intelligence, exploring how the earliest "intelligence" was defined within rule systems of logic and symbols; then witnessing the major shift from single, centralized intelligence models to distributed, collaborative intelligence thinking; and finally understanding how the "learning" paradigm completely transformed the way agents acquire capabilities, giving birth to the modern agents we see today.

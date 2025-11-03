@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第十五章%20构建赛博小镇.md">中文</a>
-</div>
-
 # Chapter 15: Building Cyber Town
 
 In this chapter, we will explore a brand new direction: **combining agent technology with game engines to build an AI town full of vitality**.

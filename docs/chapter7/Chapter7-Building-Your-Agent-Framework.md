@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第七章%20构建你的Agent框架.md">中文</a>
-</div>
-
 # Chapter 7 Building Your Agent Framework
 
 In the previous chapters, we explained the fundamentals of agents and experienced the development convenience brought by mainstream frameworks. Starting from this chapter, we will enter a more challenging and valuable stage: **building an agent framework from scratch—HelloAgents**.

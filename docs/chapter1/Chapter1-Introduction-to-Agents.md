@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第一章 初识智能体.md">中文</a>
-</div>
-
 # Chapter 1: Introduction to Agents
 
 Welcome to the world of agents! In today's era where the wave of artificial intelligence is sweeping across the globe, **Agents** have become one of the core concepts driving technological transformation and application innovation. Whether your aspiration is to become a researcher or engineer in the AI field, or you hope to deeply understand the cutting edge of technology as an observer, mastering the essence of agents will be an indispensable part of your knowledge system.

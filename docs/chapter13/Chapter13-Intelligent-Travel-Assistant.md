@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第十三章%20智能旅行助手.md">中文</a>
-</div>
-
 # Chapter 13 Intelligent Travel Assistant
 
 In previous chapters, we built the HelloAgents framework from scratch, implementing core functionalities including various agent paradigms, tool systems, memory mechanisms, protocol communication, and performance evaluation. Starting from this chapter, we will enter a completely new phase: **integrating all learned knowledge to build complete practical applications.**

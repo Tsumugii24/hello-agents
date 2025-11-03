@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第十章%20智能体通信协议.md">中文</a>
-</div>
-
 # Chapter 10: Agent Communication Protocols
 
 In previous chapters, we built fully functional standalone agents with reasoning, tool invocation, and memory capabilities. However, when attempting to build more complex AI systems, natural questions arise: **How can agents efficiently interact with the external world? How can multiple agents collaborate with each other?**

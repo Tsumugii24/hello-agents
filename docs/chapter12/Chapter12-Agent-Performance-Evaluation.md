@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第十二章%20智能体性能评估.md">中文</a>
-</div>
-
 # Chapter 12: Agent Performance Evaluation
 
 In previous chapters, we built the core functionality of the HelloAgents framework, implementing various agent paradigms, tool systems, memory mechanisms, and reinforcement learning training. When building agent systems, we also need to solve a core problem: **How to objectively evaluate agent performance?** Specifically, we need to answer the following questions:

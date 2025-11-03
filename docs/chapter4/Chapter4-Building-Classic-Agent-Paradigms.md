@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第四章%20智能体经典范式构建.md">中文</a>
-</div>
-
 # Chapter 4: Building Classic Agent Paradigms
 
 In the previous chapter, we deeply explored large language models as the "brain" of modern agents. We learned about their internal Transformer architecture, methods for interacting with them, and their capability boundaries. Now, it's time to transform this theoretical knowledge into practice and build agents with our own hands.

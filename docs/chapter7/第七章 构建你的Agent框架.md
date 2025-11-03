@@ -1,7 +1,3 @@
-<div align="right">
-  <a href="./Chapter7-Building-Your-Agent-Framework.md">English</a> | 中文
-</div>
-
 # 第七章 构建你的智能体框架
 
 在前面的章节中，我们讲解了智能体的基础知识，并体验了主流框架带来的开发便利。从本章开始，我们将进入一个更具挑战也更有价值的阶段：**从零开始，逐步构建一个智能体框架——HelloAgents**。

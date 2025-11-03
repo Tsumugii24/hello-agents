@@ -1,7 +1,3 @@
-<div align="right">
-  English | <a href="./第八章%20记忆与检索.md">中文</a>
-</div>
-
 # Chapter 8 Memory and Retrieval
 
 In previous chapters, we built the basic architecture of the HelloAgents framework, implementing various agent paradigms and tool systems. However, our framework still lacks a critical capability: **memory**. If an agent cannot remember previous interactions or learn from historical experiences, its performance will be greatly limited in continuous conversations or complex tasks.
