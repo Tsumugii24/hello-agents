@@ -76,9 +76,9 @@ If you wish to read locally or contribute content, please refer to the learning 
 
 | Community Selection | Content Summary |
 | --- | --- |
-| [01-Agent Interview Questions Summary](./Extra-Chapter/Extra01-Interview-Questions-EN.md) | Agent position-related interview questions |
-| [01-Agent Interview Answers](./Extra-Chapter/Extra01-Interview-Answers-EN.md) | Related interview question answers |
-| [02-Context Engineering Supplement](./Extra-Chapter/Extra02-Context-Engineering-Supplement-EN.md) | Context engineering content extension |
+| [01-Agent Interview Questions Summary](./Extra-Chapter/Extra01-面试问题总结.md) | Agent position-related interview questions |
+| [01-Agent Interview Answers](./Extra-Chapter/Extra01-参考答案.md) | Answers to related interview questions |
+| [02-Context Engineering Content Supplement](./Extra-Chapter/Extra02-上下文工程补充知识.md) | Context engineering content extension |
 
 ### PDF Version Download
 
