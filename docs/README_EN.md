@@ -118,7 +118,7 @@ We are an open-source community and welcome any form of contribution!
 - [Jiang Shufan - Project Leader](https://github.com/Tsumugii24) (Datawhale member, chapter exercise design and proofreading)
 - [Huang Peilin - Datawhale Prospective Member](https://github.com/HeteroCat) (Agent Development Engineer, Chapter 5 content contributor)
 - [Zeng Xinmin - Agent Engineer](https://github.com/fancyboi999) (Niuke Technology, Chapter 14 case development)
-- [Zhu Xinzhong - Advisory Expert](https://xinzhongzhu.github.io/) (Provincial Special Expert of Zhejiang, National Leading Talent, Dean of Hangzhou Institute of Artificial Intelligence, Zhejiang Normal University)
+- [Zhu Xinzhong - Advisory Expert](https://xinzhongzhu.github.io/) (Chief Scientist of Datawhale, Professor at Hangzhou Institute of Artificial Intelligence, Zhejiang Normal University)
 
 ### Extra-Chapter Contributors
 - [WH](https://github.com/WHQAQ11) (Content contributor)
