@@ -76,9 +76,9 @@
 
 | 社区精选 | 内容总结 |
 | --- | --- |
-| [01-Agent面试题总结](./Extra-Chapter/Extra01-面试问题总结.md) | Agent 岗位相关面试问题 |
-| [01-Agent面试题答案](./Extra-Chapter/Extra01-参考答案.md) | 相关面试问题答案 |
-| [02-上下文工程内容补充](./Extra-Chapter/Extra02-上下文工程补充知识.md) | 上下文工程内容扩展 |
+| [01-Agent面试题总结](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-面试问题总结.md) | Agent 岗位相关面试问题 |
+| [01-Agent面试题答案](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md) | 相关面试问题答案 |
+| [02-上下文工程内容补充](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md) | 上下文工程内容扩展 |
 
 ### PDF 版本下载
 

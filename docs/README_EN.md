@@ -68,9 +68,9 @@
 
 | Community Highlights | Content Summary |
 | --- | --- |
-| [01-Agent Interview Questions Summary](../Extra-Chapter/Extra01-面试问题总结.md) | Agent position-related interview questions |
-| [01-Agent Interview Answers](../Extra-Chapter/Extra01-参考答案.md) | Answers to related interview questions |
-| [02-Context Engineering Content Supplement](../Extra-Chapter/Extra02-上下文工程补充知识.md) | Context engineering content extension |
+| [01-Agent Interview Questions Summary](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-面试问题总结.md) | Agent position-related interview questions |
+| [01-Agent Interview Answers](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md) | Answers to related interview questions |
+| [02-Context Engineering Content Supplement](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md) | Context engineering content extension |
 
 ### PDF Version Download
 
