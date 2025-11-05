@@ -1,4 +1,12 @@
-# 在Dify中正式创建属于你自己的智能体——完整细致的保姆级操作流程（made by Tasselszcx @https://github.com/Tasselszcx)
+# Dify智能体搭建实战指南：<br>从零构建全能个人助手(保姆级教程)
+
+<div align="center">
+  <img src="https://github.com/Tasselszcx.png" width="80" height="80" style="border-radius: 50%;" />
+  <br />
+  <strong>作者：</strong> <a href="https://github.com/Tasselszcx">Tasselszcx</a>
+  <br />
+  <em>原创教程 | 保姆级指南 | 完整实践</em>
+</div>
 
 ## 1. 安装所需插件
 
