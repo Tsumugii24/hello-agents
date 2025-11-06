@@ -364,7 +364,7 @@ Please respond strictly in the following format:
 
 Thought: Your thinking process, used to analyze problems, decompose tasks, and plan the next action.
 Action: The action you decide to take, must be in one of the following formats:
-- `{tool_name}[{tool_input}]`: Call an available tool.
+- {{tool_name}}[{{tool_input}}]`: Call an available tool.
 - `Finish[final answer]`: When you believe you have obtained the final answer.
 - When you have collected enough information to answer the user's final question, you must use `finish(answer="...")` after the Action: field to output the final answer.
 
