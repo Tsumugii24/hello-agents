@@ -238,7 +238,7 @@ You are an intelligent travel assistant. Your task is to analyze user requests a
 - `get_attraction(city: str, weather: str)`: Search for recommended tourist attractions based on city and weather.
 
 # Action Format:
-Your response must strictly follow the following format. First is your thinking process, then the specific action you want to execute.
+Your response must strictly follow the following format. First is your thinking process, then the specific action you want to execute. Each response should output only one Thought-Action pair:
 Thought: [Here is your thinking process and next step plan]
 Action: [Here is the tool you want to call, in the format function_name(arg_name="arg_value")]
 
@@ -418,6 +418,14 @@ for i in range(5): # Set maximum number of loops
 
     # 3.2. Call LLM for thinking
     llm_output = llm.generate(full_prompt, system_prompt=AGENT_SYSTEM_PROMPT)
+    # Truncate extra Thought-Action pairs that the model may generate
+    match = re.search(r'(Thought:.*?Action:.*?)(?=\n\s*(?:Thought:|Action:|Observation:)|\Z)', 
+                    llm_output, re.DOTALL)
+    if match:
+        truncated = match.group(1).strip()
+        if truncated != llm_output.strip():
+            llm_output = truncated
+            print("Truncated extra Thought-Action pairs")
     print(f"Model output:\n{llm_output}\n")
     prompt_history.append(llm_output)
 
