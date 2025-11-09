@@ -1,7 +1,7 @@
 <div align='center'>
   <img src="./images/hello-agents.png" alt="alt text" width="100%">
   <h1>Hello-Agents</h1>
-  <h3>🤖 Building Agent Systems from Scratch: Principles and Practice Tutorial</h3>
+  <h3>🤖 "Building Agent Systems from Scratch" - A Tutorial on LLM Agent Principles and Practice</h3>
   <p><em>From fundamental theory to practical applications, comprehensively master the design and implementation of agent systems</em></p>
   <img src="https://img.shields.io/github/stars/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub stars"/>
   <img src="https://img.shields.io/github/forks/datawhalechina/Hello-Agents?style=flat&logo=github" alt="GitHub forks"/>
