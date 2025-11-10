@@ -386,7 +386,7 @@ The key to this name is "position-wise." It means this feed-forward network acts
 
 $$\mathrm{FFN}(x)=\max\left(0, xW_{1}+b_{1}\right) W_{2}+b_{2}$$
 
-Where $x$ is the output of the attention sublayer. $W_1,b_1,W_2,b_2$ are learnable parameters. Typically, the output dimension `d_ff` of the first linear layer is much larger than the input dimension `d_model` (for example, `d_ff = 4 * d_model`), then after ReLU activation, it is mapped back to `d_model` dimension through the second linear layer. This "expand then shrink" pattern, also called a bottleneck structure, is believed to help the model learn richer feature representations.
+Where $x$ is the output of the attention sublayer. $W_1,b_1,W_2,b_2$ are learnable parameters. Typically, the output dimension `d_ff` of the first linear layer is much larger than the input dimension `d_model` (for example, `d_ff = 4 * d_model`), then after ReLU activation, it is mapped back to `d_model` dimension through the second linear layer. This "expand then shrink" design is believed to help the model learn richer feature representations.
 
 In our PyTorch skeleton, we can implement this module with the following code:
 
@@ -552,8 +552,6 @@ Sentiment: Positive
 ```
 
 **One-shot Prompting** We provide the model with one complete example, showing it the task format and expected output style.
-
-We provide the model with one complete example, showing it the task format and expected output style.
 
 Case: We first give the model a complete "question-answer" pair as a demonstration, then pose our new question.
 
