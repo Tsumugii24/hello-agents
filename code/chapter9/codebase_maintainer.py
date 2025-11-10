@@ -7,16 +7,18 @@ CodebaseMaintainer - 代码库维护助手
 3. TerminalTool - 即时文件访问
 4. MemoryTool - 对话记忆
 
-实现跨会话的代码库维护任务管理
+关键改进：使用 Agentic 方式，让 agent 自主决定使用哪些工具
 """
 
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 import json
 
-from hello_agents import SimpleAgent, HelloAgentsLLM
+from hello_agents import HelloAgentsLLM
+from hello_agents.agents import FunctionCallAgent
 from hello_agents.context import ContextBuilder, ContextConfig, ContextPacket
 from hello_agents.tools import MemoryTool, NoteTool, TerminalTool
+from hello_agents.tools.registry import ToolRegistry
 from hello_agents.core.message import Message
 
 
@@ -25,6 +27,11 @@ class CodebaseMaintainer:
 
     整合 ContextBuilder + NoteTool + TerminalTool + MemoryTool
     实现跨会话的代码库维护任务管理
+    
+    核心特性：
+    - Agent 自主使用工具探索代码库
+    - 不预定义工作流，完全基于 agent 决策
+    - 跨会话记忆和上下文管理
     """
 
     def __init__(
@@ -60,6 +67,22 @@ class CodebaseMaintainer:
             )
         )
 
+        # 创建工具注册表并注册工具
+        self.tool_registry = ToolRegistry()
+        self.tool_registry.register_tool(self.terminal_tool)
+        self.tool_registry.register_tool(self.note_tool)
+        self.tool_registry.register_tool(self.memory_tool)
+
+        # 创建 Agent
+        self.agent = FunctionCallAgent(
+            name="CodebaseMaintainer",
+            llm=self.llm,
+            system_prompt=self._build_base_system_prompt(),
+            tool_registry=self.tool_registry,
+            enable_tool_calling=True,
+            max_tool_iterations=30
+        )
+
         # 对话历史
         self.conversation_history: List[Message] = []
 
@@ -68,23 +91,25 @@ class CodebaseMaintainer:
             "session_start": datetime.now(),
             "commands_executed": 0,
             "notes_created": 0,
-            "issues_found": 0
+            "issues_found": 0,
+            "tool_calls": 0
         }
 
-        print(f"✅ 代码库维护助手已初始化: {project_name}")
+        print(f"✅ 代码库维护助手已初始化: {project_name} (Agentic Mode)")
         print(f"📁 工作目录: {codebase_path}")
         print(f"🆔 会话ID: {self.session_id}")
+        print(f"🔧 可用工具: {', '.join(self.tool_registry.list_tools())}")
 
     def run(self, user_input: str, mode: str = "auto") -> str:
-        """运行助手
+        """运行助手（Agentic 方式）
 
         Args:
             user_input: 用户输入
-            mode: 运行模式
+            mode: 运行模式提示（给 agent 提供方向性建议）
                 - "auto": 自动决策是否使用工具
-                - "explore": 侧重代码探索
-                - "analyze": 侧重问题分析
-                - "plan": 侧重任务规划
+                - "explore": 建议 agent 侧重代码探索
+                - "analyze": 建议 agent 侧重问题分析
+                - "plan": 建议 agent 侧重任务规划
 
         Returns:
             str: 助手的回答
@@ -93,39 +118,31 @@ class CodebaseMaintainer:
         print(f"👤 用户: {user_input}")
         print(f"{'='*80}\n")
 
-        # 第一步:根据模式执行预处理
-        pre_context = self._preprocess_by_mode(user_input, mode)
-
-        # 第二步:检索相关笔记
+        # 第一步: 检索相关笔记（为 agent 提供上下文）
         relevant_notes = self._retrieve_relevant_notes(user_input)
         note_packets = self._notes_to_packets(relevant_notes)
 
-        # 第三步:构建优化的上下文
+        # 第二步: 构建优化的上下文
         context = self.context_builder.build(
             user_query=user_input,
             conversation_history=self.conversation_history,
             system_instructions=self._build_system_instructions(mode),
-            additional_packets=note_packets + pre_context
+            additional_packets=note_packets
         )
 
-        # 第四步:调用 LLM
-        print("🤖 正在思考...")
-        messages = [
-            {
-                "role": "system",
-                "content": context
-            },
-            {
-                "role": "user",
-                "content": user_input
-            }
-        ]
-        response = self.llm.invoke(messages)
+        # 第三步: 让 Agent 自主决策和使用工具
+        print("🤖 Agent 正在思考并决定使用哪些工具...\n")
+        
+        # 更新 agent 的系统提示（包含上下文）
+        self.agent.system_prompt = context
+        
+        # 调用 agent（agent 会自主决定是否使用工具）
+        response = self.agent.run(user_input)
 
-        # 第五步:后处理
-        self._postprocess_response(user_input, response)
+        # 第四步: 统计工具使用情况
+        self._track_tool_usage()
 
-        # 第六步:更新对话历史
+        # 第五步: 更新对话历史
         self._update_history(user_input, response)
 
         print(f"\n🤖 助手: {response}\n")
@@ -133,71 +150,45 @@ class CodebaseMaintainer:
 
         return response
 
-    def _preprocess_by_mode(
-        self,
-        user_input: str,
-        mode: str
-    ) -> List[ContextPacket]:
-        """根据模式执行预处理,收集相关信息"""
-        packets = []
+    def _build_base_system_prompt(self) -> str:
+        """构建基础系统提示"""
+        return f"""你是 {self.project_name} 项目的代码库维护助手。
 
-        if mode == "explore" or mode == "auto":
-            # 探索模式:自动查看项目结构
-            print("🔍 探索代码库结构...")
+你的核心能力:
+1. 使用 TerminalTool 探索代码库
+   - 你可以执行任何 shell 命令: ls, cat, grep, find, git 等
+   - 工作目录: {self.codebase_path}
+   
+2. 使用 NoteTool 记录发现和任务
+   - 创建笔记记录重要发现
+   - 笔记类型: blocker(阻塞问题)、action(行动计划)、task_state(任务状态)、conclusion(结论)
+   
+3. 使用 MemoryTool 存储关键信息
+   - 记住重要的上下文信息
+   - 跨会话保持连贯性
 
-            structure = self.terminal_tool.run({"command": "find . -type f -name '*.py' | head -n 20"})
-            self.stats["commands_executed"] += 1
+当前会话ID: {self.session_id}
 
-            packets.append(ContextPacket(
-                content=f"[代码库结构]\n{structure}",
-                timestamp=datetime.now(),
-                token_count=len(structure) // 4,
-                relevance_score=0.6,
-                metadata={"type": "code_structure", "source": "terminal"}
-            ))
+重要原则:
+- 你要自主决定使用哪些工具、执行什么命令
+- 探索代码库时，先了解整体结构，再深入细节
+- 发现重要信息时，主动使用 NoteTool 记录
+- 保持回答的专业性和实用性
+"""
 
-        if mode == "analyze":
-            # 分析模式:检查代码复杂度和问题
-            print("📊 分析代码质量...")
-
-            # 统计代码行数
-            loc = self.terminal_tool.run({"command": "find . -name '*.py' -exec wc -l {} + | tail -n 1"})
-
-            # 查找 TODO 和 FIXME
-            todos = self.terminal_tool.run({"command": "grep -rn 'TODO\\|FIXME' --include='*.py' | head -n 10"})
-
-            self.stats["commands_executed"] += 2
-
-            packets.append(ContextPacket(
-                content=f"[代码统计]\n{loc}\n\n[待办事项]\n{todos}",
-                timestamp=datetime.now(),
-                token_count=(len(loc) + len(todos)) // 4,
-                relevance_score=0.7,
-                metadata={"type": "code_analysis", "source": "terminal"}
-            ))
-
-        if mode == "plan":
-            # 规划模式:加载最近的笔记
-            print("📋 加载任务规划...")
-
-            task_notes_raw = self.note_tool.run({
-                "action": "list",
-                "note_type": "task_state",
-                "limit": 3
-            })
-            task_notes = self._normalize_note_results(task_notes_raw)
-
-            if task_notes:
-                content = "\n".join([f"- {note.get('title', 'Untitled')}" for note in task_notes])
-                packets.append(ContextPacket(
-                    content=f"[当前任务]\n{content}",
-                    timestamp=datetime.now(),
-                    token_count=len(content) // 4,
-                    relevance_score=0.8,
-                    metadata={"type": "task_plan", "source": "notes"}
-                ))
-
-        return packets
+    def _track_tool_usage(self):
+        """统计工具使用情况"""
+        # 从 agent 的执行历史中统计
+        if hasattr(self.agent, 'message_history'):
+            for msg in self.agent.message_history[-10:]:  # 只看最近10条
+                if msg.role == "tool":
+                    self.stats["tool_calls"] += 1
+                    # 根据工具名统计
+                    if "terminal" in str(msg.content).lower() or "command" in str(msg.content).lower():
+                        self.stats["commands_executed"] += 1
+                    elif "note" in str(msg.content).lower():
+                        if "create" in str(msg.content).lower():
+                            self.stats["notes_created"] += 1
 
     def _retrieve_relevant_notes(self, query: str, limit: int = 3) -> List[Dict]:
         """检索相关笔记"""
@@ -300,87 +291,46 @@ class CodebaseMaintainer:
         return packets
 
     def _build_system_instructions(self, mode: str) -> str:
-        """构建系统指令"""
-        base_instructions = f"""你是 {self.project_name} 项目的代码库维护助手。
+        """构建系统指令（Agentic 方式）"""
+        base_instructions = self._build_base_system_prompt()
 
-你的核心能力:
-1. 使用 TerminalTool 探索代码库(ls, cat, grep, find等)
-2. 使用 NoteTool 记录发现和任务
-3. 基于历史笔记提供连贯的建议
-
-当前会话ID: {self.session_id}
-"""
-
-        mode_specific = {
+        mode_hints = {
             "explore": """
-当前模式: 探索代码库
+用户当前关注: 探索代码库
 
-你应该:
-- 主动使用 terminal 命令了解代码结构
-- 识别关键模块和文件
-- 记录项目架构到笔记
+建议策略:
+- 考虑使用 TerminalTool 了解代码结构（如 find, ls, tree）
+- 查看关键文件（如 README, 主要模块）
+- 将架构信息记录到笔记方便后续查阅
 """,
             "analyze": """
-当前模式: 分析代码质量
+用户当前关注: 分析代码质量
 
-你应该:
-- 查找代码问题(重复、复杂度、TODO等)
-- 评估代码质量
+建议策略:
+- 考虑使用 grep 查找潜在问题（TODO, FIXME, BUG）
+- 分析代码复杂度和结构
 - 将发现的问题记录为 blocker 或 action 笔记
 """,
             "plan": """
-当前模式: 任务规划
+用户当前关注: 任务规划
 
-你应该:
-- 回顾历史笔记和任务
-- 制定下一步行动计划
-- 更新任务状态笔记
+建议策略:
+- 回顾历史笔记了解当前进度
+- 基于已有信息制定行动计划
+- 创建或更新 task_state 类型的笔记
 """,
             "auto": """
-当前模式: 自动决策
+用户当前关注: 自由对话
 
-你应该:
-- 根据用户需求灵活选择策略
-- 在需要时使用工具
-- 保持回答的专业性和实用性
+建议策略:
+- 根据用户需求灵活决策
+- 在需要时主动使用工具获取信息
+- 不需要时可以直接回答
 """
         }
 
-        return base_instructions + mode_specific.get(mode, mode_specific["auto"])
+        return base_instructions + "\n" + mode_hints.get(mode, mode_hints["auto"])
 
-    def _postprocess_response(self, user_input: str, response: str):
-        """后处理:分析回答,自动记录重要信息"""
-
-        # 如果发现问题,自动创建 blocker 笔记
-        if any(keyword in response.lower() for keyword in ["问题", "bug", "错误", "阻塞"]):
-            try:
-                self.note_tool.run({
-                    "action": "create",
-                    "title": f"发现问题: {user_input[:30]}...",
-                    "content": f"## 用户输入\n{user_input}\n\n## 问题分析\n{response[:500]}...",
-                    "note_type": "blocker",
-                    "tags": [self.project_name, "auto_detected", self.session_id]
-                })
-                self.stats["notes_created"] += 1
-                self.stats["issues_found"] += 1
-                print("📝 已自动创建问题笔记")
-            except Exception as e:
-                print(f"[WARNING] 创建笔记失败: {e}")
-
-        # 如果是任务规划,自动创建 action 笔记
-        elif any(keyword in user_input.lower() for keyword in ["计划", "下一步", "任务", "todo"]):
-            try:
-                self.note_tool.run({
-                    "action": "create",
-                    "title": f"任务规划: {user_input[:30]}...",
-                    "content": f"## 讨论\n{user_input}\n\n## 行动计划\n{response[:500]}...",
-                    "note_type": "action",
-                    "tags": [self.project_name, "planning", self.session_id]
-                })
-                self.stats["notes_created"] += 1
-                print("📝 已自动创建行动计划笔记")
-            except Exception as e:
-                print(f"[WARNING] 创建笔记失败: {e}")
 
     def _update_history(self, user_input: str, response: str):
         """更新对话历史"""
@@ -398,17 +348,26 @@ class CodebaseMaintainer:
     # === 便捷方法 ===
 
     def explore(self, target: str = ".") -> str:
-        """探索代码库"""
-        return self.run(f"请探索 {target} 的代码结构", mode="explore")
+        """探索代码库（Agentic 方式）
+        
+        Agent 会自主决定使用哪些命令来探索代码库
+        """
+        return self.run(f"请探索 {target} 的代码结构，了解项目组织方式", mode="explore")
 
     def analyze(self, focus: str = "") -> str:
-        """分析代码质量"""
-        query = f"请分析代码质量" + (f",重点关注{focus}" if focus else "")
+        """分析代码质量（Agentic 方式）
+        
+        Agent 会自主决定如何分析代码质量
+        """
+        query = f"请分析代码质量" + (f"，重点关注{focus}" if focus else "")
         return self.run(query, mode="analyze")
 
     def plan_next_steps(self) -> str:
-        """规划下一步任务"""
-        return self.run("根据当前进度,规划下一步任务", mode="plan")
+        """规划下一步任务（Agentic 方式）
+        
+        Agent 会查看历史笔记并规划下一步
+        """
+        return self.run("根据我们之前的分析和当前进度，规划下一步任务", mode="plan")
 
     def execute_command(self, command: str) -> str:
         """执行终端命令"""
@@ -473,9 +432,15 @@ class CodebaseMaintainer:
 
 
 def main():
-    """主函数 - 演示 CodebaseMaintainer 的使用"""
+    """主函数 - 演示 CodebaseMaintainer 的使用（Agentic 版本）
+    
+    在这个版本中：
+    - Agent 自主决定使用哪些工具
+    - 不预定义工作流
+    - Agent 根据需求灵活探索代码库
+    """
     print("=" * 80)
-    print("CodebaseMaintainer 演示")
+    print("CodebaseMaintainer 演示（Agentic 版本）")
     print("=" * 80 + "\n")
 
     # 初始化助手
@@ -485,16 +450,16 @@ def main():
         llm=HelloAgentsLLM()
     )
 
-    # 探索代码库
-    print("\n### 探索代码库 ###")
+    # 探索代码库（Agent 自主决定如何探索）
+    print("\n### 探索代码库（Agent 自主探索）###")
     response = maintainer.explore()
 
-    # 分析代码质量
-    print("\n### 分析代码质量 ###")
+    # 分析代码质量（Agent 自主决定分析方法）
+    print("\n### 分析代码质量（Agent 自主分析）###")
     response = maintainer.analyze()
 
-    # 规划下一步
-    print("\n### 规划下一步任务 ###")
+    # 规划下一步（Agent 基于历史信息规划）
+    print("\n### 规划下一步任务（Agent 自主规划）###")
     response = maintainer.plan_next_steps()
 
     # 生成报告
