@@ -290,8 +290,7 @@ Furthermore, we can click this [experience link](https://www.coze.cn/store/proje
 
   * **Does Not Support MCP:** I think this is the most fatal. Although Coze's plugin market is extremely rich and attractive, not supporting MCP may become a shackle limiting its development. If opened up, it will be another killer feature.
   * **High Complexity of Some Plugin Configurations:** For plugins that require API Keys or other advanced parameters, users may need some technical background to complete correct configuration. Complex workflow orchestration is also not something that can be mastered with zero foundation; it requires some JavaScript or Python basics.
-  * **Cannot Export Orchestration JSON Files:** Previously, Coze had no export function, but now the paid version can export, but what is exported is not a JSON file like Dify or n8n, but a zip file. That is to say, you can only export from Coze and then import into Coze.
-
+  * **Unable to import JSON files:** Previously, the app didn't have an export/import function, but the paid version now does. However, the exported/imported file isn't a JSON file like Dify or N8n; it's a ZIP file. This means you can only export from the app and then import the ZIP file. However, you can use a workaround: in the layout interface, press Ctrl+A to select all, then Ctrl+C to copy the layout, and then paste it into another blank workflow or other workflows.
 
 
 ## 5.3 Platform Two: Dify
