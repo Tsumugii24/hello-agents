@@ -28,7 +28,7 @@ Therefore, moving from manual implementation to framework development is not onl
 
 The ecosystem of agent frameworks is developing at an unprecedented speed. If LangChain and LlamaIndex defined the paradigm of the first generation of general LLM application frameworks, then the new generation of frameworks is more focused on solving deep challenges in specific domains, especially **Multi-Agent Collaboration** and **Complex Workflow Control**.
 
-In the subsequent practical work of this chapter, we will focus on four frameworks that are highly representative in these cutting-edge fields: AutoGen, AgentScope, CAMEL, and LangGraph. Their design philosophies are different, representing different technical paths for implementing complex agent systems, as shown in Figure 6.1.
+In the subsequent practical work of this chapter, we will focus on four frameworks that are highly representative in these cutting-edge fields: AutoGen, AgentScope, CAMEL, and LangGraph. Their design philosophies are different, representing different technical paths for implementing complex agent systems, as shown in Table 6.1.
 
 <div align="center">
   <p>Table 6.1 Comparison of Four Agent Frameworks</p>
