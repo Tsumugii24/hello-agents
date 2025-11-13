@@ -1068,7 +1068,8 @@ def run(self, input_text: str, **kwargs) -> str:
         # 4. Check completion condition
         if action and action.startswith("Finish"):
             final_answer = self._parse_action_input(action)
-            self._save_to_history(input_text, final_answer)
+            self.add_message(Message(input_text, "user"))
+            self.add_message(Message(final_answer, "assistant"))
             return final_answer
 
         # 5. Execute tool call
@@ -1080,7 +1081,8 @@ def run(self, input_text: str, **kwargs) -> str:
 
     # Reached maximum steps
     final_answer = "Sorry, I cannot complete this task within the limited number of steps."
-    self._save_to_history(input_text, final_answer)
+    self.add_message(Message(input_text, "user"))
+    self.add_message(Message(final_answer, "assistant"))
     return final_answer
 ```
 
