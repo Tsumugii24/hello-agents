@@ -84,9 +84,7 @@ REFINE_PROMPT_TEMPLATE = """
 {task}
 
 # 你上一轮尝试的代码:
-```python
 {last_code_attempt}
-```
 
 # 评审员的反馈:
 {feedback}
@@ -138,7 +136,7 @@ class ReflectionAgent:
             self.memory.add_record("execution", refined_code)
         
         final_code = self.memory.get_last_execution()
-        print(f"\n--- 任务完成 ---\n最终生成的代码:\n```python\n{final_code}\n```")
+        print(f"\n--- 任务完成 ---\n最终生成的代码:\n{final_code}")
         return final_code
 
     def _get_llm_response(self, prompt: str) -> str:
