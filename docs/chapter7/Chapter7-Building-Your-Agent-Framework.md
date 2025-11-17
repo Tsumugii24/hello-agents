@@ -458,9 +458,9 @@ As shown in Table 7.1 above, this evolution embodies an important principle of f
 
 In the previous section, we built `HelloAgentsLLM`, a core component that solves the key problem of communicating with large language models. However, it still needs a series of supporting interfaces and components to handle data flow, manage configuration, handle exceptions, and provide a clear, unified structure for upper-layer application construction. This section will cover the following three core files:
 
-- **`message.py`**: Defines the unified message format within the framework, ensuring standardization of information transfer between agents and models.
-- **`config.py`**: Provides a centralized configuration management solution, making framework behavior easy to adjust and extend.
-- **`agent.py`**: Defines the abstract base class (`Agent`) for all agents, providing a unified interface and specification for implementing different types of agents in the future.
+- `message.py`: Defines the unified message format within the framework, ensuring standardization of information transfer between agents and models.
+- `config.py`: Provides a centralized configuration management solution, making framework behavior easy to adjust and extend.
+- `agent.py`: Defines the abstract base class (`Agent`) for all agents, providing a unified interface and specification for implementing different types of agents in the future.
 
 ### 7.3.1 Message Class
 
