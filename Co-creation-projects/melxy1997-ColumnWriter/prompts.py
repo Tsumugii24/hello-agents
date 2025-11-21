@@ -11,14 +11,14 @@ PLANNER_PROMPT = """
 ```json
 {
   "column_title": "专栏总标题",
-  "column_description": "专栏简介（100-200字）",
+  "column_description": "专栏简介（50-100字）",
   "target_audience": "目标读者群体",
   "topics": [
     {
       "id": "topic_001",
       "title": "子话题标题",
       "description": "子话题简介（50-100字）",
-      "estimated_words": 2500,
+      "estimated_words": 500,
       "key_points": ["要点1", "要点2", "要点3"],
       "prerequisites": ["前置知识1", "前置知识2"]
     }
@@ -29,7 +29,7 @@ PLANNER_PROMPT = """
 ## 规划原则
 
 ### 1. 数量控制
-- 子话题数量：5-10个
+- 子话题数量：2-4个
 - 每个话题相对独立，可单独阅读
 - 总体覆盖主题的完整知识体系
 
@@ -128,7 +128,7 @@ WRITER_PROMPT = """
 ### Level {level} 的展开策略：
 
 **Level 1 (子话题)**:
-- 必须规划 3-5 个 subsections
+- 必须规划 2-4 个 subsections
 - 每个 subsection 是一个可独立展开的小主题
 - subsections 之间有逻辑顺序
 
@@ -155,7 +155,7 @@ WRITER_PROMPT = """
       "id": "section_1_1",
       "title": "小节标题",
       "description": "小节简介（一句话说明内容）",
-      "estimated_words": 600,
+      "estimated_words": 200,
       "key_points": ["要点1", "要点2", "要点3"],
       "complexity": "high/medium/low"
     }}
@@ -304,7 +304,7 @@ REVIEWER_PROMPT = """
       {{
         "section": "第2段 - 协程概念",
         "action": "补充内容",
-        "detail": "在当前解释后，添加对比表格或对比段落（200字），对比协程与普通函数的关键区别。",
+        "detail": "在当前解释后，添加对比表格或对比段落（100字），对比协程与普通函数的关键区别。",
         "estimated_effort": "补充约200字，难度：中"
       }}
     ],
@@ -317,7 +317,7 @@ REVIEWER_PROMPT = """
       }}
     ]
   }},
-  "estimated_revision_effort": "中等 - 需要补充约500字内容，重写1个部分，调整2-3处过渡",
+  "estimated_revision_effort": "中等 - 需要补充约200字内容，重写1个部分，调整2-3处过渡",
   "needs_revision": true,
   "reviewer_notes": "文章整体框架清晰，概念解释较为准确，主要问题在于实践案例不完整和部分过渡不够流畅。"
 }}
@@ -427,10 +427,9 @@ def get_structure_requirements(level: int) -> str:
     requirements = {
         1: """
 Level 1 结构（子话题）：
-1. 引言（200-300字）：背景介绍、重要性、本文概览
-2. 主体内容（1800-2000字）：分3-5个小节，每节400-600字
-3. 实践案例（300-400字）：完整的示例代码或应用场景
-4. 总结与展望（200字）：要点回顾、延伸思考
+1. 引言（100-150字）：背景介绍、重要性、本文概览
+2. 主体内容（400-600字）：分2-4个小节，每节200-300字
+3. 总结与展望（100  50字）：要点回顾、延伸思考
         """,
         2: """
 Level 2 结构（小节）：
@@ -440,7 +439,7 @@ Level 2 结构（小节）：
         """,
         3: """
 Level 3 结构（细节）：
-1. 具体说明（250-300字）：深入某个特定点
+1. 具体说明（100-150字）：深入某个特定点
 2. 示例或补充（100-150字）：代码片段或实例
         """
     }
