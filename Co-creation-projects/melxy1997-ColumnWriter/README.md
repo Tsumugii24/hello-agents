@@ -128,12 +128,16 @@
 *   **Planner 缓存**: `CachedExecutor` 会缓存规划阶段的每个步骤结果。如果主题相同，再次运行时会直接加载缓存，节省 Token 和时间。
 *   **文件缓存**: 规划结果 (`ColumnPlan`) 会持久化到本地 `.cache` 目录。
 
+![缓存机制](./assets/feature_cache.jpg)
+
 ### 2. 模型输出解析 (Robust Parser)
 *   实现了增强版的 JSON 解析器，能够处理 LLM 输出的各种非标准 JSON 格式（如包含 Markdown 代码块、注释、不完整的括号等）。
 *   支持从历史对话 (`history`) 中回溯提取有效信息，防止因某次输出格式错误导致整个任务失败。
 
 ### 3. 错误恢复 (Error Recovery)
 *   当 `ReActAgent` 达到最大步数或执行失败时，会自动回退到 `SimpleAgent`，利用已有的历史信息 (`history_summary`) 尝试直接生成结果，确保流程不直接终止。
+
+![解析恢复](./assets/feature_robust.jpg)
 
 ## ▸ 快速开始
 
@@ -169,6 +173,8 @@ python main.py "Python 异步编程"
 
 ### 4. 查看结果
 运行完成后，结果将保存在 `output_YYYYMMDD_HHMMSS` 目录下。
+
+![查看输出结果](./assets/feature_output.jpg)
 
 ## ▸ 作者信息
 ```
