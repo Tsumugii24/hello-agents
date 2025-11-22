@@ -28,13 +28,13 @@ class LLMService:
         """获取 LLM 实例（单例模式）"""
         if cls._instance is None:
             cls._instance = HelloAgentsLLM()
-            print(f"✅ LLM服务初始化成功")
+            print(f"▸ LLM服务初始化成功")
             print(f"   提供商: {cls._instance.provider}")
             print(f"   模型: {cls._instance.model}")
         return cls._instance
 
 
-class AdvancedPlannerAgent:
+class PlannerAgent:
     """
     使用 PlanAndSolveAgent 模式
     
@@ -85,7 +85,7 @@ class AdvancedPlannerAgent:
 # 已完成步骤: {history}
 # 当前步骤: {current_step}
 
-⚠️ **关键要求**：
+▸️ **关键要求**：
 - 不能超过10个步骤。
 - 如果当前步骤是"步骤5: 组装完整的专栏大纲"或包含"组装"、"完整"、"大纲"等关键词，**必须**输出完整的 JSON 格式专栏大纲
 - 如果不是最后一步，请输出当前步骤的分析结果（文本格式）
@@ -148,10 +148,10 @@ class AdvancedPlannerAgent:
                     if (cache_data.get('topic') == self.main_topic and 
                         cache_data.get('step_index') == step_index and
                         cache_data.get('step_content') == step_content):
-                        print(f"   💾 从缓存加载步骤 {step_index} 的结果")
+                        print(f"   ▸ 从缓存加载步骤 {step_index} 的结果")
                         return cache_data.get('result')
                 except Exception as e:
-                    print(f"   ⚠️  加载步骤缓存失败: {e}")
+                    print(f"   ▸️  加载步骤缓存失败: {e}")
                 return None
             
             def _save_step_to_cache(self, step_index: int, step_content: str, result: str):
@@ -167,7 +167,7 @@ class AdvancedPlannerAgent:
                     with open(cache_file, 'w', encoding='utf-8') as f:
                         json.dump(cache_data, f, ensure_ascii=False, indent=2)
                 except Exception as e:
-                    print(f"   ⚠️  保存步骤缓存失败: {e}")
+                    print(f"   ▸️  保存步骤缓存失败: {e}")
             
             def execute(self, question: str, plan: List[str], **kwargs) -> str:
                 """按计划执行任务（带缓存）"""
@@ -198,7 +198,7 @@ class AdvancedPlannerAgent:
                     
                     history += f"步骤 {i}: {step}\n结果: {response_text}\n\n"
                     final_answer = response_text
-                    print(f"✅ 步骤 {i} 已完成，结果: {final_answer[:100] if len(final_answer) > 100 else final_answer}...")
+                    print(f"▸ 步骤 {i} 已完成，结果: {final_answer[:100] if len(final_answer) > 100 else final_answer}...")
                 
                 return final_answer
         
@@ -253,7 +253,7 @@ class AdvancedPlannerAgent:
             
             # 验证缓存的主题是否匹配
             if cache_data.get('topic') != main_topic:
-                print(f"⚠️  缓存主题不匹配，忽略缓存")
+                print(f"▸️  缓存主题不匹配，忽略缓存")
                 return None
             
             plan_data = cache_data.get('plan')
@@ -261,11 +261,11 @@ class AdvancedPlannerAgent:
                 return None
             
             plan = ColumnPlan.from_dict(plan_data)
-            print(f"✅ 从缓存加载规划结果")
+            print(f"▸ 从缓存加载规划结果")
             print(f"   缓存文件: {cache_file}")
             return plan
         except Exception as e:
-            print(f"⚠️  加载缓存失败: {e}")
+            print(f"▸️  加载缓存失败: {e}")
             return None
     
     def _save_to_cache(self, main_topic: str, plan: ColumnPlan):
@@ -288,9 +288,9 @@ class AdvancedPlannerAgent:
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(cache_data, f, ensure_ascii=False, indent=2)
             
-            print(f"💾 规划结果已保存到缓存: {cache_file}")
+            print(f"▸ 规划结果已保存到缓存: {cache_file}")
         except Exception as e:
-            print(f"⚠️  保存缓存失败: {e}")
+            print(f"▸️  保存缓存失败: {e}")
     
     def plan_column(self, main_topic: str, use_cache: bool = True) -> ColumnPlan:
         """
@@ -312,7 +312,7 @@ class AdvancedPlannerAgent:
                 return cached_plan
         
         # 缓存未命中，调用 LLM 进行规划
-        print(f"\n📋 PlanAndSolve Agent 开始规划专栏...")
+        print(f"\n▸ PlanAndSolve Agent 开始规划专栏...")
         print(f"   使用模式: 任务分解 → 逐步执行")
         print(f"   主题: {main_topic}")
         
@@ -326,7 +326,7 @@ class AdvancedPlannerAgent:
         plan_data = self._extract_json(response)
         plan = ColumnPlan.from_dict(plan_data)
         
-        print(f"✅ 规划完成")
+        print(f"▸ 规划完成")
         print(f"   专栏标题: {plan.column_title}")
         print(f"   话题数量: {plan.get_topic_count()}")
         
@@ -408,7 +408,7 @@ class AdvancedPlannerAgent:
             raise ValueError("响应中未找到有效的 JSON 数据")
             
         except json.JSONDecodeError as e:
-            print(f"⚠️  JSON 解析失败: {e}")
+            print(f"▸️  JSON 解析失败: {e}")
             print(f"   响应内容（前1000字符）: {response[:1000]}...")
             # 尝试从历史记录中查找 JSON（如果响应中包含历史信息）
             if "步骤" in response and "结果" in response:
@@ -427,7 +427,7 @@ class AdvancedPlannerAgent:
             
             raise ValueError(f"响应中未找到有效的 JSON 数据: {str(e)}")
         except Exception as e:
-            print(f"⚠️  JSON 提取失败: {e}")
+            print(f"▸️  JSON 提取失败: {e}")
             print(f"   响应内容（前500字符）: {response[:500]}...")
             raise
 
@@ -444,7 +444,7 @@ def improved_parse_output(self, text: str):
         (thought, action) 元组
     """
     if not text or not text.strip():
-        print("⚠️  警告: LLM 返回了空响应")
+        print("▸️  警告: LLM 返回了空响应")
         return None, None
     
     # 尝试多种格式解析 Thought
@@ -452,7 +452,7 @@ def improved_parse_output(self, text: str):
     thought_patterns = [
         r"Thought:\s*(.*?)(?=\nAction:|\nFinish:|$)",  # 标准格式
         r"思考:\s*(.*?)(?=\n行动:|\n完成:|$)",  # 中文格式
-        r"🤔\s*(.*?)(?=\n🎬|\n🎉|$)",  # emoji格式
+        r"▸\s*(.*?)(?=\n▸|\n▸|$)",  # emoji格式
     ]
     
     thought_end_pos = 0
@@ -469,7 +469,7 @@ def improved_parse_output(self, text: str):
     action_patterns = [
         r"Action:\s*(.*?)(?=\nThought:|\nObservation:|\nFinish:|$)",  # 标准格式
         r"行动:\s*(.*?)(?=\n思考:|\n观察:|\n完成:|$)",  # 中文格式
-        r"🎬\s*(.*?)(?=\n🤔|\n👀|\n🎉|$)",  # emoji格式
+        r"▸\s*(.*?)(?=\n▸|\n▸|\n▸|$)",  # emoji格式
         r"Finish\[(.*?)\]",  # Finish格式（可能没有Action前缀）
     ]
     
@@ -584,12 +584,12 @@ def improved_parse_output(self, text: str):
                 completion_reason.append("内容足够长且无未完标记")
             
             if is_complete:
-                print(f"✅ 检测到完整正文内容（长度: {content_length} 字符），自动添加 Finish 前缀")
+                print(f"▸ 检测到完整正文内容（长度: {content_length} 字符），自动添加 Finish 前缀")
                 print(f"   - 判断依据: {', '.join(completion_reason)}")
                 action = f"Finish[{remaining_text}]"
             else:
                 # 内容不完整，可能还想继续写
-                print(f"⚠️  检测到部分正文内容（长度: {content_length} 字符），但可能未完成")
+                print(f"▸️  检测到部分正文内容（长度: {content_length} 字符），但可能未完成")
                 if has_continuation_marker:
                     print(f"   - 检测到'未完待续'标记，继续循环让模型完成写作")
                 elif not is_substantial:
@@ -601,7 +601,7 @@ def improved_parse_output(self, text: str):
     
     # 调试信息
     if not action:
-        print(f"⚠️  警告: 未能解析出 Action")
+        print(f"▸️  警告: 未能解析出 Action")
         print(f"   响应内容（前500字符）: {text[:500]}")
         print(f"   已解析的 Thought: {thought[:100] if thought else 'None'}...")
     
@@ -687,11 +687,11 @@ class ReActAgentWrapper:
                 self.last_history = self.agent.current_history.copy() if self.agent.current_history else []
             elif hasattr(self.agent, 'history'):
                 self.last_history = self.agent.history.copy() if self.agent.history else []
-            print(f"⚠️  ReActAgentWrapper 捕获到异常: {e}")
+            print(f"▸️  ReActAgentWrapper 捕获到异常: {e}")
             raise
 
 
-class AdvancedWriterAgent:
+class WriterAgent:
     """
     写作 Agent - 使用 ReActAgent 模式
     
@@ -748,11 +748,11 @@ class AdvancedWriterAgent:
                     tavily_key=settings.tavily_api_key,
                     serpapi_key=settings.serpapi_api_key
                 )
-                print("✅ SearchTool (内置) 已初始化")
+                print("▸ SearchTool (内置) 已初始化")
             else:
-                print("⚠️  未配置搜索 API Key (Tavily/SerpApi)，跳过 SearchTool 初始化")
+                print("▸️  未配置搜索 API Key (Tavily/SerpApi)，跳过 SearchTool 初始化")
         except Exception as e:
-            print(f"⚠️  初始化 SearchTool 失败: {e}")
+            print(f"▸️  初始化 SearchTool 失败: {e}")
 
         # 2. 注册 wrapper 函数 (如果 search_tool 可用)
         if self.search_tool:
@@ -769,11 +769,11 @@ class AdvancedWriterAgent:
                     auto_expand=True
                 )
                 self.tool_registry.register_tool(github_tool)
-                print("✅ GitHub MCPTool 已注册")
+                print("▸ GitHub MCPTool 已注册")
             else:
-                print("⚠️  未配置 GITHUB_PERSONAL_ACCESS_TOKEN，跳过 GitHub MCPTool 注册")
+                print("▸️  未配置 GITHUB_PERSONAL_ACCESS_TOKEN，跳过 GitHub MCPTool 注册")
         except Exception as e:
-            print(f"⚠️  注册 GitHub MCPTool 失败: {e}")
+            print(f"▸️  注册 GitHub MCPTool 失败: {e}")
 
     def _register_search_wrappers(self):
         """注册适配 Prompt 的搜索函数 wrappers"""
@@ -799,7 +799,7 @@ class AdvancedWriterAgent:
         self.tool_registry.register_function("search_recent_info", "搜索最新信息和动态", search_recent_info)
         self.tool_registry.register_function("search_code_examples", "搜索代码示例和教程", search_code_examples)
         self.tool_registry.register_function("verify_facts", "验证事实准确性", verify_facts)
-        print("✅ 搜索函数 wrappers 已注册")
+        print("▸ 搜索函数 wrappers 已注册")
             
     
     def generate_content(
@@ -854,7 +854,7 @@ class AdvancedWriterAgent:
             
             # 调试：打印真正的原始 LLM 响应（最后一次的响应）
             print(f"\n{'='*70}")
-            print("📋 ReActAgent 原始 LLM 响应:")
+            print("▸ ReActAgent 原始 LLM 响应:")
             print(f"{'='*70}")
             if self.agent.last_raw_responses:
                 # 打印最后一次的原始响应（通常是包含 Finish[...] 的那次）
@@ -864,18 +864,18 @@ class AdvancedWriterAgent:
                 # if len(last_raw) > 2000:
                     # print(f"\n... (响应过长，已截断，总长度: {len(last_raw)} 字符)")
             else:
-                print("⚠️  未捕获到原始响应")
+                print("▸️  未捕获到原始响应")
             print(f"{'='*70}\n")
             
             # 打印 run() 方法的返回值（通常是 final_answer）
-            print(f"📤 ReActAgent.run() 返回值:")
+            print(f"▸ ReActAgent.run() 返回值:")
             print(f"   {response[:500] if response and len(response) > 500 else response}")
             print()
             
             # 检查响应是否有效
             # 注意：即使 response 为空或错误，也要检查是否有原始响应可以提取
             if not response or (isinstance(response, str) and not response.strip()):
-                print("⚠️  ReActAgent 返回了空响应或空白响应")
+                print("▸️  ReActAgent 返回了空响应或空白响应")
                 print(f"   已收集的历史信息: {len(self.agent.last_history)} 条")
                 
                 # 尝试从最后一次原始响应中提取内容
@@ -889,13 +889,13 @@ class AdvancedWriterAgent:
                         if not isinstance(content_data, dict):
                             raise ValueError("提取的内容不是字典格式")
                         if 'content' not in content_data:
-                            print(f"   ⚠️  提取的 JSON 缺少 'content' 字段")
+                            print(f"   ▸️  提取的 JSON 缺少 'content' 字段")
                             print(f"   可用字段: {list(content_data.keys())}")
                             raise ValueError("提取的 JSON 缺少 'content' 字段")
-                        print("✅ 成功从原始响应中提取到内容")
+                        print("▸ 成功从原始响应中提取到内容")
                         return content_data
                     except Exception as e:
-                        print(f"   ⚠️  从原始响应提取失败: {e}")
+                        print(f"   ▸️  从原始响应提取失败: {e}")
                 
                 # 如果提取失败，使用 fallback
                 return self._generate_content_with_history(
@@ -905,7 +905,7 @@ class AdvancedWriterAgent:
             
             # 检查是否是错误消息
             if "无法在限定步数内完成" in response or "抱歉" in response or "流程终止" in response:
-                print("⚠️  ReActAgent 达到最大步数限制或无法完成任务")
+                print("▸️  ReActAgent 达到最大步数限制或无法完成任务")
                 print(f"   已收集的历史信息: {len(self.agent.last_history)} 条")
                 
                 # 即使返回错误消息，也尝试从最后一次原始响应中提取内容
@@ -918,13 +918,13 @@ class AdvancedWriterAgent:
                         if not isinstance(content_data, dict):
                             raise ValueError("提取的内容不是字典格式")
                         if 'content' not in content_data:
-                            print(f"   ⚠️  提取的 JSON 缺少 'content' 字段")
+                            print(f"   ▸️  提取的 JSON 缺少 'content' 字段")
                             print(f"   可用字段: {list(content_data.keys())}")
                             raise ValueError("提取的 JSON 缺少 'content' 字段")
-                        print("✅ 成功从原始响应中提取到内容（尽管 ReActAgent 返回了错误消息）")
+                        print("▸ 成功从原始响应中提取到内容（尽管 ReActAgent 返回了错误消息）")
                         return content_data
                     except Exception as e:
-                        print(f"   ⚠️  从原始响应提取失败: {e}")
+                        print(f"   ▸️  从原始响应提取失败: {e}")
                 
                 # 如果提取失败，基于历史信息生成内容
                 return self._generate_content_with_history(
@@ -934,17 +934,17 @@ class AdvancedWriterAgent:
             
             # 如果 response 是 "JSON内容" 这样的占位符，从原始响应中提取
             if response.strip() in ["JSON内容", "JSON", "内容"]:
-                print(f"⚠️  ReActAgent 返回了占位符 '{response}'，尝试从原始响应中提取...")
+                print(f"▸️  ReActAgent 返回了占位符 '{response}'，尝试从原始响应中提取...")
                 if self.agent.last_raw_responses:
                     last_raw = self.agent.last_raw_responses[-1]
                     print(f"   从最后一次原始响应中提取（长度: {len(last_raw)} 字符）...")
                     try:
                         content_data = self._extract_json(last_raw)
                         if isinstance(content_data, dict) and 'content' in content_data:
-                            print("✅ 成功从原始响应中提取到内容")
+                            print("▸ 成功从原始响应中提取到内容")
                             return content_data
                     except Exception as e:
-                        print(f"   ⚠️  从原始响应提取失败: {e}")
+                        print(f"   ▸️  从原始响应提取失败: {e}")
             
             content_data = self._extract_json(response)
             
@@ -952,7 +952,7 @@ class AdvancedWriterAgent:
             if not isinstance(content_data, dict):
                 raise ValueError(f"提取的内容不是字典格式: {type(content_data)}")
             if 'content' not in content_data:
-                print(f"⚠️  提取的 JSON 缺少 'content' 字段")
+                print(f"▸️  提取的 JSON 缺少 'content' 字段")
                 print(f"   可用字段: {list(content_data.keys())}")
                 print(f"   响应内容（前500字符）: {response[:500]}")
                 
@@ -963,16 +963,16 @@ class AdvancedWriterAgent:
                     try:
                         content_data = self._extract_json(last_raw)
                         if isinstance(content_data, dict) and 'content' in content_data:
-                            print("✅ 成功从原始响应中提取到内容")
+                            print("▸ 成功从原始响应中提取到内容")
                             return content_data
                     except Exception as e:
-                        print(f"   ⚠️  从原始响应提取失败: {e}")
+                        print(f"   ▸️  从原始响应提取失败: {e}")
                 
                 raise ValueError("提取的 JSON 缺少 'content' 字段")
             
             return content_data
         except Exception as e:
-            print(f"⚠️  ReActAgent 执行失败: {e}")
+            print(f"▸️  ReActAgent 执行失败: {e}")
             import traceback
             traceback.print_exc()
             print(f"   已收集的历史信息: {len(self.agent.last_history)} 条")
@@ -1037,7 +1037,7 @@ class AdvancedWriterAgent:
 }}
 """
         
-        print(f"📝 使用 SimpleAgent 基于历史信息生成内容...")
+        print(f"▸ 使用 SimpleAgent 基于历史信息生成内容...")
         response = fallback_agent.run(task)
         return self._extract_json(response)
     
@@ -1151,7 +1151,7 @@ class AdvancedWriterAgent:
             finish_match = re.search(r"Finish\[(.*?)\]", response, re.DOTALL)
             if finish_match:
                 finish_content = finish_match.group(1).strip()
-                print(f"🔍 找到 Finish 格式，内容长度: {len(finish_content)}")
+                print(f"▸ 找到 Finish 格式，内容长度: {len(finish_content)}")
                 return extract_json_with_retry(finish_content)
             
             # 方法2: 直接是 JSON 对象
@@ -1213,26 +1213,26 @@ class AdvancedWriterAgent:
                 # 首先尝试找到包含 'content' 字段的
                 for parsed, json_str in json_candidates:
                     if 'content' in parsed and parsed.get('content'):
-                        print(f"🔍 找到包含 'content' 字段的 JSON（长度: {len(json_str)} 字符）")
+                        print(f"▸ 找到包含 'content' 字段的 JSON（长度: {len(json_str)} 字符）")
                         return parsed
                 
                 # 如果没有找到包含 'content' 的，选择最完整的 JSON（字段最多的）
                 best_candidate = max(json_candidates, key=lambda x: len(x[0]))
-                print(f"⚠️  未找到包含 'content' 字段的 JSON，使用最完整的 JSON（字段数: {len(best_candidate[0])}）")
+                print(f"▸️  未找到包含 'content' 字段的 JSON，使用最完整的 JSON（字段数: {len(best_candidate[0])}）")
                 return best_candidate[0]
             
             # 如果都失败了，抛出错误并显示响应内容
-            print(f"⚠️  无法从响应中提取 JSON")
+            print(f"▸️  无法从响应中提取 JSON")
             print(f"   响应完整内容（前2000字符）:\n{response[:2000]}")
             raise ValueError("响应中未找到有效的 JSON 数据")
             
         except Exception as e:
-            print(f"⚠️  提取 JSON 时发生错误: {e}")
+            print(f"▸️  提取 JSON 时发生错误: {e}")
             print(f"   响应内容（前1000字符）: {response[:1000]}")
             raise
 
 
-class AdvancedReflectionWriterAgent:
+class ReflectionWriterAgent:
     """
     反思写作 Agent - 使用 ReflectionAgent 模式
     
@@ -1305,7 +1305,7 @@ class AdvancedReflectionWriterAgent:
         Returns:
             优化后的内容数据
         """
-        print(f"\n🔄 ReflectionAgent 开始写作并自我反思...")
+        print(f"\n▸ ReflectionAgent 开始写作并自我反思...")
         print(f"   使用模式: 初稿 → 自我评审 → 优化")
         
         structure_requirements = get_structure_requirements(level)
@@ -1342,7 +1342,7 @@ class AdvancedReflectionWriterAgent:
         response = self.agent.run(task_description)
         content_data = self._extract_json(response)
         
-        print(f"✅ ReflectionAgent 完成反思优化")
+        print(f"▸ ReflectionAgent 完成反思优化")
         
         return content_data
     
@@ -1369,6 +1369,6 @@ class AdvancedReflectionWriterAgent:
             
             return json.loads(json_str)
         except Exception as e:
-            print(f"⚠️  JSON 解析失败: {e}")
+            print(f"▸️  JSON 解析失败: {e}")
             raise
 

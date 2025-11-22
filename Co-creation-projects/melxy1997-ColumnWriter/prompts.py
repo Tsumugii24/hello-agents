@@ -66,7 +66,7 @@ PLANNER_PROMPT = """
 WRITER_PROMPT = """
 你是一位专业的内容创作者。你需要按照树形结构递归地撰写文章内容。
 
-## 🔍 搜索工具使用指南
+## ▸ 搜索工具使用指南
 
 你可以使用以下搜索工具来增强内容质量：
 
@@ -164,7 +164,7 @@ WRITER_PROMPT = """
     "keywords": ["关键词1", "关键词2", "关键词3"],
     "references": ["引用来源1", "引用来源2"],
     "code_examples": ["示例1描述", "示例2描述"],
-    "difficulty": "beginner/intermediate/advanced"
+    "difficulty": "beginner/intermediate/"
   }}
 }}
 ```
@@ -461,7 +461,7 @@ Action: 你决定采取的行动，必须是以下格式之一：
 - `{{tool_name}}[{{tool_input}}]`：调用一个可用工具。
 - `\n\nFinish[JSON内容]`：当你完成写作任务，准备好最终的JSON格式的文章时使用。
 
-⚠️ **关键要求 - 必须严格遵守：**
+▸️ **关键要求 - 必须严格遵守：**
 1. **完成写作后，必须使用 `\n\nFinish[JSON内容]` 格式输出结果**
 2. **不要只输出 JSON，必须用 `Finish[...]` 包裹**
 3. **`Finish` 中的内容必须是完整的 JSON 字符串，包含所有必需字段**

@@ -4,14 +4,14 @@ from datetime import datetime
 from typing import Dict, Any, List
 from models import ContentNode, ContentLevel, ColumnPlan
 from agents import (
-    AdvancedPlannerAgent,
-    AdvancedWriterAgent,
-    AdvancedReflectionWriterAgent
+    PlannerAgent,
+    WriterAgent,
+    ReflectionWriterAgent
 )
 from config import get_settings, get_word_count
 
 
-class AdvancedColumnWriterOrchestrator:
+class ColumnWriterOrchestrator:
     """
     提供多 Agent 模式的专栏写作系统
     
@@ -38,14 +38,14 @@ class AdvancedColumnWriterOrchestrator:
         print(f"   模式选择: {'ReflectionAgent（自我反思）' if use_reflection_mode else 'ReActAgent（推理行动）+ 评审'}")
         
         # 规划 Agent - 使用 PlanAndSolveAgent
-        self.planner = AdvancedPlannerAgent()
+        self.planner = PlannerAgent()
         
         # 写作 Agent - 根据模式选择
         if use_reflection_mode:
-            self.writer = AdvancedReflectionWriterAgent()
+            self.writer = ReflectionWriterAgent()
             print("   WriterAgent: ReflectionAgent（内置评审优化）")
         else:
-            self.writer = AdvancedWriterAgent(enable_search=self.settings.enable_search)
+            self.writer = WriterAgent(enable_search=self.settings.enable_search)
             print("   WriterAgent: ReActAgent（推理-行动-搜索）")
         
         # 统计信息
@@ -58,7 +58,7 @@ class AdvancedColumnWriterOrchestrator:
             'end_time': None
         }
         
-        print("✅ 系统初始化完成\n")
+        print("▸ 系统初始化完成\n")
     
     def create_column(self, main_topic: str) -> Dict[str, Any]:
         """
@@ -73,11 +73,11 @@ class AdvancedColumnWriterOrchestrator:
         self.stats['start_time'] = datetime.now()
         
         print(f"\n{'='*70}")
-        print(f"🎯 开始创建专栏：{main_topic}")
+        print(f"▸ 开始创建专栏：{main_topic}")
         print(f"{'='*70}\n")
         
         # Step 1: 规划专栏结构（使用 PlanAndSolveAgent）
-        print("📋 第一步：规划专栏结构（PlanAndSolveAgent）")
+        print("▸ 第一步：规划专栏结构（PlanAndSolveAgent）")
         print("-" * 70)
         column_plan = self.planner.plan_column(main_topic)
         print(f"   标题：{column_plan.column_title}")
@@ -86,13 +86,13 @@ class AdvancedColumnWriterOrchestrator:
         
         # Step 2: 为每个子话题创建内容树
         mode_name = "ReflectionAgent" if self.use_reflection_mode else "ReActAgent"
-        print(f"✍️  第二步：撰写专栏文章（{mode_name}）")
+        print(f"▸️  第二步：撰写专栏文章（{mode_name}）")
         print("-" * 70)
         
         content_trees = self._write_topics_sequential(column_plan)
         
         # Step 3: 组装完整专栏
-        print("\n📦 第三步：组装专栏内容")
+        print("\n▸ 第三步：组装专栏内容")
         print("-" * 70)
         full_column = self._assemble_column(column_plan, content_trees)
         
@@ -100,7 +100,7 @@ class AdvancedColumnWriterOrchestrator:
         duration = (self.stats['end_time'] - self.stats['start_time']).total_seconds()
         
         print(f"\n{'='*70}")
-        print(f"✅ 专栏创建完成！耗时 {duration:.1f} 秒")
+        print(f"▸ 专栏创建完成！耗时 {duration:.1f} 秒")
         print(f"{'='*70}\n")
         
         # 添加统计信息
@@ -118,7 +118,7 @@ class AdvancedColumnWriterOrchestrator:
         
         for idx, topic in enumerate(column_plan.topics, 1):
             print(f"\n{'─'*70}")
-            print(f"📝 正在写作第 {idx}/{column_plan.get_topic_count()} 个话题")
+            print(f"▸ 正在写作第 {idx}/{column_plan.get_topic_count()} 个话题")
             print(f"   话题：{topic['title']}")
             print(f"{'─'*70}")
             
@@ -127,7 +127,7 @@ class AdvancedColumnWriterOrchestrator:
             
             # 显示进度
             progress = idx / column_plan.get_topic_count() * 100
-            print(f"\n📊 总体进度：{progress:.0f}% ({idx}/{column_plan.get_topic_count()})")
+            print(f"\n▸ 总体进度：{progress:.0f}% ({idx}/{column_plan.get_topic_count()})")
         
         return content_trees
     
@@ -163,12 +163,12 @@ class AdvancedColumnWriterOrchestrator:
         """递归写作核心逻辑"""
         if level > self.settings.max_depth:
             indent = "  " * level
-            print(f"{indent}⚠️  达到最大深度 {self.settings.max_depth}，停止展开")
+            print(f"{indent}▸️  达到最大深度 {self.settings.max_depth}，停止展开")
             return
         
         indent = "  " * level
         print(f"\n{indent}{'┈'*40}")
-        print(f"{indent}📄 Level {level}: {node.title}")
+        print(f"{indent}▸ Level {level}: {node.title}")
         print(f"{indent}{'┈'*40}")
         
         if self.use_reflection_mode:
@@ -186,7 +186,7 @@ class AdvancedColumnWriterOrchestrator:
         indent: str
     ):
         """使用 ReflectionAgent 模式写作"""
-        print(f"{indent}✍️  使用 ReflectionAgent 生成并优化内容...")
+        print(f"{indent}▸️  使用 ReflectionAgent 生成并优化内容...")
         
         content_data = self.writer.generate_and_refine_content(node, context, level)
         self.stats['total_generations'] += 1
@@ -199,7 +199,7 @@ class AdvancedColumnWriterOrchestrator:
         
         word_count = content_data.get('word_count', len(content_data['content']))
         print(f"{indent}   字数：{word_count}")
-        print(f"{indent}✅ 内容已通过自我反思优化")
+        print(f"{indent}▸ 内容已通过自我反思优化")
         
         # 处理子节点
         self._process_children(node, content_data, context, level, indent)
@@ -212,7 +212,7 @@ class AdvancedColumnWriterOrchestrator:
         indent: str
     ):
         """使用 ReActAgent 模式写作"""
-        print(f"{indent}✍️  使用 ReActAgent 生成内容（推理-行动）...")
+        print(f"{indent}▸️  使用 ReActAgent 生成内容（推理-行动）...")
         
         content_data = self.writer.generate_content(node, context, level)
         self.stats['total_generations'] += 1
@@ -223,7 +223,7 @@ class AdvancedColumnWriterOrchestrator:
         
         word_count = content_data.get('word_count', len(content_data['content']))
         print(f"{indent}   字数：{word_count}")
-        print(f"{indent}✅ ReActAgent 完成推理和行动")
+        print(f"{indent}▸ ReActAgent 完成推理和行动")
         
         # 处理子节点
         self._process_children(node, content_data, context, level, indent)
@@ -240,7 +240,7 @@ class AdvancedColumnWriterOrchestrator:
         if content_data.get('needs_expansion') and level < self.settings.max_depth:
             subsections = content_data.get('subsections', [])
             if subsections:
-                print(f"{indent}📂 需要展开 {len(subsections)} 个子节点")
+                print(f"{indent}▸ 需要展开 {len(subsections)} 个子节点")
                 
                 for subsection in subsections:
                     child = ContentNode(

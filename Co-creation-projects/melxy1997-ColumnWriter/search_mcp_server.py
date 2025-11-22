@@ -5,7 +5,7 @@ from typing import Optional
 try:
     from fastmcp import FastMCP
 except ImportError:
-    print("⚠️  需要安装 fastmcp: pip install fastmcp")
+    print("▸️  需要安装 fastmcp: pip install fastmcp")
     exit(1)
 
 # 创建 MCP 服务器
@@ -24,7 +24,7 @@ def web_search(query: str, max_results: int = 3) -> str:
     Returns:
         搜索结果摘要
     """
-    print(f"🔍 执行搜索: {query}")
+    print(f"▸ 执行搜索: {query}")
     
     # 尝试使用 Tavily（推荐）
     tavily_key = os.getenv("TAVILY_API_KEY")
@@ -36,9 +36,9 @@ def web_search(query: str, max_results: int = 3) -> str:
             
             result = ""
             if response.get('answer'):
-                result += f"💡 AI 答案：{response['answer']}\n\n"
+                result += f"▸ AI 答案：{response['answer']}\n\n"
             
-            result += "🔗 相关结果：\n"
+            result += "▸ 相关结果：\n"
             for i, item in enumerate(response.get('results', [])[:max_results], 1):
                 result += f"[{i}] {item.get('title', '')}\n"
                 result += f"    {item.get('content', '')[:200]}...\n"
@@ -46,7 +46,7 @@ def web_search(query: str, max_results: int = 3) -> str:
             
             return result
         except Exception as e:
-            print(f"⚠️  Tavily 搜索失败: {e}")
+            print(f"▸️  Tavily 搜索失败: {e}")
     
     # 尝试使用 SerpAPI
     serpapi_key = os.getenv("SERPAPI_API_KEY")
@@ -64,15 +64,15 @@ def web_search(query: str, max_results: int = 3) -> str:
             
             results = search.get_dict()
             
-            result = "🔗 搜索结果：\n"
+            result = "▸ 搜索结果：\n"
             
             # 优先返回答案框
             if "answer_box" in results and "answer" in results["answer_box"]:
-                result += f"💡 直接答案：{results['answer_box']['answer']}\n\n"
+                result += f"▸ 直接答案：{results['answer_box']['answer']}\n\n"
             
             # 知识图谱
             if "knowledge_graph" in results and "description" in results["knowledge_graph"]:
-                result += f"📚 知识图谱：{results['knowledge_graph']['description']}\n\n"
+                result += f"▸ 知识图谱：{results['knowledge_graph']['description']}\n\n"
             
             # 有机结果
             if "organic_results" in results:
@@ -83,10 +83,10 @@ def web_search(query: str, max_results: int = 3) -> str:
             
             return result
         except Exception as e:
-            print(f"⚠️  SerpAPI 搜索失败: {e}")
+            print(f"▸️  SerpAPI 搜索失败: {e}")
     
     # 如果都不可用
-    return """❌ 搜索功能不可用，请配置以下 API 密钥之一：
+    return """▸ 搜索功能不可用，请配置以下 API 密钥之一：
 
 1. Tavily API（推荐）
    - 设置环境变量: TAVILY_API_KEY
@@ -150,7 +150,7 @@ def verify_facts(statement: str) -> str:
 
 if __name__ == "__main__":
     # 运行 MCP 服务器
-    print("🚀 启动搜索 MCP 服务器...")
+    print("▸ 启动搜索 MCP 服务器...")
     print("   提供工具: web_search, search_recent_info, search_code_examples, verify_facts")
     mcp.run()
 

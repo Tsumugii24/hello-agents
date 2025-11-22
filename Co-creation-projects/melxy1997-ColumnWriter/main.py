@@ -1,7 +1,7 @@
 """主程序入口"""
 
 import sys
-from orchestrator import AdvancedColumnWriterOrchestrator
+from orchestrator import ColumnWriterOrchestrator
 from exporter import ColumnExporter
 from config import get_settings
 
@@ -33,8 +33,8 @@ def main():
     use_reflection = mode_choice == "2"
     
     try:
-        # 创建高级编排器
-        orchestrator = AdvancedColumnWriterOrchestrator(use_reflection_mode=use_reflection)
+        # 创建主理人
+        orchestrator = ColumnWriterOrchestrator(use_reflection_mode=use_reflection)
         
         # 创建专栏
         result = orchestrator.create_column(main_topic)
@@ -46,7 +46,7 @@ def main():
         
         # 打印统计
         print(f"\n{'='*70}")
-        print(f"📊 创作统计")
+        print(f"▸ 创作统计")
         print(f"{'='*70}")
         stats = result['statistics']
         print(f"文章总数: {stats['total_articles']}")
@@ -59,7 +59,7 @@ def main():
             print(f"  Writer: {result['agent_modes']['writer']}")
         
         print(f"\n{'='*70}")
-        print(f"✅ 专栏创建完成！")
+        print(f"▸ 专栏创建完成！")
         print(f"   输出目录: {output_dir}")
         print(f"{'='*70}\n")
         
@@ -67,7 +67,7 @@ def main():
         print("\n\n⏸️  用户中断，程序退出")
         sys.exit(0)
     except Exception as e:
-        print(f"\n❌ 程序出错: {e}")
+        print(f"\n▸ 程序出错: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

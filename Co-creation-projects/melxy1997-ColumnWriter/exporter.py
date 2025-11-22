@@ -22,14 +22,14 @@ class ColumnExporter:
         os.makedirs(output_dir, exist_ok=True)
         
         print(f"\n{'='*70}")
-        print(f"📁 开始导出专栏文件...")
+        print(f"▸ 开始导出专栏文件...")
         print(f"{'='*70}\n")
         
         # 导出完整JSON
         json_path = os.path.join(output_dir, 'column_data.json')
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(column_data, f, ensure_ascii=False, indent=2, default=str)
-        print(f"✅ 已保存完整数据：{json_path}")
+        print(f"▸ 已保存完整数据：{json_path}")
         
         # 导出每篇文章
         for article in column_data['articles']:
@@ -57,15 +57,15 @@ class ColumnExporter:
                         for change in article['metadata']['revision_summary'].get('major_changes', []):
                             f.write(f"  - {change}\n")
             
-            print(f"✅ 已保存文章：{filepath}")
+            print(f"▸ 已保存文章：{filepath}")
         
         # 导出统计报告
         report_path = os.path.join(output_dir, 'REPORT.md')
         ColumnExporter._export_report(column_data, report_path)
-        print(f"✅ 已保存统计报告：{report_path}")
+        print(f"▸ 已保存统计报告：{report_path}")
         
         print(f"\n{'='*70}")
-        print(f"✅ 导出完成！输出目录：{output_dir}")
+        print(f"▸ 导出完成！输出目录：{output_dir}")
         print(f"{'='*70}\n")
     
     @staticmethod
