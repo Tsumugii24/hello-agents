@@ -36,7 +36,6 @@ env/
 .env
 
 # Output
-output_*/
 example_output/
 column_output/
 
