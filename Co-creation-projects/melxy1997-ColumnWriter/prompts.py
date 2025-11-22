@@ -459,12 +459,30 @@ def get_react_writer_prompt() -> str:
 Thought: 你的思考过程，用于分析问题、拆解任务和规划下一步行动。
 Action: 你决定采取的行动，必须是以下格式之一：
 - `{{tool_name}}[{{tool_input}}]`：调用一个可用工具。
-- `Finish[JSON内容]`：当你完成写作任务，准备好最终的JSON格式的文章时使用。
+- `\n\nFinish[JSON内容]`：当你完成写作任务，准备好最终的JSON格式的文章时使用。
+
+⚠️ **关键要求 - 必须严格遵守：**
+1. **完成写作后，必须使用 `\n\nFinish[JSON内容]` 格式输出结果**
+2. **不要只输出 JSON，必须用 `Finish[...]` 包裹**
+3. **`Finish` 中的内容必须是完整的 JSON 字符串，包含所有必需字段**
+4. **如果你已经写好了文章内容，即使没有调用工具，也必须使用 `Finish` 来结束任务**
 
 重要提示：
 - 你的最终目标是生成一个完整的JSON对象。
 - 在调用 `Finish` 之前，你可以多次使用 `Thought` 和 `Action` 来收集信息或进行构思。
-- `Finish` 的内容必须是一个完整的、符合任务要求的JSON字符串。
+- **当你完成写作后，必须使用 `\n\nFinish[JSON内容]` 格式，这是唯一正确的结束方式**
+- `Finish` 的内容必须是一个完整的、符合任务要求的JSON字符串，格式如下：
+  ```json
+  {{
+    "title": "章节标题",
+    "level": 层级数字,
+    "content": "完整的文章正文（markdown格式）",
+    "word_count": 实际字数,
+    "needs_expansion": true/false,
+    "subsections": [...],
+    "metadata": {{...}}
+  }}
+  ```
 
 现在，请开始解决以下问题：
 Question: {question}

@@ -48,9 +48,9 @@ class Settings(BaseSettings):
     vite_amap_web_key: str = ""
     
     # 字数配置
-    word_count_level_1: int = 2500
-    word_count_level_2: int = 600
-    word_count_level_3: int = 400
+    word_count_level_1: int = 600
+    word_count_level_2: int = 400
+    word_count_level_3: int = 200
     word_count_tolerance: float = 0.1
     
     class Config:

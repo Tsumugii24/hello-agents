@@ -91,4 +91,13 @@ class ColumnPlan:
     def get_topic_count(self) -> int:
         """获取话题数量"""
         return len(self.topics)
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """转换为字典（用于缓存）"""
+        return {
+            'column_title': self.column_title,
+            'column_description': self.column_description,
+            'target_audience': self.target_audience,
+            'topics': self.topics
+        }
 

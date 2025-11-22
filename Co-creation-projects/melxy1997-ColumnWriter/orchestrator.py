@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Dict, Any, List
 from models import ContentNode, ContentLevel, ColumnPlan
-from agents_advanced import (
+from agents import (
     AdvancedPlannerAgent,
     AdvancedWriterAgent,
     AdvancedReflectionWriterAgent
