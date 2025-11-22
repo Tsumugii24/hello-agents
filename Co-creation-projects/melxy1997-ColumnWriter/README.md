@@ -1,15 +1,47 @@
 # 专栏作家智能体 (Column Writer Agent)
 
-一个基于 [HelloAgents](https://github.com/helloagents/hello-agents) 框架构建的智能专栏写作系统，采用多智能体协作模式，能够自动完成专栏的规划、撰写、评审和优化。
+一个基于 [HelloAgents](https://github.com/helloagents/hello-agents) 框架构建的智能专栏写作系统，采用多智能体/多设计模式，自动完成专栏的规划、撰写、评审和优化。
 
 ## ▸ 项目简介
 
-该项目展示了如何使用 HelloAgents 框架构建复杂的智能体系统。它模拟了一个专业的专栏作家团队，包括：
+我们的智能体系统模拟了一个专业的创作者团队，包括：
 - **策划专家**：负责顶层设计和内容规划
 - **写作专家**：负责具体内容的撰写和工具调用
 - **评审专家**：负责内容质量把控和反馈
 
 系统支持树形递归生成，可以创作出结构严谨、内容详实的长篇技术专栏。
+
+## ▸ 核心功能
+
+1.  **智能规划与分解**：
+    *   利用 Plan-and-Solve 模式，自动将一个宽泛的主题（如"Python异步编程"）拆解为包含多个子话题和章节的完整大纲。
+    *   支持多层级递归展开，生成深度内容。
+
+2.  **多模式智能写作**：
+    *   **ReAct 模式**：结合推理与行动，写作过程中主动调用搜索工具获取最新信息。
+    *   **Reflection 模式**：通过自我反思（Self-Reflection）机制，生成初稿后自动评审并优化。
+
+3.  **联网搜索增强**：
+    *   集成 Tavily/SerpApi，确保内容的时效性和准确性。
+    *   集成 GitHub MCP，可直接读取开源项目代码作为案例。
+
+4.  **质量闭环控制**：
+    *   内置评分系统，对生成内容进行多维度评审（准确性、逻辑性、易读性）。
+    *   分数不足自动触发修改流程，直至达到质量标准。
+
+5.  **智能缓存与容错**：
+    *   支持规划结果缓存，避免重复生成。
+    *   具备强大的错误恢复机制，在 Agent 调用失败时自动降级处理，确保任务完成。
+
+## ▸ 技术栈
+
+*   **核心框架**: [HelloAgents](https://github.com/helloagents/hello-agents)
+*   **Agent Patterns**: Plan-and-Solve, ReAct, Reflection
+*   **Tools**:
+    *   MCP (Model Context Protocol)
+    *   Tavily / SerpApi (Search)
+    *   GitHub API
+*   **Runtime**: Python 3.10+
 
 ## ▸️ 模块架构
 
@@ -80,7 +112,6 @@
 
 ### 模型支持
 通过 `config.py` 配置，支持多种 LLM 后端：
-- **OpenAI**: GPT-4 (推荐), GPT-3.5
 - **其他兼容模型**: 任何支持 OpenAI 接口格式的模型
 
 ### 内置工具
@@ -97,12 +128,12 @@
 *   **Planner 缓存**: `CachedExecutor` 会缓存规划阶段的每个步骤结果。如果主题相同，再次运行时会直接加载缓存，节省 Token 和时间。
 *   **文件缓存**: 规划结果 (`ColumnPlan`) 会持久化到本地 `.cache` 目录。
 
-### 2. 鲁棒的解析器 (Robust Parser)
+### 2. 模型输出解析 (Robust Parser)
 *   实现了增强版的 JSON 解析器，能够处理 LLM 输出的各种非标准 JSON 格式（如包含 Markdown 代码块、注释、不完整的括号等）。
 *   支持从历史对话 (`history`) 中回溯提取有效信息，防止因某次输出格式错误导致整个任务失败。
 
 ### 3. 错误恢复 (Error Recovery)
-*   当 `ReActAgent` 达到最大步数或执行失败时，会自动回退到 `SimpleAgent`，利用已有的历史信息 (`history_summary`) 尝试直接生成结果，确保流程不中断。
+*   当 `ReActAgent` 达到最大步数或执行失败时，会自动回退到 `SimpleAgent`，利用已有的历史信息 (`history_summary`) 尝试直接生成结果，确保流程不直接终止。
 
 ## ▸ 快速开始
 
@@ -133,8 +164,17 @@ GITHUB_PERSONAL_ACCESS_TOKEN=...
 python main.py
 
 # 命令行模式
-python main.py "如何构建一个 AI Agent 系统"
+python main.py "Python 异步编程"
 ```
 
 ### 4. 查看结果
 运行完成后，结果将保存在 `output_YYYYMMDD_HHMMSS` 目录下。
+
+## ▸ 作者信息
+```
+- Name: Xinyu Liu
+- Work: Trip.com
+- Role: Web Developer
+- Github: melxy1997
+- EMail: melxy#foxmail.com
+```
