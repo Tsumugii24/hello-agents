@@ -1,0 +1,6 @@
+#大模型参数
+LLM_MODEL_ID = "yourmodel"
+LLM_API_KEY = "yourkey"
+LLM_BASE_URL = "yourbaseurl"
+#Tavily参数
+TAVILY_API_KEY = "yourTavilyKey"
