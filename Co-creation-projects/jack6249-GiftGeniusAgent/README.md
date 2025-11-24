@@ -38,9 +38,11 @@ GiftGenius 是一个智能化的礼物推荐 Agent，旨在解决“送什么礼
 
   用于从搜索结果中提取专家的数据反思和修正。
 
-- 工具与API:Tavily Search API (用于联网检索)
+- 工具与API:
 
-- 其他依赖: python-dotenv, numpy (用于价格计算), jupyter
+  Tavily Search API (用于联网检索)、百度优选MCP(用于联网检索)
+
+- 其他依赖: `mcp`, `nest_asyncio`, `python-dotenv`, `numpy`
 
 ## 🚀 快速开始
 
@@ -77,6 +79,12 @@ cp .env.example .env
 ```bash
 jupyter notebook main.ipynb
 ```
+项目默认使用的是百度优选MCP，可修改为Tavily Search API。
+```py
+# 搜索源配置
+# 可选值: "tavily" (通用/海外) 或 "baidu" (电商/国内)
+os.environ["SEARCH_PROVIDER"] = "baidu" 
+```
 
 
 点击 "Run All" 运行所有单元格，最终结果将生成在 outputs/gift_plan_output.md 中。
@@ -109,11 +117,13 @@ jupyter notebook main.ipynb
 
 - 动态策略修正 (Feedback Loop)：实现了“价格守门员”机制。如果搜到的商品均价超预算，会重新触发“军师”制定“平替”策略，直到找到合适商品为止。
 
+- 支持多数据源：集成了百度优选MCP 和 Tavily Search API 两种搜索源
+
 ## 🔮 未来计划
 
 - [ ] 前端交互：新增前端页面，提供更好的用户交互体验
 
-- [ ] 数据源增强：接入百度或BigGo的MCP Server，获取更精准的实时价格和商品信息
+- [ ] 数据源深度集成：完全接入百度优选MCP 的比价与历史价格接口，获取更精准的实时价格和库存信息，实现“全网比价”功能。
 
 - [ ] 丰富选项：增加更多的个人喜好选项，如喜欢的商品类型、品牌等
 
