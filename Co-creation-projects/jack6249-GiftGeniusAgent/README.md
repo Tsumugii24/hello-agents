@@ -34,9 +34,7 @@ GiftGenius 是一个智能化的礼物推荐 Agent，旨在解决“送什么礼
 
 - 框架: HelloAgents
 
-- 智能体范式:Reflection
-
-  用于从搜索结果中提取专家的数据反思和修正。
+- 智能体范式: 使用HelloAgent框架的SimpleAgent
 
 - 工具与API:
 
