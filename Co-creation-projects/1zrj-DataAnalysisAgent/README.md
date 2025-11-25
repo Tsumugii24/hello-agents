@@ -65,15 +65,12 @@ jupyter lab
 
 ### 完整功能
 
-1. 将待审查的代码放入`data/sample_code.py`
-2. 依次运行`main.ipynb`的第1-7部分
-3. 查看生成的审查报告`outputs/review_report.md`
+1. 将待分析数据表格放入`data`
+2. 依次运行`main.ipynb`
+3. 查看生成的图表`outputs/echarts.html`
+4. 查看生成的数据分析报告`outputs/report.md`
 
-## 🎯 项目亮点
 
-- **自动化**：无需人工逐行检查,自动发现问题
-- **智能化**：利用LLM理解代码语义,提供深度建议
-- **可扩展**：易于添加新的检查规则和工具
 
 ## 📂 项目结构
 
@@ -85,60 +82,26 @@ jjyaoao-CodeReviewAgent/
 ├── .env.example          # 环境变量示例
 ├── main.ipynb            # 主程序(包含快速演示和完整功能)
 ├── data/
-│   └── sample_code.py    # 示例代码
+│   └──    # 示例代码
 └── outputs/
-    └── review_report.md  # 审查报告
+    └── report.md  # 数据分析报告
+    └── echarts.html  # 图表html
 ```
 
 ## 🔧 技术实现
 
 ### 工具系统
 
-1. **CodeAnalysisTool**: 使用Python AST模块解析代码结构
-2. **StyleCheckTool**: 检查PEP 8代码风格规范
+1. **DataCleaningTool**: 数据清洗工具 - 基于用户指定规则清洗表格数据
+2. **DataStatisticsTool**: 数据统计工具 - 提供描述性统计分析
 
 ### 智能体设计
 
 使用HelloAgents的SimpleAgent,配合自定义工具实现智能代码审查。
 
-## 📊 示例输出
-
-```markdown
-# 代码审查报告
-
-## 代码结构分析
-- 函数数量: 3
-- 类数量: 1
-- 代码行数: 45
-
-## 风格问题
-- 第12行：超过79个字符
-- 第25行：缩进不规范
-
-## 优化建议
-1. 建议将长函数拆分为多个小函数
-2. 添加类型注解提高代码可读性
-3. 补充文档字符串
 ```
-
-## 🚧 未来改进
-
-- [ ] 支持更多编程语言（JavaScript、Java等）
-- [ ] 添加安全漏洞检测
-- [ ] 集成更多静态分析工具
-- [ ] 支持批量文件审查
-- [ ] 生成HTML格式报告
-
-## 👤 作者
-
-- GitHub: [@jjyaoao](https://github.com/jjyaoao)
-- 项目链接：[CodeReviewAgent](https://github.com/datawhalechina/Hello-Agents/tree/main/Co-creation-projects/jjyaoao-CodeReviewAgent)
 
 ## 🙏 致谢
 
 感谢Datawhale社区和Hello-Agents项目！
-
-## 📄 许可证
-
-本项目采用MIT许可证。
 
