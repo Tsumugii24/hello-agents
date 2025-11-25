@@ -63,125 +63,44 @@ PLANNER_PROMPT = """
 """
 
 
-WRITER_PROMPT = """
-你是一位专业的内容创作者。你需要按照树形结构递归地撰写文章内容。
+WRITER_PROMPT = """请注意，你是一个有能力调用外部工具的智能助手。
 
-## ▸ 搜索工具使用指南
+可用工具如下：
+{tools}
 
-你可以使用以下搜索工具来增强内容质量：
+请严格按照以下格式进行回应：
 
-**可用工具：**
-- `web_search(query)` - 通用网页搜索，获取最新资讯和资料
-- `search_recent_info(topic)` - 搜索最新信息和动态
-- `search_code_examples(technology, task)` - 搜索代码示例和教程
-- `verify_facts(statement)` - 验证事实准确性
+Thought: 你的思考过程，用于分析问题、拆解任务和规划下一步行动。
+Action: 你决定采取的行动，必须是以下格式之一：
+- `{{tool_name}}[{{tool_input}}]`：调用一个可用工具。
+- `\n\nFinish[JSON内容]`：当你完成写作任务，准备好最终的JSON格式的文章时使用。
 
-**使用时机：**
-1. 需要最新数据、统计信息或行业动态
-2. 需要具体的代码示例或技术实现
-3. 不确定某个技术细节或概念
-4. 需要验证重要事实的准确性
+▸️ **关键要求 - 必须严格遵守：**
+1. **完成写作后，必须使用 `\n\nFinish[JSON内容]` 格式输出结果**
+2. **不要只输出 JSON，必须用 `Finish[...]` 包裹**
+3. **`Finish` 中的内容必须是完整的 JSON 字符串，包含所有必需字段**
+4. **如果你已经写好了文章内容，即使没有调用工具，也必须使用 `Finish` 来结束任务**
 
-**示例：**
-- 写关于"最新AI技术"时：使用 `search_recent_info("人工智能最新进展")`
-- 需要代码示例时：使用 `search_code_examples("Python", "异步编程")`
-- 验证数据时：使用 `verify_facts("Python 3.12 发布于 2023 年")`
-
-请在写作过程中主动使用搜索工具，确保内容的准确性和时效性。
-
-## 当前写作任务
-- **层级**: Level {level}/3
-- **话题**: {topic_title}
-- **描述**: {description}
-- **要求字数**: {word_count} 字（允许误差±10%）
-- **上下文**: 
-{context}
-
-## 写作要求
-
-### 内容结构
-{structure_requirements}
-
-### 风格要求
-1. **语言风格**
-   - 清晰、专业但易懂
-   - 避免过度技术化的术语堆砌
-   - 使用类比和比喻帮助理解
-
-2. **段落组织**
-   - 每段3-5句话
-   - 主题句清晰
-   - 段落间过渡自然
-
-3. **举例说明**
-   - 每个关键概念配合实例
-   - 示例要具体、可操作
-   - 代码示例要完整可运行
-
-4. **逻辑连贯**
-   - 先总后分
-   - 循序渐进
-   - 前后呼应
-
-## 递归展开规则
-
-### Level {level} 的展开策略：
-
-**Level 1 (子话题)**:
-- 必须规划 2-4 个 subsections
-- 每个 subsection 是一个可独立展开的小主题
-- subsections 之间有逻辑顺序
-
-**Level 2 (小节)**:
-- 根据内容复杂度决定是否展开
-- 如果某个概念需要深入讲解，设置 subsections
-- 建议 0-2 个 subsections
-
-**Level 3 (细节)**:
-- 不再展开（needs_expansion = false）
-- 专注于具体内容的详细说明
-
-## 输出格式
-
-```json
-{{
-  "title": "章节标题",
-  "level": {level},
-  "content": "正文内容（markdown格式）",
-  "word_count": 实际字数,
-  "needs_expansion": true/false,
-  "subsections": [
-    {{
-      "id": "section_1_1",
-      "title": "小节标题",
-      "description": "小节简介（一句话说明内容）",
-      "estimated_words": 200,
-      "key_points": ["要点1", "要点2", "要点3"],
-      "complexity": "high/medium/low"
-    }}
-  ],
-  "metadata": {{
-    "keywords": ["关键词1", "关键词2", "关键词3"],
-    "references": ["引用来源1", "引用来源2"],
-    "code_examples": ["示例1描述", "示例2描述"],
-    "difficulty": "beginner/intermediate/"
+重要提示：
+- 你的最终目标是生成一个完整的JSON对象。
+- 在调用 `Finish` 之前，你可以多次使用 `Thought` 和 `Action` 来收集信息或进行构思。
+- **当你完成写作后，必须使用 `\n\nFinish[JSON内容]` 格式，这是唯一正确的结束方式**
+- `Finish` 的内容必须是一个完整的、符合任务要求的JSON字符串，格式如下：
+  ```json
+  {{
+    "title": "章节标题",
+    "level": 层级数字,
+    "content": "完整的文章正文（markdown格式）",
+    "word_count": 实际字数,
+    "needs_expansion": true/false,
+    "subsections": [...],
+    "metadata": {{...}}
   }}
-}}
-```
+  ```
 
-## 质量自检
-
-在生成内容前，请确认：
-- [ ] 是否覆盖了规划的所有要点？
-- [ ] 概念解释是否清晰易懂？
-- [ ] 是否包含足够的例子？
-- [ ] 逻辑是否连贯？
-- [ ] 字数是否符合要求？
-- [ ] 如需展开，subsections 是否规划合理？
-
-{additional_requirements}
-
-现在开始撰写，输出完整的JSON格式内容。
+现在，请开始解决以下问题：
+Question: {question}
+History: {history}
 """
 
 
@@ -449,45 +368,17 @@ def get_react_writer_prompt() -> str:
     """
     获取为 ReActAgent 定制的、格式严格的提示词。
     """
-    return """请注意，你是一个有能力调用外部工具的智能助手。
+    return WRITER_PROMPT
 
-可用工具如下：
-{tools}
 
-请严格按照以下格式进行回应：
+def get_reviewer_prompt() -> str:
+    """获取评审提示词"""
+    return REVIEWER_PROMPT
 
-Thought: 你的思考过程，用于分析问题、拆解任务和规划下一步行动。
-Action: 你决定采取的行动，必须是以下格式之一：
-- `{{tool_name}}[{{tool_input}}]`：调用一个可用工具。
-- `\n\nFinish[JSON内容]`：当你完成写作任务，准备好最终的JSON格式的文章时使用。
 
-▸️ **关键要求 - 必须严格遵守：**
-1. **完成写作后，必须使用 `\n\nFinish[JSON内容]` 格式输出结果**
-2. **不要只输出 JSON，必须用 `Finish[...]` 包裹**
-3. **`Finish` 中的内容必须是完整的 JSON 字符串，包含所有必需字段**
-4. **如果你已经写好了文章内容，即使没有调用工具，也必须使用 `Finish` 来结束任务**
-
-重要提示：
-- 你的最终目标是生成一个完整的JSON对象。
-- 在调用 `Finish` 之前，你可以多次使用 `Thought` 和 `Action` 来收集信息或进行构思。
-- **当你完成写作后，必须使用 `\n\nFinish[JSON内容]` 格式，这是唯一正确的结束方式**
-- `Finish` 的内容必须是一个完整的、符合任务要求的JSON字符串，格式如下：
-  ```json
-  {{
-    "title": "章节标题",
-    "level": 层级数字,
-    "content": "完整的文章正文（markdown格式）",
-    "word_count": 实际字数,
-    "needs_expansion": true/false,
-    "subsections": [...],
-    "metadata": {{...}}
-  }}
-  ```
-
-现在，请开始解决以下问题：
-Question: {question}
-History: {history}
-"""
+def get_revision_prompt() -> str:
+    """获取修改提示词"""
+    return REVISION_PROMPT
 
 def get_planner_prompts() -> dict:
     """获取 PlanAndSolveAgent 所需的提示词"""

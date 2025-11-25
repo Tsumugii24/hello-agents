@@ -15,7 +15,7 @@ from hello_agents.tools import MCPTool, ToolRegistry, SearchTool
 from models import ColumnPlan, ReviewResult, ContentNode, ContentLevel
 from prompts import get_structure_requirements, get_react_writer_prompt, get_reflection_writer_prompts, get_planner_prompts
 from config import get_settings, get_word_count
-import re # Added for JSON parsing
+from utils import JSONExtractor, parse_react_output, get_current_timestamp
 
 settings = get_settings()
 
@@ -282,7 +282,7 @@ class PlannerAgent:
             cache_data = {
                 'topic': main_topic,
                 'plan': plan.to_dict(),
-                'cached_at': str(Path(__file__).stat().st_mtime)  # 简单的缓存时间戳
+                'cached_at': get_current_timestamp()  # 正确的缓存时间戳
             }
             
             with open(cache_file, 'w', encoding='utf-8') as f:
@@ -337,275 +337,16 @@ class PlannerAgent:
         return plan
     
     def _extract_json(self, response: str) -> Dict[str, Any]:
-        """从响应中提取 JSON（增强版，支持从历史记录中提取）"""
+        """从响应中提取 JSON（使用统一的 JSONExtractor）"""
         try:
-            # 方法1: 直接是 JSON
-            if response.strip().startswith('{'):
-                return json.loads(response.strip())
-            
-            # 方法2: Markdown 代码块中的 JSON
-            if "```json" in response:
-                json_start = response.find("```json") + 7
-                json_end = response.find("```", json_start)
-                if json_end != -1:
-                    json_str = response[json_start:json_end].strip()
-                    return json.loads(json_str)
-            
-            # 方法3: 普通代码块中的 JSON
-            if "```" in response:
-                json_start = response.find("```") + 3
-                json_end = response.find("```", json_start)
-                if json_end != -1:
-                    json_str = response[json_start:json_end].strip()
-                    # 移除可能的语言标识符
-                    if json_str.startswith("json"):
-                        json_str = json_str[4:].strip()
-                    if json_str.startswith('{'):
-                        return json.loads(json_str)
-            
-            # 方法4: 查找所有可能的 JSON 对象（从最大的开始尝试）
-            # 找到所有 { 和 } 的位置
-            brace_positions = []
-            for i, char in enumerate(response):
-                if char == '{':
-                    brace_positions.append(('{', i))
-                elif char == '}':
-                    brace_positions.append(('}', i))
-            
-            # 尝试从最后一个 { 到最后一个 } 提取 JSON
-            if brace_positions:
-                first_open = next((i for char, i in brace_positions if char == '{'), None)
-                last_close = next((i for char, i in reversed(brace_positions) if char == '}'), None)
-                
-                if first_open is not None and last_close is not None and last_close > first_open:
-                    # 尝试提取完整的 JSON
-                    potential_json = response[first_open:last_close + 1]
-                    try:
-                        return json.loads(potential_json)
-                    except json.JSONDecodeError:
-                        pass
-                    
-                    # 如果失败，尝试找到包含 "column_title" 或 "topics" 的 JSON（专栏规划的特征字段）
-                    # 使用正则表达式找到包含这些字段的 JSON 块
-                    import re
-                    json_pattern = r'\{[^{}]*(?:"column_title"|"topics")[^{}]*\{[^{}]*\}[^{}]*\}'
-                    matches = re.finditer(json_pattern, response, re.DOTALL)
-                    for match in matches:
-                        try:
-                            return json.loads(match.group(0))
-                        except json.JSONDecodeError:
-                            continue
-                    
-                    # 更宽松的匹配：找到包含 "column_title" 的 JSON
-                    column_title_match = re.search(r'\{[^{}]*"column_title"[^{}]*\{[^{}]*"topics"[^{}]*\[.*?\][^{}]*\}[^{}]*\}', response, re.DOTALL)
-                    if column_title_match:
-                        try:
-                            return json.loads(column_title_match.group(0))
-                        except json.JSONDecodeError:
-                            pass
-            
-            # 如果都失败了，抛出错误
-            raise ValueError("响应中未找到有效的 JSON 数据")
-            
-        except json.JSONDecodeError as e:
-            print(f"▸️  JSON 解析失败: {e}")
-            print(f"   响应内容（前1000字符）: {response[:1000]}...")
-            # 尝试从历史记录中查找 JSON（如果响应中包含历史信息）
-            if "步骤" in response and "结果" in response:
-                print("   尝试从历史记录中提取 JSON...")
-                # 查找所有包含 JSON 的步骤结果
-                import re
-                json_matches = re.findall(r'```json\s*(\{.*?\})\s*```', response, re.DOTALL)
-                if not json_matches:
-                    json_matches = re.findall(r'(\{"column_title".*?"topics".*?\})', response, re.DOTALL)
-                
-                for json_str in json_matches:
-                    try:
-                        return json.loads(json_str)
-                    except json.JSONDecodeError:
-                        continue
-            
-            raise ValueError(f"响应中未找到有效的 JSON 数据: {str(e)}")
+            return JSONExtractor.extract(
+                response,
+                required_fields=['column_title', 'topics']
+            )
         except Exception as e:
             print(f"▸️  JSON 提取失败: {e}")
             print(f"   响应内容（前500字符）: {response[:500]}...")
             raise
-
-
-def improved_parse_output(self, text: str):
-    """
-    改进的解析方法，支持更多格式和边界情况
-    
-    Args:
-        self: Agent 实例（当作为方法绑定时需要）
-        text: LLM 的原始响应文本
-        
-    Returns:
-        (thought, action) 元组
-    """
-    if not text or not text.strip():
-        print("▸️  警告: LLM 返回了空响应")
-        return None, None
-    
-    # 尝试多种格式解析 Thought
-    thought = None
-    thought_patterns = [
-        r"Thought:\s*(.*?)(?=\nAction:|\nFinish:|$)",  # 标准格式
-        r"思考:\s*(.*?)(?=\n行动:|\n完成:|$)",  # 中文格式
-        r"▸\s*(.*?)(?=\n▸|\n▸|$)",  # emoji格式
-    ]
-    
-    thought_end_pos = 0
-    for pattern in thought_patterns:
-        match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
-        if match:
-            thought = match.group(1).strip()
-            if thought:
-                thought_end_pos = match.end()
-                break
-    
-    # 尝试多种格式解析 Action
-    action = None
-    action_patterns = [
-        r"Action:\s*(.*?)(?=\nThought:|\nObservation:|\nFinish:|$)",  # 标准格式
-        r"行动:\s*(.*?)(?=\n思考:|\n观察:|\n完成:|$)",  # 中文格式
-        r"▸\s*(.*?)(?=\n▸|\n▸|\n▸|$)",  # emoji格式
-        r"Finish\[(.*?)\]",  # Finish格式（可能没有Action前缀）
-    ]
-    
-    for pattern in action_patterns:
-        match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
-        if match:
-            action = match.group(1).strip()
-            if action:
-                # 如果是 Finish 格式，需要加上 Finish 前缀
-                if pattern == r"Finish\[(.*?)\]":
-                    action = f"Finish[{action}]"
-                break
-    
-    # 如果仍然没有找到 Action，尝试查找 Finish 关键字（可能格式不标准）
-    if not action:
-        finish_patterns = [
-            r"Finish\s*\[(.*?)\]",
-            r"完成\s*\[(.*?)\]",
-            r"最终答案:\s*(.*?)(?=\n|$)",
-        ]
-        for pattern in finish_patterns:
-            match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
-            if match:
-                content = match.group(1).strip()
-                if content:
-                    action = f"Finish[{content}]"
-                    break
-    
-    # 如果仍然没有找到 Action，检查 Thought 之后是否有正文内容
-    # 或者即使没有 Thought，也检查是否有直接的内容（JSON 或正文）
-    if not action:
-        # 首先尝试从整个文本中提取 JSON（因为 Thought 的正则可能包含了后续内容）
-        # 查找第一个 { 到最后一个 } 之间的内容（可能是 JSON）
-        json_match = None
-        brace_start = text.find('{')
-        if brace_start != -1:
-            # 找到最后一个 }
-            brace_end = text.rfind('}')
-            if brace_end > brace_start:
-                potential_json = text[brace_start:brace_end + 1]
-                # 检查是否包含 content 字段
-                if '"content"' in potential_json or "'content'" in potential_json:
-                    json_match = re.search(r'\{.*?"content".*?\}', potential_json, re.DOTALL)
-        
-        # 如果没有找到 JSON，检查 Thought 之后或 Thought 内容中的其他内容
-        if thought:
-            remaining_text = text[thought_end_pos:].strip()
-            if not remaining_text:
-                # Thought 内容可能包含了完整的正文
-                remaining_text = thought
-        else:
-            # 没有 Thought，直接检查整个文本
-            remaining_text = text.strip()
-        
-        # 移除可能的 Action: 或 Finish: 前缀（如果格式不标准）
-        remaining_text = re.sub(r'^(Action|Finish|行动|完成)[:：]\s*', '', remaining_text, flags=re.IGNORECASE)
-        
-        if remaining_text or json_match:
-            # 如果找到了 JSON，使用 JSON 内容
-            if json_match:
-                remaining_text = json_match.group(0)
-                has_json = True
-                json_str = remaining_text
-                # 检查 JSON 是否完整（有配对的括号）
-                open_braces = json_str.count('{')
-                close_braces = json_str.count('}')
-                json_complete = (open_braces == close_braces) and open_braces > 0
-            else:
-                # 检查是否包含 JSON 结构（可能是完整的文章内容）
-                json_match = re.search(r'\{.*?"content".*?\}', remaining_text, re.DOTALL)
-                has_json = bool(json_match)
-                
-                # 如果找到 JSON，检查是否完整（有配对的括号）
-                json_complete = False
-                if has_json:
-                    json_str = json_match.group(0)
-                    # 简单检查：大括号是否配对
-                    open_braces = json_str.count('{')
-                    close_braces = json_str.count('}')
-                    json_complete = (open_braces == close_braces) and open_braces > 0
-            
-            has_content_field = bool(re.search(r'"content"\s*:\s*"', remaining_text, re.DOTALL))
-            
-            # 检查是否有明显的结尾标记
-            has_ending = bool(re.search(r'(总结|结论|结语|小结|综上所述|总之|最后|end|conclusion)', remaining_text[-500:], re.IGNORECASE))
-            
-            # 检查是否有"未完待续"的标记（表示还想继续写）
-            has_continuation_marker = bool(re.search(r'(未完待续|待续|继续|to be continued|未完|待补充)', remaining_text, re.IGNORECASE))
-            
-            # 检查内容长度（如果超过一定长度，可能是完整内容）
-            content_length = len(remaining_text)
-            is_substantial = content_length > 200  # 至少200字符
-            
-            # 判断是否应该自动添加 Finish
-            # 优先级：1. 完整的 JSON 结构 > 2. 有结尾标记（即使内容稍短）> 3. 内容足够长且没有未完标记
-            is_complete = False
-            completion_reason = []
-            
-            if json_complete:
-                is_complete = True
-                completion_reason.append("完整的 JSON 结构")
-            elif has_ending:
-                # 有结尾标记，即使内容稍短也认为是完整的（模型已经表达了完成意图）
-                is_complete = True
-                if is_substantial:
-                    completion_reason.append("有结尾标记且内容足够长")
-                else:
-                    completion_reason.append("有结尾标记（模型表达了完成意图）")
-            elif is_substantial and not has_continuation_marker:
-                # 内容足够长且没有未完标记，可能是完整内容
-                is_complete = True
-                completion_reason.append("内容足够长且无未完标记")
-            
-            if is_complete:
-                print(f"▸ 检测到完整正文内容（长度: {content_length} 字符），自动添加 Finish 前缀")
-                print(f"   - 判断依据: {', '.join(completion_reason)}")
-                action = f"Finish[{remaining_text}]"
-            else:
-                # 内容不完整，可能还想继续写
-                print(f"▸️  检测到部分正文内容（长度: {content_length} 字符），但可能未完成")
-                if has_continuation_marker:
-                    print(f"   - 检测到'未完待续'标记，继续循环让模型完成写作")
-                elif not is_substantial:
-                    print(f"   - 内容长度不足，继续循环让模型完成写作")
-                else:
-                    print(f"   - 未检测到明确的完成标记，继续循环让模型完成写作")
-                # 不设置 action，让循环继续
-                return thought, None
-    
-    # 调试信息
-    if not action:
-        print(f"▸️  警告: 未能解析出 Action")
-        print(f"   响应内容（前500字符）: {text[:500]}")
-        print(f"   已解析的 Thought: {thought[:100] if thought else 'None'}...")
-    
-    return thought, action
 
 
 class ReActAgentWrapper:
@@ -618,13 +359,12 @@ class ReActAgentWrapper:
         self.last_response = None  # run() 方法的返回值（通常是 final_answer）
         self.last_raw_responses = []  # 保存所有原始 LLM 响应，用于调试
     
-    def run(self, question: str, max_retries: int = 2):
+    def run(self, question: str):
         """
         运行 Agent 并捕获历史信息
         
         Args:
             question: 问题
-            max_retries: 最大重试次数（当解析失败时）
         """
         try:
             # 清空上次的原始响应
@@ -644,9 +384,10 @@ class ReActAgentWrapper:
             
             if hasattr(self.agent, '_parse_output'):
                 original_parse = self.agent._parse_output
-                # 使用改进的解析方法（绑定到实例）
-                import types
-                self.agent._parse_output = types.MethodType(improved_parse_output, self.agent)
+                # 使用统一的解析函数（包装为方法）
+                def parse_wrapper(text):
+                    return parse_react_output(text)
+                self.agent._parse_output = parse_wrapper
             
             # 拦截 LLM 调用以捕获原始响应
             if hasattr(self.agent, 'llm') and hasattr(self.agent.llm, 'invoke'):
@@ -1087,148 +828,224 @@ class WriterAgent:
         return revised_data
     
     def _extract_json(self, response: str) -> Dict[str, Any]:
-        """
-        从响应中提取 JSON（支持多种格式，包括 Finish[...] 格式）
-        增强的 JSON 解析，能够处理包含复杂字符串的 JSON
-        """
-        import re
-        import json.encoder
-        
-        def extract_json_with_retry(json_str: str) -> Dict[str, Any]:
-            """尝试多种方式解析 JSON"""
-            # 方法1: 直接解析
-            try:
-                return json.loads(json_str)
-            except json.JSONDecodeError:
-                pass
-            
-            # 方法2: 尝试修复常见的 JSON 问题
-            # 修复未转义的换行符
-            fixed = json_str.replace('\n', '\\n').replace('\r', '\\r').replace('\t', '\\t')
-            try:
-                return json.loads(fixed)
-            except json.JSONDecodeError:
-                pass
-            
-            # 方法3: 尝试提取并重新构建 JSON
-            # 提取各个字段
-            title_match = re.search(r'"title"\s*:\s*"([^"]*)"', json_str)
-            level_match = re.search(r'"level"\s*:\s*(\d+)', json_str)
-            word_count_match = re.search(r'"word_count"\s*:\s*(\d+)', json_str)
-            needs_expansion_match = re.search(r'"needs_expansion"\s*:\s*(true|false)', json_str)
-            
-            # 提取 content（可能跨多行）
-            content_match = re.search(r'"content"\s*:\s*"(.*?)"(?=\s*[,}])', json_str, re.DOTALL)
-            if not content_match:
-                # 尝试另一种格式
-                content_match = re.search(r'"content"\s*:\s*"([^"]*(?:\\.[^"]*)*)"', json_str, re.DOTALL)
-            
-            result = {}
-            if title_match:
-                result['title'] = title_match.group(1)
-            if level_match:
-                result['level'] = int(level_match.group(1))
-            if content_match:
-                # 处理转义字符
-                content = content_match.group(1)
-                content = content.replace('\\n', '\n').replace('\\r', '\r').replace('\\t', '\t')
-                result['content'] = content
-            if word_count_match:
-                result['word_count'] = int(word_count_match.group(1))
-            else:
-                result['word_count'] = len(result.get('content', ''))
-            if needs_expansion_match:
-                result['needs_expansion'] = needs_expansion_match.group(1) == 'true'
-            else:
-                result['needs_expansion'] = False
-            result['subsections'] = []
-            result['metadata'] = {}
-            
-            return result
-        
+        """从响应中提取 JSON（使用统一的 JSONExtractor）"""
         try:
-            # 方法1: 尝试从 Finish[...] 格式中提取（ReAct 标准格式）
-            finish_match = re.search(r"Finish\[(.*?)\]", response, re.DOTALL)
-            if finish_match:
-                finish_content = finish_match.group(1).strip()
-                print(f"▸ 找到 Finish 格式，内容长度: {len(finish_content)}")
-                return extract_json_with_retry(finish_content)
-            
-            # 方法2: 直接是 JSON 对象
-            if response.strip().startswith('{'):
-                return extract_json_with_retry(response.strip())
-            
-            # 方法3: Markdown 代码块中的 JSON
-            if "```json" in response:
-                json_start = response.find("```json") + 7
-                json_end = response.find("```", json_start)
-                json_str = response[json_start:json_end].strip()
-                return extract_json_with_retry(json_str)
-            
-            # 方法4: 普通代码块中的 JSON
-            if "```" in response:
-                json_start = response.find("```") + 3
-                json_end = response.find("```", json_start)
-                json_str = response[json_start:json_end].strip()
-                if json_str.startswith("json"):
-                    json_str = json_str[4:].strip()
-                return extract_json_with_retry(json_str)
-            
-            # 方法5: 尝试提取所有可能的 JSON 对象，优先选择包含 'content' 字段的
-            # 找到所有 { 的位置
-            json_candidates = []
-            i = 0
-            while i < len(response):
-                if response[i] == '{':
-                    brace_count = 0
-                    brace_start = i
-                    brace_end = i
-                    for j in range(i, len(response)):
-                        if response[j] == '{':
-                            brace_count += 1
-                        elif response[j] == '}':
-                            brace_count -= 1
-                            if brace_count == 0:
-                                brace_end = j + 1
-                                break
-                    
-                    if brace_end > brace_start:
-                        json_str = response[brace_start:brace_end]
-                        try:
-                            # 尝试解析这个 JSON
-                            parsed = extract_json_with_retry(json_str)
-                            # 检查是否包含必需的字段
-                            if isinstance(parsed, dict):
-                                json_candidates.append((parsed, json_str))
-                        except:
-                            pass
-                        i = brace_end
-                    else:
-                        i += 1
-                else:
-                    i += 1
-            
-            # 优先选择包含 'content' 字段的 JSON
-            if json_candidates:
-                # 首先尝试找到包含 'content' 字段的
-                for parsed, json_str in json_candidates:
-                    if 'content' in parsed and parsed.get('content'):
-                        print(f"▸ 找到包含 'content' 字段的 JSON（长度: {len(json_str)} 字符）")
-                        return parsed
-                
-                # 如果没有找到包含 'content' 的，选择最完整的 JSON（字段最多的）
-                best_candidate = max(json_candidates, key=lambda x: len(x[0]))
-                print(f"▸️  未找到包含 'content' 字段的 JSON，使用最完整的 JSON（字段数: {len(best_candidate[0])}）")
-                return best_candidate[0]
-            
-            # 如果都失败了，抛出错误并显示响应内容
-            print(f"▸️  无法从响应中提取 JSON")
-            print(f"   响应完整内容（前2000字符）:\n{response[:2000]}")
-            raise ValueError("响应中未找到有效的 JSON 数据")
-            
+            return JSONExtractor.extract(
+                response,
+                required_fields=['content'],
+                fallback_fields={
+                    'subsections': [],
+                    'metadata': {},
+                    'needs_expansion': False
+                }
+            )
         except Exception as e:
             print(f"▸️  提取 JSON 时发生错误: {e}")
             print(f"   响应内容（前1000字符）: {response[:1000]}")
+            raise
+
+
+class ReviewerAgent:
+    """
+    评审 Agent - 使用 SimpleAgent 模式
+    
+    负责对生成的内容进行质量评审，提供详细的评分和修改建议
+    """
+    
+    def __init__(self):
+        from hello_agents import SimpleAgent
+        from prompts import get_reviewer_prompt
+        
+        self.llm = LLMService.get_llm()
+        self.reviewer_prompt = get_reviewer_prompt()
+        
+        self.agent = SimpleAgent(
+            name="内容评审专家",
+            llm=self.llm,
+            system_prompt="你是一位严格而专业的内容评审专家，擅长评估文章质量并提供建设性的修改意见。"
+        )
+    
+    def review_content(
+        self,
+        content: str,
+        level: int,
+        target_word_count: int,
+        key_points: List[str]
+    ) -> 'ReviewResult':
+        """
+        评审内容
+        
+        Args:
+            content: 待评审的内容
+            level: 内容层级
+            target_word_count: 目标字数
+            key_points: 关键要点
+            
+        Returns:
+            ReviewResult 实例
+        """
+        print(f"\n▸ ReviewerAgent 开始评审内容...")
+        print(f"   内容长度: {len(content)} 字符")
+        print(f"   目标字数: {target_word_count}")
+        
+        # 构建评审任务
+        task = self.reviewer_prompt.format(
+            level=level,
+            target_word_count=target_word_count,
+            key_points=json.dumps(key_points, ensure_ascii=False),
+            content=content
+        )
+        
+        response = self.agent.run(task)
+        review_data = self._extract_json(response)
+        
+        # 创建 ReviewResult 实例
+        result = ReviewResult.from_dict(review_data)
+        
+        print(f"▸ 评审完成")
+        print(f"   评分: {result.score}/100 ({result.grade})")
+        print(f"   需要修改: {'是' if result.needs_revision else '否'}")
+        
+        return result
+    
+    def _extract_json(self, response: str) -> Dict[str, Any]:
+        """从响应中提取 JSON"""
+        try:
+            return JSONExtractor.extract(
+                response,
+                required_fields=['score', 'grade'],
+                fallback_fields={
+                    'dimension_scores': {},
+                    'detailed_feedback': {'strengths': [], 'issues': []},
+                    'revision_plan': {'priority_changes': [], 'minor_improvements': []},
+                    'needs_revision': True,
+                    'estimated_revision_effort': '',
+                    'reviewer_notes': ''
+                }
+            )
+        except Exception as e:
+            print(f"▸️  评审结果解析失败: {e}")
+            # 返回默认的评审结果（需要修改）
+            return {
+                'score': 60,
+                'grade': '需改进',
+                'dimension_scores': {},
+                'detailed_feedback': {'strengths': [], 'issues': [{'problem': '评审结果解析失败'}]},
+                'revision_plan': {'priority_changes': [], 'minor_improvements': []},
+                'needs_revision': True,
+                'estimated_revision_effort': '未知',
+                'reviewer_notes': f'评审结果解析失败: {str(e)}'
+            }
+
+
+class RevisionAgent:
+    """
+    修改 Agent - 使用 SimpleAgent 模式
+    
+    根据评审意见修改内容
+    """
+    
+    def __init__(self):
+        from hello_agents import SimpleAgent
+        from prompts import get_revision_prompt
+        
+        self.llm = LLMService.get_llm()
+        self.revision_prompt = get_revision_prompt()
+        
+        self.agent = SimpleAgent(
+            name="内容修改专家",
+            llm=self.llm,
+            system_prompt="你是一位专业的内容创作者，擅长根据评审意见修改和优化文章。"
+        )
+    
+    def revise_content(
+        self,
+        original_content: str,
+        review_result: 'ReviewResult',
+        target_word_count: int
+    ) -> Dict[str, Any]:
+        """
+        根据评审意见修改内容
+        
+        Args:
+            original_content: 原始内容
+            review_result: 评审结果
+            target_word_count: 目标字数
+            
+        Returns:
+            修改后的内容数据
+        """
+        print(f"\n▸ RevisionAgent 开始修改内容...")
+        print(f"   原始评分: {review_result.score}/100")
+        
+        current_word_count = len(original_content)
+        word_count_min = int(target_word_count * 0.9)
+        word_count_max = int(target_word_count * 1.1)
+        
+        # 计算字数调整建议
+        if current_word_count < word_count_min:
+            word_count_adjustment = f"需要增加约 {word_count_min - current_word_count} 字"
+        elif current_word_count > word_count_max:
+            word_count_adjustment = f"需要删减约 {current_word_count - word_count_max} 字"
+        else:
+            word_count_adjustment = "字数在合理范围内"
+        
+        # 格式化评审信息
+        strengths = "\n".join([f"- {s}" for s in review_result.detailed_feedback.get('strengths', [])])
+        issues = "\n".join([
+            f"- [{issue.get('category', '未知')}] {issue.get('problem', '')}: {issue.get('suggestion', '')}"
+            for issue in review_result.detailed_feedback.get('issues', [])
+        ])
+        priority_changes = "\n".join([
+            f"- **{change.get('section', '')}**: {change.get('action', '')} - {change.get('detail', '')}"
+            for change in review_result.revision_plan.get('priority_changes', [])
+        ])
+        minor_improvements = "\n".join([
+            f"- {imp.get('section', '')}: {imp.get('detail', '')}"
+            for imp in review_result.revision_plan.get('minor_improvements', [])
+        ])
+        
+        # 构建修改任务
+        task = self.revision_prompt.format(
+            original_content=original_content,
+            score=review_result.score,
+            grade=review_result.grade,
+            strengths=strengths or "无",
+            issues=issues or "无",
+            reviewer_notes=review_result.reviewer_notes or "无",
+            priority_changes=priority_changes or "无",
+            minor_improvements=minor_improvements or "无",
+            word_count_range=f"{word_count_min}-{word_count_max}",
+            current_word_count=current_word_count,
+            word_count_adjustment=word_count_adjustment
+        )
+        
+        response = self.agent.run(task)
+        revised_data = self._extract_json(response)
+        
+        print(f"▸ 修改完成")
+        print(f"   修改后字数: {revised_data.get('word_count', len(revised_data.get('revised_content', '')))}")
+        
+        return revised_data
+    
+    def _extract_json(self, response: str) -> Dict[str, Any]:
+        """从响应中提取 JSON"""
+        try:
+            data = JSONExtractor.extract(
+                response,
+                required_fields=['revised_content'],
+                fallback_fields={
+                    'revision_summary': {'major_changes': [], 'minor_changes': [], 'preserved_strengths': []},
+                    'word_count': 0,
+                    'word_count_change': ''
+                }
+            )
+            # 如果没有 word_count，计算一下
+            if not data.get('word_count'):
+                data['word_count'] = len(data.get('revised_content', ''))
+            return data
+        except Exception as e:
+            print(f"▸️  修改结果解析失败: {e}")
             raise
 
 
@@ -1347,27 +1164,17 @@ class ReflectionWriterAgent:
         return content_data
     
     def _extract_json(self, response: str) -> Dict[str, Any]:
-        """从响应中提取 JSON"""
+        """从响应中提取 JSON（使用统一的 JSONExtractor）"""
         try:
-            if response.strip().startswith('{'):
-                return json.loads(response)
-            
-            if "```json" in response:
-                json_start = response.find("```json") + 7
-                json_end = response.find("```", json_start)
-                json_str = response[json_start:json_end].strip()
-            elif "```" in response:
-                json_start = response.find("```") + 3
-                json_end = response.find("```", json_start)
-                json_str = response[json_start:json_end].strip()
-            elif "{" in response and "}" in response:
-                json_start = response.find("{")
-                json_end = response.rfind("}") + 1
-                json_str = response[json_start:json_end]
-            else:
-                raise ValueError("响应中未找到 JSON 数据")
-            
-            return json.loads(json_str)
+            return JSONExtractor.extract(
+                response,
+                required_fields=['content'],
+                fallback_fields={
+                    'subsections': [],
+                    'metadata': {},
+                    'needs_expansion': False
+                }
+            )
         except Exception as e:
             print(f"▸️  JSON 解析失败: {e}")
             raise
