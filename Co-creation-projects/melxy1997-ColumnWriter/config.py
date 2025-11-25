@@ -29,10 +29,12 @@ class Settings(BaseSettings):
     
     # 系统配置
     max_depth: int = 3
-    approval_threshold: int = 75
-    revision_threshold: int = 60
+    approval_threshold: int = 75  # 评审通过阈值（分数 >= 此值则通过）
+    revision_threshold: int = 60  # 修改阈值（分数 < 此值则需要重写）
     enable_parallel: bool = False
     enable_search: bool = True  # 是否启用搜索功能
+    enable_review: bool = True  # 是否启用评审功能（仅 ReAct 模式）
+    max_revisions: int = 2  # 最大修改次数
     
     # 服务器配置（可选，用于 API 服务）
     host: str = "0.0.0.0"

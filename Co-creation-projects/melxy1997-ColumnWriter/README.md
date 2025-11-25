@@ -4,12 +4,12 @@
 
 ## ▸ 项目简介
 
-我们的智能体系统模拟了一个专业的创作者团队，包括：
+这个智能体模拟了一个专业的创作者团队，包括：
 - **策划专家**：负责顶层设计和内容规划
 - **写作专家**：负责具体内容的撰写和工具调用
 - **评审专家**：负责内容质量把控和反馈
 
-系统支持树形递归生成，可以创作出结构严谨、内容详实的长篇技术专栏。
+支持树形递归生成专栏目录，可以创作出结构严谨、内容详实的长篇技术专栏。
 
 ## ▸ 核心功能
 
@@ -50,11 +50,12 @@
 | 模块 | 文件 | 说明 |
 |------|------|------|
 | **Orchestrator** | `orchestrator.py` | **主控中心**。负责协调各个 Agent 的工作流程，管理状态流转，组合最终结果。 |
-| **Agents** | `agents.py` | **智能体实现**。包含 `PlannerAgent` (规划)、`WriterAgent` (写作)、`ReflectionWriterAgent` (反思写作) 等核心类。 |
+| **Agents** | `agents.py` | **智能体实现**。包含 `PlannerAgent` (规划)、`WriterAgent` (写作)、`ReviewerAgent` (评审)、`RevisionAgent` (修改)、`ReflectionWriterAgent` (反思写作) 等核心类。 |
 | **Models** | `models.py` | **数据建模**。定义了 `ContentNode` (内容树)、`ColumnPlan` (规划)、`ReviewResult` (评审结果) 等数据结构。 |
 | **Tools** | `agents.py` | **工具**。集成了 `SearchTool` (Tavily/SerpApi) 和 `MCPTool` (GitHub)，赋予 Agent 联网和代码库访问能力。 |
 | **Prompts** | `prompts.py` | **提示词**。包含规划、写作、评审、修改等各个环节的 Prompt Template。 |
-| **Config** | `config.py` | **配置管理**。处理环境变量、模型参数、阈值设置等。 |
+| **Config** | `config.py` | **配置管理**。处理环境变量、模型参数、评审阈值等。 |
+| **Utils** | `utils.py` | **工具函数**。包含 `JSONExtractor` (JSON 提取)、`parse_react_output` (ReAct 输出解析) 等公共工具。 |
 
 ## ▸ 基本流程 (Workflow)
 
@@ -81,7 +82,7 @@
         *   `github`: (可选) 搜索 GitHub 仓库，读取真实项目代码。
 
 4.  **评审与优化 (Review & Refine)**
-    *   **ReAct 模式**: 内容生成后，独立的 Reviewer 进行评分。如果分数低于阈值，触发修改流程。
+    *   **ReAct 模式 + 独立评审**: 内容生成后，`ReviewerAgent` 进行多维度评分（内容质量、结构逻辑、语言表达、格式规范）。如果分数低于阈值（默认75分），`RevisionAgent` 根据评审意见进行修改，循环直到通过或达到最大修改次数。
     *   **Reflection 模式**: 使用 `ReflectionAgent`，Agent 生成初稿后立即自我反思 (Self-Reflection) 并自动优化，一步到位。
 
 5.  **组装与导出 (Assembly & Export)**
@@ -108,13 +109,20 @@
 *   **原理**: 生成内容 -> 自我评估 (Critic) -> 优化内容 (Refine)。
 *   **优势**: 显著提升内容质量，模拟人类"写完读一遍再改"的创作习惯。
 
+### 4. Independent Review (独立评审)
+*   **应用**: `ReviewerAgent` + `RevisionAgent`
+*   **原理**: 
+    - `ReviewerAgent`: 对生成的内容进行多维度评审（内容质量40分、结构逻辑30分、语言表达20分、格式规范10分），输出详细的评分和修改建议。
+    - `RevisionAgent`: 根据评审意见进行针对性修改，保留优点、修复问题。
+*   **优势**: 专业分工，评审标准统一，可追溯评审历史，支持多轮修改直到达标。
+
 ## ▸️ 模型与工具 (Models & Tools)
 
 ### 模型支持
 通过 `config.py` 配置，支持多种 LLM 后端：
 - **其他兼容模型**: 任何支持 OpenAI 接口格式的模型
 
-### 内置工具
+### 模型工具
 1.  **SearchTool (联网搜索)**
     *   支持后端: Tavily (推荐), SerpApi, DuckDuckGo 等。
     *   功能: 提供实时信息检索，解决大模型幻觉和知识滞后问题。

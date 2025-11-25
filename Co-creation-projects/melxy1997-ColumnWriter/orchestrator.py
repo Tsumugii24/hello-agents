@@ -1,12 +1,14 @@
 """使用多 Agent 模式的主系统编排逻辑"""
 
 from datetime import datetime
-from typing import Dict, Any, List
-from models import ContentNode, ContentLevel, ColumnPlan
+from typing import Dict, Any, List, Optional
+from models import ContentNode, ContentLevel, ColumnPlan, ReviewResult
 from agents import (
     PlannerAgent,
     WriterAgent,
-    ReflectionWriterAgent
+    ReflectionWriterAgent,
+    ReviewerAgent,
+    RevisionAgent
 )
 from config import get_settings, get_word_count
 
@@ -44,9 +46,22 @@ class ColumnWriterOrchestrator:
         if use_reflection_mode:
             self.writer = ReflectionWriterAgent()
             print("   WriterAgent: ReflectionAgent（内置评审优化）")
+            self.reviewer = None
+            self.revision_agent = None
         else:
             self.writer = WriterAgent(enable_search=self.settings.enable_search)
             print("   WriterAgent: ReActAgent（推理-行动-搜索）")
+            
+            # 评审和修改 Agent（仅 ReAct 模式下可用）
+            if self.settings.enable_review:
+                self.reviewer = ReviewerAgent()
+                self.revision_agent = RevisionAgent()
+                print(f"   ReviewerAgent: 已启用（通过阈值: {self.settings.approval_threshold}）")
+                print(f"   RevisionAgent: 已启用（最大修改次数: {self.settings.max_revisions}）")
+            else:
+                self.reviewer = None
+                self.revision_agent = None
+                print("   ReviewerAgent: 已禁用")
         
         # 统计信息
         self.stats = {
@@ -54,6 +69,7 @@ class ColumnWriterOrchestrator:
             'total_reviews': 0,
             'total_revisions': 0,
             'total_rewrites': 0,
+            'approved_first_try': 0,
             'start_time': None,
             'end_time': None
         }
@@ -107,7 +123,9 @@ class ColumnWriterOrchestrator:
         full_column['creation_stats'] = self.stats
         full_column['agent_modes'] = {
             'planner': 'PlanAndSolveAgent',
-            'writer': 'ReflectionAgent' if self.use_reflection_mode else 'ReActAgent'
+            'writer': 'ReflectionAgent' if self.use_reflection_mode else 'ReActAgent',
+            'reviewer': 'ReviewerAgent' if (self.reviewer and not self.use_reflection_mode) else None,
+            'revision': 'RevisionAgent' if (self.revision_agent and not self.use_reflection_mode) else None
         }
         
         return full_column
@@ -211,22 +229,131 @@ class ColumnWriterOrchestrator:
         level: int,
         indent: str
     ):
-        """使用 ReActAgent 模式写作"""
+        """使用 ReActAgent 模式写作（可选评审）"""
         print(f"{indent}▸️  使用 ReActAgent 生成内容（推理-行动）...")
         
         content_data = self.writer.generate_content(node, context, level)
         self.stats['total_generations'] += 1
         
-        node.content = content_data['content']
-        node.metadata = content_data.get('metadata', {})
-        node.metadata['agent_mode'] = 'ReActAgent'
-        
-        word_count = content_data.get('word_count', len(content_data['content']))
+        current_content = content_data['content']
+        word_count = content_data.get('word_count', len(current_content))
         print(f"{indent}   字数：{word_count}")
         print(f"{indent}▸ ReActAgent 完成推理和行动")
         
+        # 如果启用评审，进行评审和可能的修改
+        if self.reviewer and self.settings.enable_review:
+            current_content, review_metadata = self._review_and_revise(
+                node, current_content, content_data, level, indent
+            )
+            content_data['content'] = current_content
+            content_data['metadata'] = {**content_data.get('metadata', {}), **review_metadata}
+        
+        node.content = current_content
+        node.metadata = content_data.get('metadata', {})
+        node.metadata['agent_mode'] = 'ReActAgent'
+        
         # 处理子节点
         self._process_children(node, content_data, context, level, indent)
+    
+    def _review_and_revise(
+        self,
+        node: ContentNode,
+        content: str,
+        content_data: Dict[str, Any],
+        level: int,
+        indent: str
+    ) -> tuple:
+        """
+        评审并根据需要修改内容
+        
+        Args:
+            node: 当前节点
+            content: 当前内容
+            content_data: 完整的内容数据
+            level: 层级
+            indent: 缩进
+            
+        Returns:
+            (最终内容, 评审元数据)
+        """
+        target_word_count = get_word_count(level)
+        key_points = content_data.get('metadata', {}).get('keywords', [])
+        if not key_points:
+            key_points = [node.title, node.description]
+        
+        revision_count = 0
+        final_content = content
+        review_history = []
+        
+        while revision_count <= self.settings.max_revisions:
+            # 评审
+            print(f"{indent}▸ 开始评审（第 {revision_count + 1} 轮）...")
+            review_result = self.reviewer.review_content(
+                content=final_content,
+                level=level,
+                target_word_count=target_word_count,
+                key_points=key_points
+            )
+            self.stats['total_reviews'] += 1
+            
+            review_history.append({
+                'round': revision_count + 1,
+                'score': review_result.score,
+                'grade': review_result.grade,
+                'needs_revision': review_result.needs_revision
+            })
+            
+            print(f"{indent}   评审结果: {review_result.score}/100 ({review_result.grade})")
+            
+            # 检查是否通过评审
+            if review_result.score >= self.settings.approval_threshold:
+                print(f"{indent}▸ 内容通过评审！")
+                if revision_count == 0:
+                    self.stats['approved_first_try'] += 1
+                break
+            
+            # 检查是否还能修改
+            if revision_count >= self.settings.max_revisions:
+                print(f"{indent}▸️  达到最大修改次数 ({self.settings.max_revisions})，使用当前版本")
+                break
+            
+            # 检查是否需要重写（分数太低）
+            if review_result.score < self.settings.revision_threshold:
+                print(f"{indent}▸️  分数过低 ({review_result.score} < {self.settings.revision_threshold})，需要重写")
+                self.stats['total_rewrites'] += 1
+                # 重新生成内容
+                new_content_data = self.writer.generate_content(
+                    node, 
+                    {'review_feedback': review_result.reviewer_notes}, 
+                    level,
+                    additional_requirements=f"请注意避免以下问题: {review_result.reviewer_notes}"
+                )
+                self.stats['total_generations'] += 1
+                final_content = new_content_data['content']
+            else:
+                # 修改内容
+                print(f"{indent}▸ 根据评审意见修改内容...")
+                revised_data = self.revision_agent.revise_content(
+                    original_content=final_content,
+                    review_result=review_result,
+                    target_word_count=target_word_count
+                )
+                self.stats['total_revisions'] += 1
+                final_content = revised_data.get('revised_content', final_content)
+            
+            revision_count += 1
+        
+        # 构建评审元数据
+        final_review = review_history[-1] if review_history else {}
+        review_metadata = {
+            'review_score': final_review.get('score'),
+            'review_grade': final_review.get('grade'),
+            'review_rounds': len(review_history),
+            'review_history': review_history,
+            'reviewed': True
+        }
+        
+        return final_content, review_metadata
     
     def _process_children(
         self,
