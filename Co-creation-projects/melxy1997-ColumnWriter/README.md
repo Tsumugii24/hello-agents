@@ -1,6 +1,7 @@
 # 专栏作家智能体 (Column Writer Agent)
 
 一个基于 [HelloAgents](https://github.com/helloagents/hello-agents) 框架构建的智能专栏写作系统，采用多智能体/多设计模式，自动完成专栏的规划、撰写、评审和优化。
+![执行截图](./assets/agent_run.jpg)
 
 ## ▸ 项目简介
 
