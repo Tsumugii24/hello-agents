@@ -73,7 +73,7 @@ Where $r_\phi(x, y)$ is the reward model, input is (prompt, answer) pair, output
 The third step is **Reinforcement Learning Fine-tuning**. With the reward model, we can use reinforcement learning to optimize the language model to generate higher quality answers. The most classic algorithm is PPO (Proximal Policy Optimization)<sup>[1]</sup>, with the training objective:
 
 $$
-\mathcal{L}_{\text{PPO}} = \mathbb{E}_{x, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \cdot D_{KL}(\pi_\theta || \pi_{\text{ref}})
+J_{\text{PPO}} = \mathbb{E}_{x, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \cdot D_{KL}(\pi_\theta || \pi_{\text{ref}})
 $$
 
 Where $\pi_\theta$ is the current policy, i.e., the language model, $\pi_{\text{ref}}$ is the reference policy, which in this scenario can be the SFT model, $r_\phi(x, y)$ is the reward model score, $D_{KL}$ is KL divergence, aimed at preventing the model from deviating too far, and $\beta$ is the balance coefficient. The meaning of this objective function is: maximize reward while not deviating too far from the original model.
@@ -1159,7 +1159,7 @@ GRPO (Group Relative Policy Optimization)<sup>[2]</sup> is a simplified PPO vari
 Let's understand GRPO's principles through mathematical formulas. PPO's objective function is:
 
 $$
-\mathcal{L}_{\text{PPO}}(\theta) = \mathbb{E}_{s,a \sim \pi_\theta} \left[ \min\left( \frac{\pi_\theta(a|s)}{\pi_{\text{old}}(a|s)} A(s,a), \text{clip}\left(\frac{\pi_\theta(a|s)}{\pi_{\text{old}}(a|s)}, 1-\epsilon, 1+\epsilon\right) A(s,a) \right) \right]
+J_{\text{PPO}}(\theta) = \mathbb{E}_{s,a \sim \pi_\theta} \left[ \min\left( \frac{\pi_\theta(a|s)}{\pi_{\text{old}}(a|s)} A(s,a), \text{clip}\left(\frac{\pi_\theta(a|s)}{\pi_{\text{old}}(a|s)}, 1-\epsilon, 1+\epsilon\right) A(s,a) \right) \right]
 $$
 
 Where $A(s,a)$ is the advantage function, requiring Value Model to estimate:
@@ -1171,7 +1171,7 @@ $$
 GRPO's objective function is simplified to:
 
 $$
-\mathcal{L}_{\text{GRPO}}(\theta) = \mathbb{E}_{s,a \sim \pi_\theta} \left[ \frac{\pi_\theta(a|s)}{\pi_{\text{ref}}(a|s)} \cdot (r(s,a) - \bar{r}_{\text{group}}) \right] - \beta \cdot D_{KL}(\pi_\theta || \pi_{\text{ref}})
+J_{\text{GRPO}}(\theta) = \mathbb{E}_{s,a \sim \pi_\theta} \left[ \frac{\pi_\theta(a|s)}{\pi_{\text{ref}}(a|s)} \cdot (r(s,a) - \bar{r}_{\text{group}}) \right] - \beta \cdot D_{KL}(\pi_\theta || \pi_{\text{ref}})
 $$
 
 Where $\bar{r}_{\text{group}}$ is the group average reward and $\beta$ is the KL divergence penalty coefficient. Key differences are: GRPO uses $r(s,a) - \bar{r}_{\text{group}}$ instead of advantage function $A(s,a)$, no need for Value Model; GRPO uses group-relative rewards, reducing reward variance; GRPO adds KL divergence penalty, preventing policy from deviating too far.
