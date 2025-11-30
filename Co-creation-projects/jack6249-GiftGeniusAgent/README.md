@@ -105,7 +105,7 @@ os.environ["SEARCH_PROVIDER"] = "baidu"
 
 运行结果 (final_gift_plan.md):
 
-![example](/Co-creation-projects/jack6249-GiftGeniusAgent/example.png)
+![example](example.png)
 
 ## 🎯 项目亮点
 
