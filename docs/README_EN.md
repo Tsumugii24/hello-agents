@@ -125,7 +125,8 @@ We are an open-source community and welcome any form of contribution!
 - [WH](https://github.com/WHQAQ11) (Content contributor)
 - [Zhou Aojie - DW Contributor Team](https://github.com/thunderbolt-fire) (Xi'an Jiaotong University, Extra02 content contribution)
 - [Zhang Chenxu - Individual Developer](https://github.com/Tasselszcx) (Imperial College London, Extra03 Content Contributor)
-- 
+- [Huang Honghan - DW Contributor Team](https://github.com/XiaoMa-PM) (Shenzhen University, Extra04 Content Contributor)
+
 ### Special Thanks
 - Thanks to [@Sm1les](https://github.com/Sm1les) for help and support for this project
 - Thanks to all developers who have contributed to this project ❤️
