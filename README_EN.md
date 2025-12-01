@@ -45,41 +45,41 @@ If you wish to read locally or contribute content, please refer to the learning 
 
 ## 📖 Content Navigation
 
-| Chapter | Key Content | Status |
-| --- | --- | --- |
-| [Preface](./docs/Preface.md) | Project origin, background, and reader suggestions | ✅ |
-| **Part 1: Agent and Language Model Fundamentals** |  |  |
-| [Chapter 1: Introduction to Agents](./docs/chapter1/Chapter1-Introduction-to-Agents.md) | Agent definition, types, paradigms, and applications | ✅ |
-| [Chapter 2: History of Agents](./docs/chapter2/Chapter2-History-of-Agents.md) | Evolution from symbolism to LLM-driven agents | ✅ |
-| [Chapter 3: Large Language Model Fundamentals](./docs/chapter3/Chapter3-Fundamentals-of-Large-Language-Models.md) | Transformer, prompts, mainstream LLMs and their limitations | ✅ |
-| **Part 2: Building Your LLM Agent** |  |  |
-| [Chapter 4: Classic Agent Paradigm Construction](./docs/chapter4/Chapter4-Building-Classic-Agent-Paradigms.md) | Hands-on implementation of ReAct, Plan-and-Solve, Reflection | ✅ |
-| [Chapter 5: Low-Code Platform Agent Development](./docs/chapter5/Chapter5-Building-Agents-with-Low-Code-Platforms.md) | Understanding Coze, Dify, n8n and other low-code agent platforms | ✅ |
-| [Chapter 6: Framework Development Practice](./docs/chapter6/Chapter6-Framework-Development-Practice.md) | AutoGen, AgentScope, LangGraph and other mainstream framework applications | ✅ |
-| [Chapter 7: Building Your Agent Framework](./docs/chapter7/Chapter7-Building-Your-Agent-Framework.md) | Building an agent framework from scratch | ✅ |
-| **Part 3: Advanced Knowledge Extension** |  |  |
-| [Chapter 8: Memory and Retrieval](./docs/chapter8/Chapter8-Memory-and-Retrieval.md) | Memory systems, RAG, storage | ✅ |
-| [Chapter 9: Context Engineering](./docs/chapter9/Chapter9-Context-Engineering.md) | "Contextual understanding" for continuous interaction | ✅ |
-| [Chapter 10: Agent Communication Protocols](./docs/chapter10/Chapter10-Agent-Communication-Protocols.md) | MCP, A2A, ANP and other protocol analysis | ✅ |
-| [Chapter 11: Agentic-RL](./docs/chapter11/Chapter11-Agentic-RL.md) | Practical LLM training from SFT to GRPO | ✅ |
-| [Chapter 12: Agent Performance Evaluation](./docs/chapter12/Chapter12-Agent-Performance-Evaluation.md) | Core metrics, benchmarks, and evaluation frameworks | ✅ |
-| **Part 4: Comprehensive Case Studies** |  |  |
-| [Chapter 13: Intelligent Travel Assistant](./docs/chapter13/Chapter13-Intelligent-Travel-Assistant.md) | Real-world applications of MCP and multi-agent collaboration | ✅ |
-| [Chapter 14: Automated Deep Research Agent](./docs/chapter14/Chapter14-Automated-Deep-Research-Agent.md) | DeepResearch Agent reproduction and analysis | ✅ |
-| [Chapter 15: Building a Cyber Town](./docs/chapter15/Chapter15-Building-Cyber-Town.md) | Combining agents with games, simulating social dynamics | ✅ |
-| **Part 5: Capstone Project and Future Outlook** |  |  |
-| [Chapter 16: Capstone Project](./docs/chapter16/Chapter16-Graduation-Project.md) | Build your own complete multi-agent application | ✅ |
+| Chapter                                                                                                               | Key Content                                                                | Status |
+| --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ------ |
+| [Preface](./docs/Preface.md)                                                                                          | Project origin, background, and reader suggestions                         | ✅      |
+| **Part 1: Agent and Language Model Fundamentals**                                                                     |                                                                            |        |
+| [Chapter 1: Introduction to Agents](./docs/chapter1/Chapter1-Introduction-to-Agents.md)                               | Agent definition, types, paradigms, and applications                       | ✅      |
+| [Chapter 2: History of Agents](./docs/chapter2/Chapter2-History-of-Agents.md)                                         | Evolution from symbolism to LLM-driven agents                              | ✅      |
+| [Chapter 3: Large Language Model Fundamentals](./docs/chapter3/Chapter3-Fundamentals-of-Large-Language-Models.md)     | Transformer, prompts, mainstream LLMs and their limitations                | ✅      |
+| **Part 2: Building Your LLM Agent**                                                                                   |                                                                            |        |
+| [Chapter 4: Classic Agent Paradigm Construction](./docs/chapter4/Chapter4-Building-Classic-Agent-Paradigms.md)        | Hands-on implementation of ReAct, Plan-and-Solve, Reflection               | ✅      |
+| [Chapter 5: Low-Code Platform Agent Development](./docs/chapter5/Chapter5-Building-Agents-with-Low-Code-Platforms.md) | Understanding Coze, Dify, n8n and other low-code agent platforms           | ✅      |
+| [Chapter 6: Framework Development Practice](./docs/chapter6/Chapter6-Framework-Development-Practice.md)               | AutoGen, AgentScope, LangGraph and other mainstream framework applications | ✅      |
+| [Chapter 7: Building Your Agent Framework](./docs/chapter7/Chapter7-Building-Your-Agent-Framework.md)                 | Building an agent framework from scratch                                   | ✅      |
+| **Part 3: Advanced Knowledge Extension**                                                                              |                                                                            |        |
+| [Chapter 8: Memory and Retrieval](./docs/chapter8/Chapter8-Memory-and-Retrieval.md)                                   | Memory systems, RAG, storage                                               | ✅      |
+| [Chapter 9: Context Engineering](./docs/chapter9/Chapter9-Context-Engineering.md)                                     | "Contextual understanding" for continuous interaction                      | ✅      |
+| [Chapter 10: Agent Communication Protocols](./docs/chapter10/Chapter10-Agent-Communication-Protocols.md)              | MCP, A2A, ANP and other protocol analysis                                  | ✅      |
+| [Chapter 11: Agentic-RL](./docs/chapter11/Chapter11-Agentic-RL.md)                                                    | Practical LLM training from SFT to GRPO                                    | ✅      |
+| [Chapter 12: Agent Performance Evaluation](./docs/chapter12/Chapter12-Agent-Performance-Evaluation.md)                | Core metrics, benchmarks, and evaluation frameworks                        | ✅      |
+| **Part 4: Comprehensive Case Studies**                                                                                |                                                                            |        |
+| [Chapter 13: Intelligent Travel Assistant](./docs/chapter13/Chapter13-Intelligent-Travel-Assistant.md)                | Real-world applications of MCP and multi-agent collaboration               | ✅      |
+| [Chapter 14: Automated Deep Research Agent](./docs/chapter14/Chapter14-Automated-Deep-Research-Agent.md)              | DeepResearch Agent reproduction and analysis                               | ✅      |
+| [Chapter 15: Building a Cyber Town](./docs/chapter15/Chapter15-Building-Cyber-Town.md)                                | Combining agents with games, simulating social dynamics                    | ✅      |
+| **Part 5: Capstone Project and Future Outlook**                                                                       |                                                                            |        |
+| [Chapter 16: Capstone Project](./docs/chapter16/Chapter16-Graduation-Project.md)                                      | Build your own complete multi-agent application                            | ✅      |
 
 ### Community Contributions
 
 &emsp;&emsp;We welcome everyone to contribute their unique insights and practical summaries from learning Hello-Agents or Agent-related technologies to the community selection in the form of PRs. If the content is independent of the main text, you can also submit it to Extra-Chapter! **Looking forward to your first contribution!**
 
-| Community Selection | Content Summary |
-| --- | --- |
-| [01-Agent Interview Questions Summary](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-面试问题总结.md) | Agent position-related interview questions |
-| [01-Agent Interview Answers](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md) | Answers to related interview questions |
-| [02-Context Engineering Content Supplement](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md) | Context engineering content extension |
-| [03-Dify Agent Creation Step-by-Step Tutorial](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra03-Dify智能体创建保姆级操作流程.md) | Dify Agent Creation Step-by-Step Tutorial |
+| Community Selection                                                                                                                                            | Content Summary                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| [01-Agent Interview Questions Summary](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-面试问题总结.md)                         | Agent position-related interview questions |
+| [01-Agent Interview Answers](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md)                                       | Answers to related interview questions     |
+| [02-Context Engineering Content Supplement](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md)              | Context engineering content extension      |
+| [03-Dify Agent Creation Step-by-Step Tutorial](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra03-Dify智能体创建保姆级操作流程.md) | Dify Agent Creation Step-by-Step Tutorial  |
 
 ### PDF Version Download
 
@@ -148,7 +148,7 @@ We are an open-source community and welcome any form of contribution!
 ## Star History
 
 <div align='center'>
-    <img src="./docs/images/star-history-2025117.png" alt="Datawhale" width="90%">
+    <img src="./docs/images/star-history-20251130.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">

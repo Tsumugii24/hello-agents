@@ -41,40 +41,40 @@
 
 ## 📖 内容导航
 
-| 章节 | 关键内容 | 状态 |
-| --- | --- | --- |
-| [前言](./前言.md) | 项目的缘起、背景及读者建议 | ✅ |
-| <strong>第一部分：智能体与语言模型基础</strong> |  |  |
-| [第一章 初识智能体](./chapter1/第一章%20初识智能体.md) | 智能体定义、类型、范式与应用 | ✅ |
-| [第二章 智能体发展史](./chapter2/第二章%20智能体发展史.md) | 从符号主义到 LLM 驱动的智能体演进 | ✅ |
-| [第三章 大语言模型基础](./chapter3/第三章%20大语言模型基础.md) | Transformer、提示、主流 LLM 及其局限 | ✅ |
-| <strong>第二部分：构建你的大语言模型智能体</strong> |  |  |
-| [第四章 智能体经典范式构建](./chapter4/第四章%20智能体经典范式构建.md) | 手把手实现 ReAct、Plan-and-Solve、Reflection | ✅ |
-| [第五章 基于低代码平台的智能体搭建](./chapter5/第五章%20基于低代码平台的智能体搭建.md) | 了解 Coze、Dify、n8n 等低代码智能体平台使用 | ✅ |
-| [第六章 框架开发实践](./chapter6/第六章%20框架开发实践.md) | AutoGen、AgentScope、LangGraph 等主流框架应用 | ✅ |
-| [第七章 构建你的Agent框架](./chapter7/第七章%20构建你的Agent框架.md) | 从 0 开始构建智能体框架 | ✅ |
-| <strong>第三部分：高级知识扩展</strong> |  |  |
-| [第八章 记忆与检索](./chapter8/第八章%20记忆与检索.md) | 记忆系统，RAG，存储 | ✅ |
-| [第九章 上下文工程](./chapter9/第九章%20上下文工程.md) | 持续交互的"情境理解" | ✅ |
-| [第十章 智能体通信协议](./chapter10/第十章%20智能体通信协议.md) | MCP、A2A、ANP 等协议解析 | ✅ |
-| [第十一章 Agentic-RL](./chapter11/第十一章%20Agentic-RL.md) | 从 SFT 到 GRPO 的 LLM 训练实战 | ✅ |
-| [第十二章 智能体性能评估](./chapter12/第十二章%20智能体性能评估.md) | 核心指标、基准测试与评估框架 | ✅ |
-| <strong>第四部分：综合案例进阶</strong> |  |  |
-| [第十三章 智能旅行助手](./chapter13/第十三章%20智能旅行助手.md) | MCP 与多智能体协作的真实世界应用 | ✅ |
-| [第十四章 自动化深度研究智能体](./chapter14/第十四章%20自动化深度研究智能体.md) | DeepResearch Agent 复现与解析 | ✅ |
-| [第十五章 构建赛博小镇](./chapter15/第十五章%20构建赛博小镇.md) | Agent 与游戏的结合，模拟社会动态 | ✅ |
-| <strong>第五部分：毕业设计及未来展望</strong> |  |  |
-| [第十六章 毕业设计](./chapter16/第十六章%20毕业设计.md) | 构建属于你的完整多智能体应用 | ✅ |
+| 章节                                                                                   | 关键内容                                      | 状态 |
+| -------------------------------------------------------------------------------------- | --------------------------------------------- | ---- |
+| [前言](./前言.md)                                                                      | 项目的缘起、背景及读者建议                    | ✅    |
+| <strong>第一部分：智能体与语言模型基础</strong>                                        |                                               |      |
+| [第一章 初识智能体](./chapter1/第一章%20初识智能体.md)                                 | 智能体定义、类型、范式与应用                  | ✅    |
+| [第二章 智能体发展史](./chapter2/第二章%20智能体发展史.md)                             | 从符号主义到 LLM 驱动的智能体演进             | ✅    |
+| [第三章 大语言模型基础](./chapter3/第三章%20大语言模型基础.md)                         | Transformer、提示、主流 LLM 及其局限          | ✅    |
+| <strong>第二部分：构建你的大语言模型智能体</strong>                                    |                                               |      |
+| [第四章 智能体经典范式构建](./chapter4/第四章%20智能体经典范式构建.md)                 | 手把手实现 ReAct、Plan-and-Solve、Reflection  | ✅    |
+| [第五章 基于低代码平台的智能体搭建](./chapter5/第五章%20基于低代码平台的智能体搭建.md) | 了解 Coze、Dify、n8n 等低代码智能体平台使用   | ✅    |
+| [第六章 框架开发实践](./chapter6/第六章%20框架开发实践.md)                             | AutoGen、AgentScope、LangGraph 等主流框架应用 | ✅    |
+| [第七章 构建你的Agent框架](./chapter7/第七章%20构建你的Agent框架.md)                   | 从 0 开始构建智能体框架                       | ✅    |
+| <strong>第三部分：高级知识扩展</strong>                                                |                                               |      |
+| [第八章 记忆与检索](./chapter8/第八章%20记忆与检索.md)                                 | 记忆系统，RAG，存储                           | ✅    |
+| [第九章 上下文工程](./chapter9/第九章%20上下文工程.md)                                 | 持续交互的"情境理解"                          | ✅    |
+| [第十章 智能体通信协议](./chapter10/第十章%20智能体通信协议.md)                        | MCP、A2A、ANP 等协议解析                      | ✅    |
+| [第十一章 Agentic-RL](./chapter11/第十一章%20Agentic-RL.md)                            | 从 SFT 到 GRPO 的 LLM 训练实战                | ✅    |
+| [第十二章 智能体性能评估](./chapter12/第十二章%20智能体性能评估.md)                    | 核心指标、基准测试与评估框架                  | ✅    |
+| <strong>第四部分：综合案例进阶</strong>                                                |                                               |      |
+| [第十三章 智能旅行助手](./chapter13/第十三章%20智能旅行助手.md)                        | MCP 与多智能体协作的真实世界应用              | ✅    |
+| [第十四章 自动化深度研究智能体](./chapter14/第十四章%20自动化深度研究智能体.md)        | DeepResearch Agent 复现与解析                 | ✅    |
+| [第十五章 构建赛博小镇](./chapter15/第十五章%20构建赛博小镇.md)                        | Agent 与游戏的结合，模拟社会动态              | ✅    |
+| <strong>第五部分：毕业设计及未来展望</strong>                                          |                                               |      |
+| [第十六章 毕业设计](./chapter16/第十六章%20毕业设计.md)                                | 构建属于你的完整多智能体应用                  | ✅    |
 
 ### 社区贡献精选 (Community Blog)
 
 &emsp;&emsp;欢迎大家将在学习 Hello-Agents 或 Agent 相关技术中的独到见解、实践总结，以 PR 的形式贡献到社区精选。如果是独立于正文的内容，也可以投稿至 Extra-Chapter！<strong>期待你的第一次贡献！</strong>
 
-| 社区精选 | 内容总结 |
-| --- | --- |
-| [01-Agent面试题总结](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-面试问题总结.md) | Agent 岗位相关面试问题 |
-| [01-Agent面试题答案](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md) | 相关面试问题答案 |
-| [02-上下文工程内容补充](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md) | 上下文工程内容扩展 |
+| 社区精选                                                                                                                                      | 内容总结                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| [01-Agent面试题总结](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-面试问题总结.md)                          | Agent 岗位相关面试问题   |
+| [01-Agent面试题答案](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md)                              | 相关面试问题答案         |
+| [02-上下文工程内容补充](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md)                 | 上下文工程内容扩展       |
 | [03-Dify智能体创建保姆级教程](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra03-Dify智能体创建保姆级操作流程.md) | Dify智能体创建保姆级教程 |
 
 ### PDF 版本下载
@@ -145,7 +145,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./images/star-history-2025117.png" alt="Datawhale" width="90%">
+    <img src="./images/star-history-20251130.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">

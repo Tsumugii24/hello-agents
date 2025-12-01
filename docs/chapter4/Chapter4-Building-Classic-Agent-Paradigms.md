@@ -1021,7 +1021,6 @@ You are a senior Python programmer. You are optimizing your code based on feedba
 {task}
 
 # Your Previous Code Attempt:
-```
 {last_code_attempt}
 Reviewer's Feedback:
 {feedback}

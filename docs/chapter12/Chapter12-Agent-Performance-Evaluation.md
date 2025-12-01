@@ -1865,7 +1865,7 @@ In our implementation, LLM Judge evaluates AIME problem quality from four key di
 
 <div align="center">
   <p>Table 12.5 LLM Judge Evaluation Dimensions for AIME Problems</p>
-  <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/12-figures/12-table-4.png" alt="" width="85%"/>
+  <img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/12-figures/12-table-5.png" alt="" width="85%"/>
 </div>
 
 After obtaining scores from four dimensions, we need to aggregate these scores into overall evaluation metrics. We define three key metrics to measure the quality level of generated problems:
