@@ -74,12 +74,13 @@ If you wish to read locally or contribute content, please refer to the learning 
 
 &emsp;&emsp;We welcome everyone to contribute their unique insights and practical summaries from learning Hello-Agents or Agent-related technologies to the community selection in the form of PRs. If the content is independent of the main text, you can also submit it to Extra-Chapter! **Looking forward to your first contribution!**
 
-| Community Selection                                                                                                                                            | Content Summary                            |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| [01-Agent Interview Questions Summary](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-面试问题总结.md)                         | Agent position-related interview questions |
-| [01-Agent Interview Answers](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md)                                       | Answers to related interview questions     |
-| [02-Context Engineering Content Supplement](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md)              | Context engineering content extension      |
-| [03-Dify Agent Creation Step-by-Step Tutorial](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra03-Dify智能体创建保姆级操作流程.md) | Dify Agent Creation Step-by-Step Tutorial  |
+| Community Selection | Content Summary |
+| --- | --- |
+| [01-Agent Interview Questions Summary](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-面试问题总结.md) | Agent position-related interview questions |
+| [01-Agent Interview Answers](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md) | Answers to related interview questions |
+| [02-Context Engineering Content Supplement](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md) | Context engineering content extension |
+| [03-Dify Agent Creation Step-by-Step Tutorial](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra03-Dify智能体创建保姆级操作流程.md) | Dify Agent Creation Step-by-Step Tutorial |
+| [04-Datawhale Course Common Questions](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra04-DatawhaleFAQ.md) | Datawhale Course Common Questions |
 
 ### PDF Version Download
 
@@ -133,6 +134,7 @@ We are an open-source community and welcome any form of contribution!
 - [WH](https://github.com/WHQAQ11) (Content contributor)
 - [Zhou Aojie - DW Contributor Team](https://github.com/thunderbolt-fire) (Xi'an Jiaotong University, Extra02 content contribution)
 - [Zhang Chenxu - Individual Developer](https://github.com/Tasselszcx) (Imperial College London, Extra03 Content Contributor)
+- [Huang Honghan - DW Contributor Team](https://github.com/XiaoMa-PM) (Shenzhen University, Extra04 Content Contributor)
 
 ### Special Thanks
 - Thanks to [@Sm1les](https://github.com/Sm1les) for help and support for this project
