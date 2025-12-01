@@ -76,6 +76,7 @@
 | [01-Agent面试题答案](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra01-参考答案.md)                              | 相关面试问题答案         |
 | [02-上下文工程内容补充](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md)                 | 上下文工程内容扩展       |
 | [03-Dify智能体创建保姆级教程](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra03-Dify智能体创建保姆级操作流程.md) | Dify智能体创建保姆级教程 |
+| [04-Datawhale课程常见问题](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra04-Datawhale FAQ.md) | Datawhale课程常见问题 |
 
 ### PDF 版本下载
 
