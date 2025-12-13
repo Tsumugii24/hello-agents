@@ -108,7 +108,7 @@ python main.py
 
 1. 启动Godot
 2. 点击"导入"
-3. 选择 `chapter15/Game/project.godot`
+3. 选择 `Helloagents-AI-Town/helloagents-ai-town/scenes/main.tscn`
 4. 点击"导入并编辑"
 
 ### 步骤7: 运行游戏

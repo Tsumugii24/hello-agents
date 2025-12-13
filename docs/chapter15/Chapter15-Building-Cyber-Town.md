@@ -129,7 +129,7 @@ After successful startup, you will see the following output:
 
 Godot installation is very simple. Windows provides a direct `.exe` file, and Mac also provides a `.dmg` file. You can download directly from the official website ([Windows](https://godotengine.org/download/windows/) / [Mac](https://godotengine.org/download/macos/))
 
-Open the Godot engine, click the "Import" button, browse to `Helloagents-AI-Town/helloagents-ai-town/project.godot`, and click "Import and Edit". After Godot imports the resources, press `F5` or click the "Run" button to start the game.
+Open the Godot engine, click the "Import" button, browse to `Helloagents-AI-Town/helloagents-ai-town/scenes/main.tscn`, and click "Import and Edit". After Godot imports the resources, press `F5` or click the "Run" button to start the game.
 
 **Experience Core Features:**
 
