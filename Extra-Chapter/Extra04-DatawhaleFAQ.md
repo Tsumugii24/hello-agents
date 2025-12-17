@@ -211,10 +211,11 @@
 
 - 要点整理：
   - 课程项目模型API支持：
-    - (硅基流动Inference API)[https://modelscope.cn/models]；
-    - (Deepseek API)[https://platform.deepseek.com/usage];
-    - (OpenAI API)[https://platform.openai.com/docs/quickstart];
-  - 配置流程，获取API_KEY、MODEL_ID、BASE_URL设置于环境变量`env.`文件中。
+    - [硅基流动Inference API](https://modelscope.cn/models)；
+    - [Deepseek API](https://platform.deepseek.com/usage);
+    - [OpenAI API](https://platform.openai.com/docs/quickstart);
+    - 其他 ...
+  - 配置流程，获取API_KEY、MODEL_ID、BASE_URL设置于环境变量`.env`文件中。
   - modelscope社区的模型api获取方法 https://www.modelscope.cn/models/Qwen/Qwen3-VL-8B-Instruct
     - 点击模型库，找到支持API-Inference的模型，点击进入模型详情页面，找到API-Inference
     - ![alt text](./images/Extra04-figures/3f1b68eedc9d9e556fbb51358bf49f9d.png)
