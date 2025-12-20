@@ -709,7 +709,7 @@ Google 在 Gemini 模型中引入了 **"Grounding with Functions"**，允许开�
 
 
 
-## 
+
 
 ### 标准化的趋势
 
