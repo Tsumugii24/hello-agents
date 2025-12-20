@@ -13,7 +13,7 @@
 在构建智能体之前，需要先完成必要的插件安装和 MCP 配置。如图1所示，按照图中文字指示一步步安装本章节所需插件。
 
 <div align="center">
-  <img src="./Extra03-figures/image1.jpg" alt="插件安装示意图" width="90%"/>
+  <img src="./images/Extra03-figures/image1.jpg" alt="插件安装示意图" width="90%"/>
   <p>图1 插件安装示意图</p>
 </div>
 
@@ -21,53 +21,53 @@
 
 关于 MCP 的详细原理这里不展开，我们重点演示如何使用云端部署的 MCP 服务。本案例使用国内的魔搭社区 MCP 市场进行演示，具体步骤如下：
 
-**(1) 进入ModelScope社区**：[https://www.modelscope.cn/home](https://www.modelscope.cn/home)
+<strong>(1) 进入ModelScope社区</strong>：[https://www.modelscope.cn/home](https://www.modelscope.cn/home)
 
-**(2) 注册账号并登录**，如图2所示
+<strong>(2) 注册账号并登录</strong>，如图2所示
 
 <div align="center">
-  <img src="./Extra03-figures/image2.jpg" alt="ModelScope注册登录界面" width="90%"/>
+  <img src="./images/Extra03-figures/image2.jpg" alt="ModelScope注册登录界面" width="90%"/>
   <p>图2 ModelScope注册登录界面</p>
 </div>
 
-**(3) 进入高德地图MCP配置页面**
+<strong>(3) 进入高德地图MCP配置页面</strong>
    - 登录后，按照图3所示，一步步点击进入高德地图MCP配置页面
    - 页面应如图4所示
 
 <div align="center">
-  <img src="./Extra03-figures/image3.jpg" alt="高德地图MCP入口指引" width="90%"/>
+  <img src="./images/Extra03-figures/image3.jpg" alt="高德地图MCP入口指引" width="90%"/>
   <p>图3 高德地图MCP入口指引</p>
 </div>
 
 <div align="center">
-  <img src="./Extra03-figures/image4.jpg" alt="高德地图MCP配置页面" width="90%"/>
+  <img src="./images/Extra03-figures/image4.jpg" alt="高德地图MCP配置页面" width="90%"/>
   <p>图4 高德地图MCP配置页面</p>
 </div>
 
-**(4) 进入高德开放平台**：[https://console.amap.com/dev/index](https://console.amap.com/dev/index)
+<strong>(4) 进入高德开放平台</strong>：[https://console.amap.com/dev/index](https://console.amap.com/dev/index)
    - 按照图5中文字指示新建应用
 
 <div align="center">
-  <img src="./Extra03-figures/image5.jpg" alt="高德开放平台新建应用" width="90%"/>
+  <img src="./images/Extra03-figures/image5.jpg" alt="高德开放平台新建应用" width="90%"/>
   <p>图5 高德开放平台新建应用</p>
 </div>
 
-**(5) 创建api_key**
+<strong>(5) 创建api_key</strong>
    - 如图6所示，一步步创建api_key
    - 将创建好的api_key输入图4的红框中，即可显示配置成功
    - 配置成功页面如图7所示
 
 <div align="center">
-  <img src="./Extra03-figures/image6.jpg" alt="创建api_key步骤" width="90%"/>
+  <img src="./images/Extra03-figures/image6.jpg" alt="创建api_key步骤" width="90%"/>
   <p>图6 创建api_key步骤</p>
 </div>
 
 <div align="center">
-  <img src="./Extra03-figures/image7.jpg" alt="MCP配置成功页面" width="90%"/>
+  <img src="./images/Extra03-figures/image7.jpg" alt="MCP配置成功页面" width="90%"/>
   <p>图7 MCP配置成功页面</p>
 </div>
 
-**至此，整个高德地图MCP配置完成！**
+<strong>至此，整个高德地图MCP配置完成！</strong>
 
 ## 3. Agent设计与效果展示
 
@@ -82,7 +82,7 @@
 整个智能体的编排架构如图8所示。
 
 <div align="center">
-  <img src="./Extra03-figures/image8.jpg" alt="智能体编排架构图" width="90%"/>
+  <img src="./images/Extra03-figures/image8.jpg" alt="智能体编排架构图" width="90%"/>
   <p>图8 智能体编排架构图</p>
 </div>
 
@@ -92,12 +92,12 @@
 - 按照图9及图10，一步步创建Chatflow空白应用
 
 <div align="center">
-  <img src="./Extra03-figures/image9.jpg" alt="创建Chatflow步骤1" width="90%"/>
+  <img src="./images/Extra03-figures/image9.jpg" alt="创建Chatflow步骤1" width="90%"/>
   <p>图9 创建Chatflow步骤1</p>
 </div>
 
 <div align="center">
-  <img src="./Extra03-figures/image10.jpg" alt="创建Chatflow步骤2" width="90%"/>
+  <img src="./images/Extra03-figures/image10.jpg" alt="创建Chatflow步骤2" width="90%"/>
   <p>图10 创建Chatflow步骤2</p>
 </div>
 
@@ -106,7 +106,7 @@
 - 分类器所填内容如图11所示
 
 <div align="center">
-  <img src="./Extra03-figures/image11.jpg" alt="问题分类器配置" width="80%"/>
+  <img src="./images/Extra03-figures/image11.jpg" alt="问题分类器配置" width="80%"/>
   <p>图11 问题分类器配置</p>
 </div>
 
@@ -114,17 +114,17 @@
 
 这是一个基础的对话模块，配置大语言模型和时间工具，作为兜底的通用问答服务。
 
-**配置说明**：
+<strong>配置说明</strong>：
 - 配置说明及连线参考图12
 - 具体flow中各节点分别为"开始-问题分类器-LLM-直接回复"
-- **后续我们直接用节点flow进行说明每个模块的flow**
+- <strong>后续我们直接用节点flow进行说明每个模块的flow</strong>
 
 <div align="center">
-  <img src="./Extra03-figures/image12.jpg" alt="日常助手模块配置" width="90%"/>
+  <img src="./images/Extra03-figures/image12.jpg" alt="日常助手模块配置" width="90%"/>
   <p>图12 日常助手模块配置</p>
 </div>
 
-**LLM节点的system_prompt如下**：
+<strong>LLM节点的system_prompt如下</strong>：
 ```
 # Role: 日常问题咨询专家
 
@@ -185,11 +185,11 @@
 作为日常问题咨询专家，你必须遵守上述Rules，按照Workflows执行任务。
 ```
 
-**演示效果**：
+<strong>演示效果</strong>：
 如图13所示：
 
 <div align="center">
-  <img src="./Extra03-figures/image13.png" alt="日常助手演示效果" width="80%"/>
+  <img src="./images/Extra03-figures/image13.png" alt="日常助手演示效果" width="80%"/>
   <p>图13 日常助手演示效果</p>
 </div>
 
@@ -197,10 +197,10 @@
 
 根据 OpenAI 的数据报告，超过60%的用户使用 ChatGPT 进行文本优化相关任务，包括润色、修改、扩写、缩写等。因此，文案优化是高频需求场景，我们将其作为第二个核心功能模块。
 
-**具体配置**：
+<strong>具体配置</strong>：
 - 具体flow中各节点分别为"开始-问题分类器-LLM-直接回复"，同（3）
 
-**LLM节点的system_prompt如下**：
+<strong>LLM节点的system_prompt如下</strong>：
 ```
 # 一、 角色人设（Role）
 你是一位专业的文案优化专家，拥有丰富的营销文案写作和优化经验，擅长提升文案的吸引力、转化率和可读性。你的视角是站在目标受众和营销目标的角度，专业度边界限于文案优化领域，不涉及技术实现或产品开发。
@@ -230,11 +230,11 @@
 ```
 
 
-**演示效果**：
+<strong>演示效果</strong>：
 如图14所示：
 
 <div align="center">
-  <img src="./Extra03-figures/image14.png" alt="文案优化演示效果" width="80%"/>
+  <img src="./images/Extra03-figures/image14.png" alt="文案优化演示效果" width="80%"/>
   <p>图14 文案优化演示效果</p>
 </div>
 
@@ -242,7 +242,7 @@
 
 图片和视频生成是另一个高频应用场景。随着豆包生图、Google Imagen 等模型的进化，以及可灵、Google Veo 3、OpenAI Sora 2 等视频生成技术的突破，多模态内容生成的质量已达到实用水平。
 
-**图片生成配置**：
+<strong>图片生成配置</strong>：
 - 本案例使用豆包插件实现图片和视频生成
 - 关于豆包插件的图片、视频生成权限及api_key获取，请参考这篇blog，讲解的极其清晰，建议直接看blog中的第3、4部分：
   [https://blog.csdn.net/sjkflw121150/article/details/148480867#:~:text=3.-,%E8%B0%83%E7%94%A8Doubao%E6%96%87%E7%94%9F%E5%9B%BE%E5%B7%A5%E5%85%B7,-%E8%B0%83%E7%94%A8%20Doubao](https://blog.csdn.net/sjkflw121150/article/details/148480867#:~:text=3.-,%E8%B0%83%E7%94%A8Doubao%E6%96%87%E7%94%9F%E5%9B%BE%E5%B7%A5%E5%85%B7,-%E8%B0%83%E7%94%A8%20Doubao)
@@ -250,32 +250,32 @@
 - flow中各节点分别为"开始-问题分类器-豆包T2I-直接回复"
 
 <div align="center">
-  <img src="./Extra03-figures/image15.jpg" alt="豆包生图flow配置" width="90%"/>
+  <img src="./images/Extra03-figures/image15.jpg" alt="豆包生图flow配置" width="90%"/>
   <p>图15 豆包生图flow配置</p>
 </div>
 
-**生图效果**：
+<strong>生图效果</strong>：
 如图16所示：
 
 <div align="center">
-  <img src="./Extra03-figures/image16.png" alt="豆包生图效果展示" width="80%"/>
+  <img src="./images/Extra03-figures/image16.png" alt="豆包生图效果展示" width="80%"/>
   <p>图16 豆包生图效果展示</p>
 </div>
 
-**视频生成配置**：
+<strong>视频生成配置</strong>：
 - 视频生成与图片生成同理，火山引擎中开通文生视频权限即可，见图17的说明
 - 文生视频flow中各节点分别为"开始-问题分类器-豆包T2V-直接回复"
 
 <div align="center">
-  <img src="./Extra03-figures/image17.jpg" alt="文生视频权限开通" width="90%"/>
+  <img src="./images/Extra03-figures/image17.jpg" alt="文生视频权限开通" width="90%"/>
   <p>图17 文生视频权限开通</p>
 </div>
 
-**生视频效果**：
+<strong>生视频效果</strong>：
 如图18所示：
 
 <div align="center">
-  <img src="./Extra03-figures/image18.png" alt="豆包生视频效果展示" width="80%"/>
+  <img src="./images/Extra03-figures/image18.png" alt="豆包生视频效果展示" width="80%"/>
   <p>图18 豆包生视频效果展示</p>
 </div>
 
@@ -283,7 +283,7 @@
 
 在前面我们已经完成了 MCP 的配置，现在将其集成到智能体中。
 
-**配置步骤**（参考图19）：
+<strong>配置步骤</strong>（参考图19）：
 
 1. 选择支持 MCP 调用的Agent节点
 2. 选择 ReAct 模式
@@ -292,38 +292,38 @@
 5. 填写相应的提示词
 
 <div align="center">
-  <img src="./Extra03-figures/image19.jpg" alt="MCP工具集成配置步骤" width="90%"/>
+  <img src="./images/Extra03-figures/image19.jpg" alt="MCP工具集成配置步骤" width="90%"/>
   <p>图19 MCP工具集成配置步骤</p>
 </div>
 
-**具体配置**：
+<strong>具体配置</strong>：
 - 最后Agent节点填写信息可参考图20
 - MCP服务调用的flow中各节点分别为"开始-问题分类器-Agent-直接回复"
 
 <div align="center">
-  <img src="./Extra03-figures/image20.jpg" alt="Agent节点配置详情" width="50%"/>
+  <img src="./images/Extra03-figures/image20.jpg" alt="Agent节点配置详情" width="50%"/>
   <p>图20 Agent节点配置详情</p>
 </div>
 
-**效果展示**：
+<strong>效果展示</strong>：
 - 高德助手效果：如图21所示
 
 <div align="center">
-  <img src="./Extra03-figures/image21.png" alt="高德助手效果展示" width="80%"/>
+  <img src="./images/Extra03-figures/image21.png" alt="高德助手效果展示" width="80%"/>
   <p>图21 高德助手效果展示</p>
 </div>
 
 - 饮食助手效果：如图22所示
 
 <div align="center">
-  <img src="./Extra03-figures/image22.png" alt="饮食助手效果展示" width="80%"/>
+  <img src="./images/Extra03-figures/image22.png" alt="饮食助手效果展示" width="80%"/>
   <p>图22 饮食助手效果展示</p>
 </div>
 
 - 新闻助手效果：如图23所示
 
 <div align="center">
-  <img src="./Extra03-figures/image23.png" alt="新闻助手效果展示" width="50%"/>
+  <img src="./images/Extra03-figures/image23.png" alt="新闻助手效果展示" width="50%"/>
   <p>图23 新闻助手效果展示</p>
 </div>
 
@@ -341,11 +341,11 @@
 配置数据库连接信息（IP地址、数据库名称、端口、账号、密码等），如图24所示。查询结果需要通过大模型节点进行整理，转换为易于理解的自然语言输出。
 
 <div align="center">
-  <img src="./Extra03-figures/image24.png" alt="数据库配置" width="50%"/>
+  <img src="./images/Extra03-figures/image24.png" alt="数据库配置" width="50%"/>
   <p>图24 数据库配置</p>
 </div>
 
-**提示词设置：**
+<strong>提示词设置：</strong>
 ```
 # 一、 角色人设（Role）
 您是一位专业的数据查询师，擅长数据整理，具有清晰的逻辑思维和简洁表达能力。
@@ -373,11 +373,11 @@
 效果展示如图25所示：
 
 <div align="center">
-  <img src="./Extra03-figures/image25.png" alt="数据查询助手效果" width="80%"/>
+  <img src="./images/Extra03-figures/image25.png" alt="数据查询助手效果" width="80%"/>
   <p>图25 数据查询助手</p>
 </div>
 
-**提示词设置：**
+<strong>提示词设置：</strong>
 ```
 # 一、 角色人设（Role）
 你是一位专业的数据分析师，具备数据整理、清洗和可视化能力，能够从原始数据中提取关键信息并转化为直观的可视化展示。
@@ -407,7 +407,7 @@
 ```
 
 <div align="center">
-  <img src="./Extra03-figures/image26.png" alt="数据分析助手效果" width="80%"/>
+  <img src="./images/Extra03-figures/image26.png" alt="数据分析助手效果" width="80%"/>
   <p>图26 数据分析助手</p>
 </div>
 
@@ -415,7 +415,7 @@
 
 ---
 
-**至此，我们完成了一个功能全面的超级智能体个人助手。**
+<strong>至此，我们完成了一个功能全面的超级智能体个人助手。</strong>
 
 该助手涵盖了生活的多个方面：
 - 需要新衣服时，可以让豆包生成设计
@@ -423,7 +423,7 @@
 - 不知道吃什么时，可以获取饮食推荐
 - 想了解学习情况时，可以进行数据分析
 
-**这个智能体能够处理各类工作和生活任务，期待看到大家搭建出更多有创意的私人智能体助手。**
+<strong>这个智能体能够处理各类工作和生活任务，期待看到大家搭建出更多有创意的私人智能体助手。</strong>
 
 ## 参考文献
 1. ModelScope社区. https://www.modelscope.cn/home

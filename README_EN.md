@@ -86,6 +86,7 @@ If you wish to read locally or contribute content, please refer to the learning 
 | [02-Context Engineering Content Supplement](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra02-上下文工程补充知识.md)              | Context engineering content extension      |
 | [03-Dify Agent Creation Step-by-Step Tutorial](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra03-Dify智能体创建保姆级操作流程.md) | Dify Agent Creation Step-by-Step Tutorial  |
 | [04-Hello-agents Course Common Questions](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra04-DatawhaleFAQ.md)                      | Datawhale Course Common Questions          |
+| [05-Agent Skills vs MCP Comparison](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra05-AgentSkills解读.md)                         | Agent Skills vs MCP Technical Comparison   |
 
 ### PDF Version Download
 
