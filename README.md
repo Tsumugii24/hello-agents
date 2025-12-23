@@ -160,7 +160,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./docs/images/star-history-20251217.png" alt="Datawhale" width="90%">
+    <img src="./docs/images/star-history-20251223.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">
