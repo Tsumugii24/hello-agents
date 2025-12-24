@@ -39,7 +39,7 @@ Currently, the low-code platform market for agents and LLM applications presents
 
 - **Core Positioning**: n8n is essentially an open-source workflow automation tool<sup>[3]</sup>, not a pure LLM platform. In recent years, it has actively integrated AI capabilities.
 
-- **Feature Analysis**: n8n's strength lies in "connection." It has hundreds of preset nodes that can easily connect various SaaS services, databases, and APIs into complex automated business processes. You can embed LLM nodes in this process, making it part of the entire automation chain. Although it is not as specialized in LLM functionality as the first three, its general automation capability is unique. However, its learning curve is also relatively steep.
+- **Feature Analysis**: n8n's strength lies in "connection." It has hundreds of preset nodes that can easily connect various SaaS services, databases, and APIs into complex automated business processes. You can embed LLM nodes in this process, making it part of the entire automation chain. Although it is not as specialized in LLM functionality as the first two, its general automation capability is unique. However, its learning curve is also relatively steep.
 
 - **Target Audience**: Developers and enterprises that need to deeply integrate AI capabilities into existing business processes and achieve highly customized automation.
 
