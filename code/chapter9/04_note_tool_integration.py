@@ -6,7 +6,8 @@ NoteTool 与 ContextBuilder 集成示例
 2. 笔记检索与上下文注入
 3. 基于历史笔记的连贯建议
 """
-
+from dotenv import load_dotenv
+load_dotenv()
 from hello_agents import SimpleAgent, HelloAgentsLLM
 from hello_agents.context import ContextBuilder, ContextConfig, ContextPacket
 from hello_agents.tools import MemoryTool, RAGTool, NoteTool

@@ -14,6 +14,8 @@ import os
 # 方案一：TF-IDF（最简单，无需额外依赖）
 os.environ['EMBED_MODEL_TYPE'] = 'tfidf'
 os.environ['EMBED_MODEL_NAME'] = ''  # 重要：必须清空，否则会传递不兼容的参数
+from dotenv import load_dotenv
+load_dotenv()
 # 方案二：本地Transformer（需要: pip install sentence-transformers 和 HF token）
 # os.environ['EMBED_MODEL_TYPE'] = 'local'
 # os.environ['EMBED_MODEL_NAME'] = 'sentence-transformers/all-MiniLM-L6-v2'
@@ -263,7 +265,7 @@ def main():
         project_name="demo_codebase",
         #实际使用的时候替换代码路径
         codebase_path="/Users/suntao/Documents/GitHub/hello-agents/code/chapter9/codebase",
-        llm=HelloAgentsLLM(provider="deepseek",model="deepseek-chat",api_key="sk-1264257bc4114a73998498ad1436f8f0",base_url="https://api.deepseek.com")
+        llm=HelloAgentsLLM()
     )
 
     # 执行三天工作流

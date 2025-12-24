@@ -192,6 +192,9 @@ llm = HelloAgentsLLM(
     model="gpt-4"
 )
 ```
+建议直接在'.env'文件中设置。
+    
+
 
 ### 记忆功能配置
 
