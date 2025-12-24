@@ -7,7 +7,8 @@ ContextBuilder 基础使用示例
 3. 添加记忆
 4. 构建结构化上下文
 """
-
+from dotenv import load_dotenv
+load_dotenv()
 from hello_agents.context import ContextBuilder, ContextConfig
 from hello_agents.tools import MemoryTool, RAGTool
 from hello_agents.core.message import Message
@@ -88,12 +89,7 @@ def main():
     ]
 
     from hello_agents.core.llm import HelloAgentsLLM
-    llm = HelloAgentsLLM(
-        model="ZhipuAI/GLM-4.6",
-        api_key="6ff5219e-410a-4293-8772-0c948bfa691c",
-        base_url="https://api-inference.modelscope.cn/v1/",
-        provider="modelscope"
-    )
+    llm = HelloAgentsLLM()
     # 注意: 实际使用时需要配置 LLM
     response = llm.invoke(messages)
     print(f"LLM 回答: {response}")
