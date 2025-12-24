@@ -5,7 +5,7 @@ In previous chapters, we have introduced memory systems and RAG for agents. Howe
 To enable readers to quickly experience the complete functionality of this chapter, we provide a directly installable Python package. You can install the version corresponding to this chapter with the following command:
 
 ```bash
-pip install "hello-agents[all]==0.2.7"
+pip install "hello-agents[all]==0.2.8"
 ```
 
 This chapter mainly introduces the core concepts and practices of context engineering, and adds a context builder and two supporting tools to the HelloAgents framework:
