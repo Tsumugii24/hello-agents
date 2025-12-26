@@ -112,7 +112,7 @@ npm install
 ```bash
 # 创建.env文件,配置高德地图Web API Key和Web端JS API Key
 echo "VITE_AMAP_WEB_KEY=your_amap_web_key" > .env
-echo "VITE_AMAP_WEB_JS_KEY=your)amap_web_js_key" > .env
+echo "VITE_AMAP_WEB_JS_KEY=your_amap_web_js_key" > .env
 ```
 
 4. 启动开发服务器
