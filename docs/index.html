@@ -10,6 +10,7 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@latest/lib/themes/vue.css">
     <style>
+        /* --- 1. 原有样式 (保留) --- */
         /* 语言切换按钮样式 */
         .lang-switch {
             position: fixed;
@@ -95,6 +96,103 @@
             color: rgba(255, 255, 255, 0.9);
             margin: 0;
         }
+
+        /* --- 2. 新增：暗黑模式样式 (Dark Mode Styles) --- */
+        :root {
+            --dark-bg: #1a1a1a;
+            --dark-text: #c4c4c4;
+            --dark-sidebar: #141414;
+            --dark-code-bg: #2b2b2b;
+            --dark-border: #333;
+            --theme-color: #42b983;
+        }
+
+        /* 基础反色 */
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        /* 侧边栏适配 */
+        body.dark-mode .sidebar {
+            background-color: var(--dark-sidebar);
+            border-right: 1px solid var(--dark-border);
+            color: var(--dark-text);
+        }
+        body.dark-mode .sidebar-nav li a {
+            color: #999;
+        }
+        body.dark-mode .sidebar-nav li.active > a {
+            color: var(--theme-color);
+            border-right: 2px solid var(--theme-color);
+        }
+
+        /* 代码块适配 */
+        body.dark-mode pre {
+            background-color: var(--dark-code-bg) !important;
+        }
+        body.dark-mode code {
+            background-color: var(--dark-code-bg) !important;
+            color: #e0e0e0 !important;
+        }
+        body.dark-mode .markdown-section code {
+            color: #f08d49;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* 标题和引用适配 */
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4 {
+            color: #e0e0e0;
+        }
+        body.dark-mode blockquote {
+            color: #999;
+            background: rgba(255,255,255,0.05);
+            border-left-color: var(--theme-color);
+        }
+
+        /* 表格适配 */
+        body.dark-mode .markdown-section tr:nth-child(2n) {
+            background-color: rgba(255,255,255,0.03);
+        }
+        body.dark-mode .markdown-section td, 
+        body.dark-mode .markdown-section th {
+            border-color: var(--dark-border);
+        }
+
+        /* Mermaid 图表适配 (颜色反转) */
+        body.dark-mode .mermaid {
+            filter: invert(1) hue-rotate(180deg);
+        }
+
+        /* Giscus 容器边框适配 */
+        body.dark-mode .giscus-container {
+            border-top: 1px solid var(--dark-border);
+        }
+
+        /* --- 3. 新增：侧边栏开关按钮样式 --- */
+        .sidebar-toggle-btn {
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            padding: 10px 0;
+            margin: 0 15px 10px 15px;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 4px;
+            background-color: rgba(0,0,0,0.05);
+            color: #505d6b;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        body.dark-mode .sidebar-toggle-btn {
+            background-color: rgba(255,255,255,0.1);
+            color: #ccc;
+            border: 1px solid #444;
+        }
+        .sidebar-toggle-btn:hover {
+            background-color: var(--theme-color);
+            color: white;
+        }
     </style>
 </head>
 
@@ -141,6 +239,56 @@
             },
             // 使用钩子动态处理侧边栏
             plugins: [
+                // --- 新增：暗黑模式开关插件 ---
+                function(hook, vm) {
+                    hook.doneEach(function() {
+                        const sidebar = document.querySelector('.sidebar-nav');
+                        // 防止重复添加
+                        if (!sidebar || document.querySelector('.sidebar-toggle-btn')) return;
+
+                        const btn = document.createElement('div');
+                        btn.className = 'sidebar-toggle-btn';
+                        
+                        // 初始化状态
+                        const savedTheme = localStorage.getItem('theme-mode');
+                        if (savedTheme === 'dark') {
+                            document.body.classList.add('dark-mode');
+                            btn.textContent = '🌙 Switch to Light';
+                        } else {
+                            btn.textContent = '☀️ Switch to Dark';
+                        }
+
+                        // 核心：点击事件
+                        btn.onclick = function() {
+                            // 1. 切换类名
+                            document.body.classList.toggle('dark-mode');
+                            const isDark = document.body.classList.contains('dark-mode');
+                            
+                            // 2. 保存状态
+                            localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+                            
+                            // 3. 更新按钮文字
+                            btn.textContent = isDark ? '🌙 Switch to Light' : '☀️ Switch to Dark';
+                            
+                            // 4. 关键：通知 Giscus 切换主题 (无需刷新)
+                            const iframe = document.querySelector('iframe.giscus-frame');
+                            if (iframe) {
+                                iframe.contentWindow.postMessage({
+                                    giscus: {
+                                        setConfig: {
+                                            theme: isDark ? 'dark' : 'light'
+                                        }
+                                    }
+                                }, 'https://giscus.app');
+                            }
+                        };
+
+                        // 插入到侧边栏最顶部
+                        sidebar.insertBefore(btn, sidebar.firstChild);
+                    });
+                },
+
+                // --- 原有逻辑：语言偏好处理 ---
                 function(hook, vm) {
                     // 在每次路由变化时检查语言偏好
                     hook.beforeEach(function(content) {
@@ -185,6 +333,10 @@
                         const preferredLang = localStorage.getItem('preferredLanguage');
                         const isEnglish = currentPath.includes('/en/') || preferredLang === 'en';
 
+                        // --- 获取当前主题状态 (新增逻辑) ---
+                        // 这里是为了在创建 Giscus 时就设置正确的初始主题
+                        const isDarkMode = document.body.classList.contains('dark-mode');
+
                         // 创建可折叠的标题栏
                         const toggleButton = document.createElement('div');
                         toggleButton.className = 'giscus-toggle';
@@ -228,7 +380,11 @@
                         giscusScript.setAttribute('data-reactions-enabled', '1');
                         giscusScript.setAttribute('data-emit-metadata', '0');
                         giscusScript.setAttribute('data-input-position', 'top');
-                        giscusScript.setAttribute('data-theme', 'preferred_color_scheme');
+                        
+                        // --- 修改：强制跟随当前 dark-mode 状态 ---
+                        // 如果当前 body 有 dark-mode 类，则初始化为 'dark'，否则 'light'
+                        giscusScript.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+                        
                         giscusScript.setAttribute('data-lang', isEnglish ? 'en' : 'zh-CN');
                         giscusScript.setAttribute('data-loading', 'lazy');
                         giscusScript.crossOrigin = 'anonymous';
@@ -271,6 +427,9 @@
     <script src="//cdn.jsdelivr.net/npm/docsify-pagination@latest/dist/docsify-pagination.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
 
+    <!-- 新增：图片放大插件 (官方) -->
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/marked@3"></script>
@@ -279,7 +438,7 @@
     <!-- 字数统计 -->
     <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
 
-    <!-- 语言切换脚本 -->
+    <!-- 语言切换脚本 (保留原样) -->
     <script>
         // 章节文件名映射
         const chapterMapping = {
