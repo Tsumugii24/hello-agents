@@ -763,7 +763,7 @@ return [
 
 Computers cannot directly understand text and need to convert it into vectors. We use the `Embeddings` node to complete this "translation" work.
 
-- **Node**: `Embeddings Google Gemini`, select model as `gemini-embedding-exp-03-07`. Here we use Google API for demonstration; if you don't know how to obtain Google API, you can refer to Section 5.5.3.
+- **Node**: `Embeddings Google Gemini`, select model as `gemini-embedding-exp-03-07`. Here we use Google API for demonstration; if you don't know how to obtain Google API, you can refer to the official documentation.
 - **Configuration**: Connect it after the `Code` node, and it will automatically convert the text passed from upstream into vector data.
 
 <div align="center">
