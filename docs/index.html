@@ -10,7 +10,7 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@latest/lib/themes/vue.css">
     <style>
-        /* --- 1. 现有样式保持不变 --- */
+        /* --- 1. 原有样式 (保留) --- */
         /* 语言切换按钮样式 */
         .lang-switch {
             position: fixed;
@@ -97,7 +97,7 @@
             margin: 0;
         }
 
-        /* --- 2. 新增：暗黑模式核心样式 --- */
+        /* --- 2. 新增：暗黑模式样式 (Dark Mode Styles) --- */
         :root {
             --dark-bg: #1a1a1a;
             --dark-text: #c4c4c4;
@@ -127,7 +127,7 @@
             border-right: 2px solid var(--theme-color);
         }
 
-        /* 代码块适配 (关键) */
+        /* 代码块适配 */
         body.dark-mode pre {
             background-color: var(--dark-code-bg) !important;
         }
@@ -164,7 +164,7 @@
             filter: invert(1) hue-rotate(180deg);
         }
 
-        /* Giscus 区域在暗黑模式下的微调 */
+        /* Giscus 容器边框适配 */
         body.dark-mode .giscus-container {
             border-top: 1px solid var(--dark-border);
         }
@@ -197,7 +197,7 @@
 </head>
 
 <body>
-    <!-- 语言切换按钮 (保持原有) -->
+    <!-- 语言切换按钮 -->
     <div class="lang-switch">
         <button id="langBtn" onclick="switchLanguage()">English</button>
     </div>
@@ -237,12 +237,13 @@
                 '/en/': '#/en/',
                 '/': '#/'
             },
-            // --- 插件系统 ---
+            // 使用钩子动态处理侧边栏
             plugins: [
-                // 1. 暗黑模式开关 (新增)
+                // --- 新增：暗黑模式开关插件 ---
                 function(hook, vm) {
                     hook.doneEach(function() {
                         const sidebar = document.querySelector('.sidebar-nav');
+                        // 防止重复添加
                         if (!sidebar || document.querySelector('.sidebar-toggle-btn')) return;
 
                         const btn = document.createElement('div');
@@ -257,28 +258,44 @@
                             btn.textContent = '☀️ Switch to Dark';
                         }
 
-                        // 点击切换
+                        // 核心：点击事件
                         btn.onclick = function() {
+                            // 1. 切换类名
                             document.body.classList.toggle('dark-mode');
                             const isDark = document.body.classList.contains('dark-mode');
+                            
+                            // 2. 保存状态
                             localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+                            
+                            // 3. 更新按钮文字
                             btn.textContent = isDark ? '🌙 Switch to Light' : '☀️ Switch to Dark';
                             
-                            // 可选：在这里重新加载 Giscus 以适应主题 (需要刷新 iframe，略复杂，暂时保持现状)
+                            // 4. 关键：通知 Giscus 切换主题 (无需刷新)
+                            const iframe = document.querySelector('iframe.giscus-frame');
+                            if (iframe) {
+                                iframe.contentWindow.postMessage({
+                                    giscus: {
+                                        setConfig: {
+                                            theme: isDark ? 'dark' : 'light'
+                                        }
+                                    }
+                                }, 'https://giscus.app');
+                            }
                         };
 
-                        // 插入到侧边栏顶部
+                        // 插入到侧边栏最顶部
                         sidebar.insertBefore(btn, sidebar.firstChild);
                     });
                 },
 
-                // 2. 原有的语言偏好与评论区逻辑
+                // --- 原有逻辑：语言偏好处理 ---
                 function(hook, vm) {
                     // 在每次路由变化时检查语言偏好
                     hook.beforeEach(function(content) {
                         const preferredLang = localStorage.getItem('preferredLanguage');
                         const currentPath = vm.route.path;
 
+                        // 根据当前路径或语言偏好更新分页文本
                         if (currentPath.includes('/en/') || preferredLang === 'en') {
                             window.$docsify.pagination.previousText = 'Previous';
                             window.$docsify.pagination.nextText = 'Next';
@@ -292,26 +309,35 @@
 
                     // 在页面渲染后添加 Giscus 评论区
                     hook.doneEach(function() {
+                        // 检查是否是章节页面(排除首页和前言)
                         const currentPath = vm.route.path;
                         const isChapterPage = currentPath.includes('chapter') ||
                                              currentPath.includes('Chapter') ||
                                              currentPath.includes('第') && currentPath.includes('章');
 
                         if (!isChapterPage) {
-                            return; 
+                            return; // 非章节页面不显示评论区
                         }
 
+                        // 移除旧的评论区
                         const oldGiscus = document.querySelector('.giscus-container');
                         if (oldGiscus) {
                             oldGiscus.remove();
                         }
 
+                        // 创建评论区容器
                         const giscusContainer = document.createElement('div');
                         giscusContainer.className = 'giscus-container';
 
+                        // 获取语言设置
                         const preferredLang = localStorage.getItem('preferredLanguage');
                         const isEnglish = currentPath.includes('/en/') || preferredLang === 'en';
 
+                        // --- 获取当前主题状态 (新增逻辑) ---
+                        // 这里是为了在创建 Giscus 时就设置正确的初始主题
+                        const isDarkMode = document.body.classList.contains('dark-mode');
+
+                        // 创建可折叠的标题栏
                         const toggleButton = document.createElement('div');
                         toggleButton.className = 'giscus-toggle';
 
@@ -338,9 +364,11 @@
                         toggleButton.appendChild(titleWrapper);
                         toggleButton.appendChild(iconSpan);
 
+                        // 创建评论内容容器
                         const contentDiv = document.createElement('div');
                         contentDiv.className = 'giscus-content';
 
+                        // 创建 Giscus 脚本
                         const giscusScript = document.createElement('script');
                         giscusScript.src = 'https://giscus.app/client.js';
                         giscusScript.setAttribute('data-repo', 'datawhalechina/hello-agents');
@@ -353,9 +381,9 @@
                         giscusScript.setAttribute('data-emit-metadata', '0');
                         giscusScript.setAttribute('data-input-position', 'top');
                         
-                        // 让 Giscus 自动跟随系统/浏览器偏好，或强制指定
-                        // 这里使用 preferred_color_scheme，它通常能检测到 OS 设置
-                        giscusScript.setAttribute('data-theme', 'preferred_color_scheme');
+                        // --- 修改：强制跟随当前 dark-mode 状态 ---
+                        // 如果当前 body 有 dark-mode 类，则初始化为 'dark'，否则 'light'
+                        giscusScript.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
                         
                         giscusScript.setAttribute('data-lang', isEnglish ? 'en' : 'zh-CN');
                         giscusScript.setAttribute('data-loading', 'lazy');
@@ -364,9 +392,11 @@
 
                         contentDiv.appendChild(giscusScript);
 
+                        // 组装评论区
                         giscusContainer.appendChild(toggleButton);
                         giscusContainer.appendChild(contentDiv);
 
+                        // 添加折叠/展开功能
                         let isExpanded = false;
                         toggleButton.addEventListener('click', function() {
                             isExpanded = !isExpanded;
@@ -379,6 +409,7 @@
                             }
                         });
 
+                        // 将评论区添加到内容区域
                         const article = document.querySelector('article.markdown-section');
                         if (article) {
                             article.appendChild(giscusContainer);
@@ -407,7 +438,7 @@
     <!-- 字数统计 -->
     <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
 
-    <!-- 语言切换脚本 (完整保留) -->
+    <!-- 语言切换脚本 (保留原样) -->
     <script>
         // 章节文件名映射
         const chapterMapping = {
