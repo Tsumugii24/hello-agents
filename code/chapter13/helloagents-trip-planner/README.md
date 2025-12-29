@@ -110,9 +110,8 @@ npm install
 
 3. 配置环境变量
 ```bash
-# 创建.env文件,配置高德地图Web API Key和Web端JS API Key
-echo "VITE_AMAP_WEB_KEY=your_amap_web_key" > .env
-echo "VITE_AMAP_WEB_JS_KEY=your_amap_web_js_key" > .env
+# 创建.env文件, 填入高德地图Web API Key 和 Web端JS API Key
+cp .env.example .env
 ```
 
 4. 启动开发服务器
