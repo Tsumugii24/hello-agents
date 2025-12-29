@@ -64,7 +64,7 @@ helloagents-trip-planner/
 
 - Python 3.10+
 - Node.js 16+
-- 高德地图API密钥 (Web服务API)
+- 高德地图API密钥 (Web服务API和Web端(JS API))
 - LLM API密钥 (OpenAI/DeepSeek等)
 
 ### 后端安装
@@ -110,8 +110,8 @@ npm install
 
 3. 配置环境变量
 ```bash
-# 创建.env文件,配置高德地图Web API Key
-echo "VITE_AMAP_WEB_KEY=your_amap_web_key" > .env
+# 创建.env文件, 填入高德地图Web API Key 和 Web端JS API Key
+cp .env.example .env
 ```
 
 4. 启动开发服务器

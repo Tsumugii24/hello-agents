@@ -833,7 +833,7 @@ const restoreMap = () => {
 const initMap = async () => {
   try {
     const AMap = await AMapLoader.load({
-      key: '25dfaf050fe024803e96badd370e8029', // 高德地图Web服务API Key
+      key: import.meta.env.VITE_AMAP_WEB_JS_KEY,  // 高德地图Web端(JS API) Key
       version: '2.0',
       plugins: ['AMap.Marker', 'AMap.Polyline', 'AMap.InfoWindow']
     })
